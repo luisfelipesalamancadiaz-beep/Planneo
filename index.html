@@ -1,2355 +1,1466 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Planneo - Agenda Digital</title>
-
-  <!-- FullCalendar -->
-  <link href="https://cdn.jsdelivr.net/npm/fullcalendar@6.1.8/main.min.css" rel="stylesheet">
-  <script src="https://cdn.jsdelivr.net/npm/fullcalendar@6.1.8/index.global.min.js"></script>
-  
-  <script src="https://cdn.jsdelivr.net/npm/fullcalendar@6.1.8/locales-all.global.min.js"></script>
-
-  <style>
-    body {
-      font-family: Arial, sans-serif;
-      background: #fff8dc;
-      margin: 0;
-      padding: 0;
-    }
-
-    nav {
-      background: #6c8ebf;
-      padding: 15px;
-    }
-
-    nav ul {
-      list-style: none;
-      margin: 0;
-      padding: 0;
-      display: flex;
-      justify-content: center;
-      flex-wrap: wrap;
-    }
-
-    nav li {
-      margin: 0 20px;
-    }
-
-    nav a {
-      color: white;
-      text-decoration: none;
-      font-weight: bold;
-      font-size: 18px;
-    }
-
-    nav a:hover {
-      color: #ffd166;
-    }
-
-    /* Dropdown de idiomas */
-    .dropdown {
-      position: relative;
-    }
-
-    .submenu {
-      display: none;
-      position: absolute;
-      top: 100%;
-      left: 0;
-      background: white;
-      min-width: 170px;
-      list-style: none;
-      padding: 10px;
-      margin-top: 8px;
-      border-radius: 8px;
-      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
-      z-index: 100;
-    }
-
-    .submenu.show {
-      display: block;
-    }
-
-    .submenu li a {
-      display: block;
-      padding: 10px;
-      color: black;
-      text-decoration: none;
-    }
-
-    .submenu li a:hover {
-      background: #f0f0f0;
-      border-radius: 5px;
-    }
-
-    #vistaInicio {
-      padding-bottom: 40px;
-    }
-
-    #titulo,
-    #bienvenida {
-      text-align: center;
-    }
-
-    #agenda {
-      max-width: 600px;
-      margin: 20px auto;
-      background: white;
-      padding: 20px;
-      border-radius: 8px;
-      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
-    }
-
-    #agenda input,
-    #agenda button {
-      padding: 10px;
-      margin: 5px 0;
-      border: 1px solid #ccc;
-      border-radius: 5px;
-      font-size: 14px;
-      width: 100%;
-      box-sizing: border-box;
-    }
-
-    #agenda button {
-      background: #6c8ebf;
-      color: white;
-      font-weight: bold;
-      cursor: pointer;
-      border: none;
-    }
-
-    #agenda button:hover {
-      background: #ffd166;
-      color: black;
-    }
-
-    #listaEventos {
-      list-style: none;
-      padding: 0;
-      margin-top: 20px;
-    }
-
-    #listaEventos li.tarea {
-      background: white;
-      margin: 12px 0;
-      padding: 15px;
-      border-radius: 12px;
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      gap: 15px;
-      border-left: 6px solid #6c8ebf;
-      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.15);
-    }
-
-    .botones {
-      display: flex;
-      gap: 8px;
-      flex-shrink: 0;
-    }
-
-    .btnListo {
-      background: #4CAF50;
-      color: white;
-      border: none;
-      padding: 8px 12px;
-      border-radius: 5px;
-      cursor: pointer;
-    }
-
-    .btnListo:hover:not(:disabled) {
-      background: #45a049;
-    }
-
-    .btnListo:disabled {
-      opacity: 0.7;
-      cursor: default;
-    }
-
-    .btnEliminar {
-      background: #e74c3c;
-      color: white;
-      border: none;
-      padding: 8px 12px;
-      border-radius: 5px;
-      cursor: pointer;
-    }
-
-    .btnEliminar:hover {
-      background: #c0392b;
-    }
-
-    /* Mensaje de error */
-    #mensajeError {
-      color: #d32f2f;
-      background: #ffebee;
-      border: 1px solid #ef9a9a;
-      border-radius: 8px;
-      padding: 10px;
-      margin-top: 8px;
-      text-align: center;
-      display: none;
-      font-weight: bold;
-      animation: aparecer 0.3s;
-    }
-
-    @keyframes aparecer {
-      from {
-        opacity: 0;
-        transform: translateY(-8px);
-      }
-
-      to {
-        opacity: 1;
-        transform: translateY(0);
-      }
-    }
-
-    /* Calendario */
-    #calendario {
-      max-width: 900px;
-      margin: 40px auto;
-      background: white;
-      padding: 20px;
-      border-radius: 8px;
-      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
-    }
-
-    /* ===== Vista Mi Día ===== */
-    #vistaMiDia {
-      max-width: 800px;
-      margin: 30px auto;
-      background: white;
-      padding: 25px;
-      border-radius: 15px;
-      box-shadow: 0 6px 15px rgba(0, 0, 0, 0.15);
-      display: none;
-    }
-
-    #vistaMiDia h2 {
-      text-align: center;
-      color: #4CAF50;
-      margin-bottom: 10px;
-    }
-
-    #saludo {
-      text-align: center;
-      color: #555;
-      margin-bottom: 25px;
-    }
-
-    #listaMiDia {
-      list-style: none;
-      padding: 0;
-    }
-
-    #listaMiDia li.tarea {
-      background: #f8f9fa;
-      margin: 12px 0;
-      padding: 15px;
-      border-radius: 12px;
-      border-left: 6px solid #4CAF50;
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      gap: 15px;
-    }
-
-    #btnVolver {
-      display: block;
-      margin: 25px auto 0;
-      padding: 10px 20px;
-      background: #6c8ebf;
-      color: white;
-      border: none;
-      border-radius: 5px;
-      font-weight: bold;
-      cursor: pointer;
-    }
-
-    #btnVolver:hover {
-      background: #ffd166;
-      color: black;
-    }
-
-    /* ===== Vista Notas ===== */
-
-    #vistaNotas {
-      max-width: 950px;
-      margin: 35px auto;
-      padding: 30px;
-      background: #ffffff;
-      border-radius: 22px;
-      box-shadow: 0 8px 30px rgba(0,0,0,0.12);
-      display: none;
-    }
-
-    .encabezadoNotas {
-      margin-bottom: 25px;
-    }
-
-    .encabezadoNotas h2 {
-      margin: 0;
-      color: #4f6fae;
-      font-size: 30px;
-    }
-
-    .encabezadoNotas p {
-      margin-top: 6px;
-      color: #777;
-    }
-
-    .editorNota {
-      background: #f7f8fb;
-      border: 1px solid #e5e7ed;
-      padding: 22px;
-      border-radius: 18px;
-      margin-bottom: 30px;
-    }
-
-    #notaTitulo {
-      width: 100%;
-      box-sizing: border-box;
-      padding: 13px;
-      border: 1px solid #d5d9e1;
-      border-radius: 10px;
-      font-size: 17px;
-      font-weight: bold;
-      margin-bottom: 12px;
-      background: white;
-    }
-
-    #notaTexto {
-      width: 100%;
-      min-height: 130px;
-      box-sizing: border-box;
-      padding: 13px;
-      border: 1px solid #d5d9e1;
-      border-radius: 10px;
-      font-family: Arial, sans-serif;
-      font-size: 15px;
-      resize: vertical;
-      background: white;
-    }
-
-    #notaTitulo:focus,
-    #notaTexto:focus {
-      outline: none;
-      border-color: #6c8ebf;
-      box-shadow: 0 0 0 3px rgba(108,142,191,.12);
-    }
-
-    .textoTipoNota {
-      font-weight: bold;
-      color: #555;
-      margin: 18px 0 10px;
-    }
-
-    .tiposNota {
-      display: grid;
-      grid-template-columns: repeat(4, 1fr);
-      gap: 12px;
-    }
-
-    .tipoNota {
-      padding: 13px 8px;
-      background: white;
-      border: 2px solid #e1e4ea;
-      border-radius: 12px;
-      cursor: pointer;
-      transition: .2s;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      gap: 5px;
-      color: #555;
-    }
-
-    .tipoNota span {
-      font-size: 25px;
-    }
-
-    .tipoNota:hover {
-      transform: translateY(-2px);
-      border-color: #6c8ebf;
-    }
-
-    .tipoNota.activo {
-      border-color: #6c8ebf;
-      background: #eef3fb;
-      color: #4f6fae;
-    }
-
-    #btnGuardarNota {
-      width: 100%;
-      padding: 13px;
-      margin-top: 15px;
-      background: #6c8ebf;
-      color: white;
-      border: none;
-      border-radius: 10px;
-      font-size: 15px;
-      font-weight: bold;
-      cursor: pointer;
-      transition: .2s;
-    }
-
-    #btnGuardarNota:hover {
-      background: #ffd166;
-      color: black;
-      transform: translateY(-1px);
-    }
-
-    .separadorNotas {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      margin: 5px 0 15px;
-    }
-
-    .separadorNotas h3 {
-      margin: 0;
-      color: #444;
-    }
-
-    #contadorNotas {
-      color: #888;
-      font-size: 14px;
-    }
-
-    /* Tarjetas */
-
-    #listaNotas {
-      list-style: none;
-      padding: 0;
-      margin: 0;
-
-      display: grid;
-      grid-template-columns: repeat(2, minmax(0, 1fr));
-      gap: 22px;
-    }
-
-    #listaNotas li {
-      position: relative;
-      min-height: 190px;
-      padding: 22px;
-      box-sizing: border-box;
-
-      background: #fffdf5;
-      border-radius: 18px;
-
-      box-shadow:
-        0 5px 15px rgba(0,0,0,.08);
-
-      display: flex;
-      flex-direction: column;
-
-      transition: .25s;
-    }
-
-    #listaNotas li:hover {
-      transform: translateY(-5px);
-      box-shadow:
-        0 10px 25px rgba(0,0,0,.13);
-    }
-
-    .iconoNota {
-      font-size: 30px;
-      margin-bottom: 10px;
-    }
-
-    .tituloNotaGuardada {
-      font-size: 19px;
-      font-weight: bold;
-      color: #333;
-      margin-bottom: 10px;
-      padding-right: 30px;
-    }
-
-    .contenidoNota {
-      white-space: pre-wrap;
-      word-break: break-word;
-      color: #5d5d5d;
-      line-height: 1.5;
-      flex: 1;
-    }
-
-    .pieNota {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      margin-top: 18px;
-      font-size: 12px;
-      color: #888;
-    }
-
-    .etiquetaNota {
-      padding: 5px 9px;
-      border-radius: 20px;
-      font-weight: bold;
-    }
-
-    .nota-tarea {
-      border-top: 5px solid #4f8edc !important;
-    }
-
-    .nota-idea {
-      border-top: 5px solid #f2c94c !important;
-      background: #fffdf0 !important;
-    }
-
-    .nota-recordatorio {
-      border-top: 5px solid #55b889 !important;
-      background: #f5fff9 !important;
-    }
-
-    .nota-importante {
-      border-top: 5px solid #e74c3c !important;
-      background: #fff7f6 !important;
-    }
-
-    .etiqueta-tarea {
-      background: #eaf2ff;
-      color: #3975bd;
-    }
-
-    .etiqueta-idea {
-      background: #fff4c7;
-      color: #9a7900;
-    }
-
-    .etiqueta-recordatorio {
-      background: #dff6e9;
-      color: #37835e;
-    }
-
-    .etiqueta-importante {
-      background: #ffe1dd;
-      color: #c0392b;
-    }
-
-    .btnEliminarNota {
-      position: absolute;
-      top: 18px;
-      right: 18px;
-
-      width: 34px;
-      height: 34px;
-
-      border: none;
-      border-radius: 9px;
-
-      background: #f1f1f1;
-      color: #777;
-
-      cursor: pointer;
-      transition: .2s;
-    }
-
-    .btnEliminarNota:hover {
-      background: #e74c3c;
-      color: white;
-    }
-
-    #btnVolverNotas {
-      display: block;
-      margin: 30px auto 0;
-      padding: 11px 22px;
-
-      background: #6c8ebf;
-      color: white;
-
-      border: none;
-      border-radius: 9px;
-
-      font-weight: bold;
-      cursor: pointer;
-    }
-
-    #btnVolverNotas:hover {
-      background: #ffd166;
-      color: black;
-    }
-
-    /* Responsive */
-    @media (max-width: 700px) {
-
-      #listaNotas {
-        grid-template-columns: 1fr;
-      }
-
-      .tiposNota {
-        grid-template-columns: repeat(2, 1fr);
-      }
-
-      #vistaNotas {
-        margin: 15px;
-        padding: 20px;
-      }
-
-    }
-  </style>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Planneo - Agenda Digital</title>
+<link href="https://cdn.jsdelivr.net/npm/fullcalendar@6.1.8/main.min.css" rel="stylesheet">
+<script src="https://cdn.jsdelivr.net/npm/fullcalendar@6.1.8/index.global.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/fullcalendar@6.1.8/locales-all.global.min.js"></script>
+<style>
+/* ================= GENERAL ================= */
+* {
+  box-sizing: border-box;
+}
+html {
+  scroll-behavior: smooth;
+}
+body {
+  font-family: Arial, sans-serif;
+  background: #fff8dc;
+  margin: 0;
+  padding: 0;
+  color: #333;
+}
+button,
+input,
+textarea {
+  font-family: inherit;
+}
+/* ================= NAV ================= */
+nav {
+  background: #6c8ebf;
+  padding: 14px 20px;
+  position: relative;
+  z-index: 1000;
+}
+nav ul {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+nav li {
+  margin: 0;
+}
+nav a {
+  color: white;
+  text-decoration: none;
+  font-weight: bold;
+  font-size: 17px;
+  display: block;
+  padding: 9px 14px;
+  border-radius: 8px;
+  transition: 0.2s;
+}
+nav a:hover {
+  color: #111;
+  background: #ffd166;
+}
+/* ================= DROPDOWN ================= */
+.dropdown {
+  position: relative;
+}
+.submenu {
+  display: none;
+  position: absolute;
+  top: calc(100% + 5px);
+  left: 50%;
+  transform: translateX(-50%);
+  background: white;
+  min-width: 180px;
+  list-style: none;
+  padding: 8px;
+  margin: 0;
+  border-radius: 10px;
+  box-shadow: 0 8px 25px rgba(0,0,0,0.2);
+  z-index: 5000;
+}
+.submenu.show {
+  display: block;
+}
+.submenu li {
+  margin: 0;
+}
+.submenu li a {
+  display: block;
+  padding: 10px 12px;
+  color: #333;
+  font-size: 14px;
+  border-radius: 7px;
+}
+.submenu li a:hover {
+  background: #eef3fb;
+  color: #4f6fae;
+}
+/* ================= INICIO ================= */
+#vistaInicio {
+  padding: 20px 15px 50px;
+}
+#titulo,
+#bienvenida {
+  text-align: center;
+}
+#titulo {
+  margin-top: 15px;
+  font-size: 32px;
+}
+#bienvenida {
+  font-size: 18px;
+}
+/* ================= AGENDA ================= */
+#agenda {
+  width: 100%;
+  max-width: 600px;
+  margin: 25px auto;
+  background: white;
+  padding: 20px;
+  border-radius: 15px;
+  box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+}
+#agenda input,
+#agenda button {
+  width: 100%;
+  padding: 12px;
+  margin: 6px 0;
+  border: 1px solid #ccc;
+  border-radius: 8px;
+  font-size: 15px;
+}
+#agenda input:focus {
+  outline: none;
+  border-color: #6c8ebf;
+  box-shadow: 0 0 0 3px rgba(108,142,191,0.12);
+}
+#agenda button {
+  background: #6c8ebf;
+  color: white;
+  font-weight: bold;
+  cursor: pointer;
+  border: none;
+  transition: 0.2s;
+}
+#agenda button:hover {
+  background: #ffd166;
+  color: black;
+}
+/* ================= ERROR ================= */
+#mensajeError {
+  color: #d32f2f;
+  background: #ffebee;
+  border: 1px solid #ef9a9a;
+  border-radius: 8px;
+  padding: 10px;
+  margin: 15px auto;
+  max-width: 600px;
+  text-align: center;
+  display: none;
+  font-weight: bold;
+  animation: aparecer 0.3s;
+}
+@keyframes aparecer {
+  from {
+    opacity: 0;
+    transform: translateY(-8px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+/* ================= LISTA TAREAS ================= */
+#listaEventos {
+  list-style: none;
+  padding: 0;
+  margin-top: 20px;
+}
+#listaEventos li.tarea {
+  background: white;
+  margin: 12px 0;
+  padding: 15px;
+  border-radius: 12px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 15px;
+  border-left: 6px solid #6c8ebf;
+  box-shadow: 0 4px 10px rgba(0,0,0,0.12);
+  word-break: break-word;
+}
+.botones {
+  display: flex;
+  gap: 8px;
+  flex-shrink: 0;
+}
+.btnListo,
+.btnEliminar {
+  color: white;
+  border: none;
+  padding: 8px 12px;
+  border-radius: 7px;
+  cursor: pointer;
+  font-weight: bold;
+}
+.btnListo {
+  background: #4CAF50;
+}
+.btnListo:hover:not(:disabled) {
+  background: #45a049;
+}
+.btnListo:disabled {
+  opacity: 0.7;
+  cursor: default;
+}
+.btnEliminar {
+  background: #e74c3c;
+}
+.btnEliminar:hover {
+  background: #c0392b;
+}
+/* ================= CALENDARIO ================= */
+#calendario {
+  width: 100%;
+  max-width: 950px;
+  margin: 35px auto;
+  background: white;
+  padding: 20px;
+  border-radius: 15px;
+  box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+  overflow: hidden;
+}
+/* ================= MI DÍA ================= */
+#vistaMiDia {
+  width: 100%;
+  max-width: 800px;
+  margin: 30px auto;
+  background: white;
+  padding: 25px;
+  border-radius: 15px;
+  box-shadow: 0 6px 15px rgba(0,0,0,0.15);
+  display: none;
+}
+#vistaMiDia h2 {
+  text-align: center;
+  color: #4CAF50;
+  margin-bottom: 10px;
+}
+#saludo {
+  text-align: center;
+  color: #555;
+  margin-bottom: 25px;
+}
+#listaMiDia {
+  list-style: none;
+  padding: 0;
+}
+#listaMiDia li.tarea {
+  background: #f8f9fa;
+  margin: 12px 0;
+  padding: 15px;
+  border-radius: 12px;
+  border-left: 6px solid #4CAF50;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 15px;
+}
+#btnVolver,
+#btnVolverNotas {
+  display: block;
+  margin: 25px auto 0;
+  padding: 11px 22px;
+  background: #6c8ebf;
+  color: white;
+  border: none;
+  border-radius: 8px;
+  font-weight: bold;
+  cursor: pointer;
+}
+#btnVolver:hover,
+#btnVolverNotas:hover {
+  background: #ffd166;
+  color: black;
+}
+/* ================= NOTAS ================= */
+#vistaNotas {
+  width: calc(100% - 30px);
+  max-width: 950px;
+  margin: 35px auto;
+  padding: 30px;
+  background: white;
+  border-radius: 22px;
+  box-shadow: 0 8px 30px rgba(0,0,0,0.12);
+  display: none;
+}
+.encabezadoNotas {
+  margin-bottom: 25px;
+}
+.encabezadoNotas h2 {
+  margin: 0;
+  color: #4f6fae;
+  font-size: 30px;
+}
+.encabezadoNotas p {
+  margin-top: 6px;
+  color: #777;
+}
+/* ================= EDITOR ================= */
+.editorNota {
+  background: #f7f8fb;
+  border: 1px solid #e5e7ed;
+  padding: 22px;
+  border-radius: 18px;
+  margin-bottom: 30px;
+}
+#notaTitulo {
+  width: 100%;
+  padding: 13px;
+  border: 1px solid #d5d9e1;
+  border-radius: 10px;
+  font-size: 17px;
+  font-weight: bold;
+  margin-bottom: 12px;
+  background: white;
+}
+#notaTexto {
+  width: 100%;
+  min-height: 130px;
+  padding: 13px;
+  border: 1px solid #d5d9e1;
+  border-radius: 10px;
+  font-size: 15px;
+  resize: vertical;
+  background: white;
+}
+#notaTitulo:focus,
+#notaTexto:focus {
+  outline: none;
+  border-color: #6c8ebf;
+  box-shadow: 0 0 0 3px rgba(108,142,191,.12);
+}
+.textoTipoNota {
+  font-weight: bold;
+  color: #555;
+  margin: 18px 0 10px;
+}
+/* ================= TIPOS NOTA ================= */
+.tiposNota {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 12px;
+}
+.tipoNota {
+  padding: 13px 8px;
+  background: white;
+  border: 2px solid #e1e4ea;
+  border-radius: 12px;
+  cursor: pointer;
+  transition: .2s;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 5px;
+  color: #555;
+}
+.tipoNota span {
+  font-size: 25px;
+}
+.tipoNota:hover {
+  transform: translateY(-2px);
+  border-color: #6c8ebf;
+}
+.tipoNota.activo {
+  border-color: #6c8ebf;
+  background: #eef3fb;
+  color: #4f6fae;
+}
+/* ================= GUARDAR NOTA ================= */
+#btnGuardarNota {
+  width: 100%;
+  padding: 13px;
+  margin-top: 15px;
+  background: #6c8ebf;
+  color: white;
+  border: none;
+  border-radius: 10px;
+  font-size: 15px;
+  font-weight: bold;
+  cursor: pointer;
+}
+#btnGuardarNota:hover {
+  background: #ffd166;
+  color: black;
+}
+/* ================= ENCABEZADO LISTA NOTAS ================= */
+.separadorNotas {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 10px;
+  margin: 5px 0 15px;
+}
+.separadorNotas h3 {
+  margin: 0;
+  color: #444;
+}
+#contadorNotas {
+  color: #888;
+  font-size: 14px;
+}
+/* ================= TARJETAS NOTAS ================= */
+#listaNotas {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0,1fr));
+  gap: 22px;
+}
+#listaNotas li {
+  position: relative;
+  min-height: 190px;
+  padding: 22px;
+  background: #fffdf5;
+  border-radius: 18px;
+  box-shadow: 0 5px 15px rgba(0,0,0,.08);
+  display: flex;
+  flex-direction: column;
+  transition: .25s;
+  overflow-wrap: anywhere;
+}
+#listaNotas li:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 10px 25px rgba(0,0,0,.13);
+}
+.iconoNota {
+  font-size: 30px;
+  margin-bottom: 10px;
+}
+.tituloNotaGuardada {
+  font-size: 19px;
+  font-weight: bold;
+  color: #333;
+  margin-bottom: 10px;
+  padding-right: 30px;
+}
+.contenidoNota {
+  white-space: pre-wrap;
+  word-break: break-word;
+  color: #5d5d5d;
+  line-height: 1.5;
+  flex: 1;
+}
+.pieNota {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 10px;
+  flex-wrap: wrap;
+  margin-top: 18px;
+  font-size: 12px;
+  color: #888;
+}
+.etiquetaNota {
+  padding: 5px 9px;
+  border-radius: 20px;
+  font-weight: bold;
+}
+/* ================= COLORES NOTAS ================= */
+.nota-tarea {
+  border-top: 5px solid #4f8edc !important;
+}
+.nota-idea {
+  border-top: 5px solid #f2c94c !important;
+  background: #fffdf0 !important;
+}
+.nota-recordatorio {
+  border-top: 5px solid #55b889 !important;
+  background: #f5fff9 !important;
+}
+.nota-importante {
+  border-top: 5px solid #e74c3c !important;
+  background: #fff7f6 !important;
+}
+.etiqueta-idea {
+  background: #fff4c7;
+  color: #9a7900;
+}
+.etiqueta-recordatorio {
+  background: #dff6e9;
+  color: #37835e;
+}
+.etiqueta-importante {
+  background: #ffe1dd;
+  color: #c0392b;
+}
+/* ================= ELIMINAR NOTA ================= */
+.btnEliminarNota {
+  position: absolute;
+  top: 18px;
+  right: 18px;
+  width: 34px;
+  height: 34px;
+  border: none;
+  border-radius: 9px;
+  background: #f1f1f1;
+  color: #777;
+  cursor: pointer;
+}
+.btnEliminarNota:hover {
+  background: #e74c3c;
+  color: white;
+}
+/* ================= RESPONSIVE ================= */
+@media (max-width: 700px) {
+  body {
+    overflow-x: hidden;
+  }
+  nav {
+    padding: 10px;
+  }
+  nav ul {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 6px;
+    width: 100%;
+  }
+  nav li {
+    width: 100%;
+  }
+  nav a {
+    text-align: center;
+    font-size: 14px;
+    padding: 10px 5px;
+  }
+  .dropdown {
+    position: static;
+  }
+  .submenu {
+    position: absolute;
+    left: 50%;
+    width: 90%;
+    max-width: 250px;
+    transform: translateX(-50%);
+  }
+  #vistaInicio {
+    padding: 10px 10px 40px;
+  }
+  #titulo {
+    font-size: 27px;
+  }
+  #bienvenida {
+    font-size: 15px;
+    line-height: 1.4;
+  }
+  #agenda {
+    padding: 15px;
+    margin: 18px auto;
+  }
+  #listaEventos li.tarea,
+  #listaMiDia li.tarea {
+    flex-direction: column;
+    align-items: stretch;
+    padding: 14px;
+    gap: 12px;
+  }
+  .botones {
+    width: 100%;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+  }
+  .btnListo,
+  .btnEliminar {
+    width: 100%;
+    padding: 10px;
+  }
+  #calendario {
+    margin: 20px auto;
+    padding: 8px;
+    border-radius: 12px;
+    overflow-x: auto;
+  }
+  .fc .fc-toolbar {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+  }
+  .fc .fc-toolbar-title {
+    font-size: 20px;
+  }
+  .fc .fc-button {
+    font-size: 12px;
+    padding: 6px 9px;
+  }
+  #vistaMiDia {
+    width: calc(100% - 20px);
+    margin: 15px auto;
+    padding: 18px;
+  }
+  #vistaNotas {
+    width: calc(100% - 20px);
+    margin: 15px auto;
+    padding: 16px;
+    border-radius: 16px;
+  }
+  .encabezadoNotas h2 {
+    font-size: 25px;
+  }
+  .encabezadoNotas p {
+    font-size: 14px;
+    line-height: 1.4;
+  }
+  .tiposNota {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 8px;
+  }
+  .tipoNota {
+    padding: 11px 5px;
+    font-size: 13px;
+  }
+  #listaNotas {
+    grid-template-columns: 1fr;
+    gap: 15px;
+  }
+  #listaNotas li {
+    min-height: 160px;
+    padding: 18px;
+  }
+  .separadorNotas {
+    align-items: flex-start;
+    flex-direction: column;
+  }
+}
+@media (max-width: 400px) {
+  nav ul {
+    grid-template-columns: 1fr;
+  }
+  .tiposNota {
+    grid-template-columns: 1fr 1fr;
+  }
+  #titulo {
+    font-size: 24px;
+  }
+  #bienvenida {
+    font-size: 14px;
+  }
+  .fc .fc-toolbar-chunk {
+    display: flex;
+    justify-content: center;
+  }
+}
+</style>
 </head>
-
 <body>
 
-  <nav>
-    <ul>
-      <li>
-        <a href="#" id="linkMiDia">Mi Día</a>
-      </li>
+<!-- ================= NAV ================= -->
+<nav>
+<ul>
+<li>
+<a href="#" id="linkMiDia" data-i18n="miDia">🌞 Mi Día</a>
+</li>
+<li>
+<a href="#" id="sobre" data-i18n="notas">📝 Notas</a>
+</li>
+<li class="dropdown">
+<a href="#" id="linkConfig" data-i18n="configuracion">⚙️ Configuración</a>
+<ul class="submenu" id="submenuIdiomas">
+<li><a href="#" data-lang="es">🇪🇸 Español</a></li>
+<li><a href="#" data-lang="en">🇺🇸 English</a></li>
+<li><a href="#" data-lang="fr">🇫🇷 Français</a></li>
+<li><a href="#" data-lang="de">🇩🇪 Deutsch</a></li>
+<li><a href="#" data-lang="it">🇮🇹 Italiano</a></li>
+<li><a href="#" data-lang="pt">🇵🇹 Português</a></li>
+</ul>
+</li>
+<li>
+<a href="#" id="linkCalendario" data-i18n="calendario">📅 Calendario</a>
+</li>
+</ul>
+</nav>
 
-      <li>
-        <a href="#" id="sobre">Notas</a>
-      </li>
+<!-- MENSAJE DE ERROR GLOBAL -->
+<div id="mensajeError" role="alert" aria-live="assertive"></div>
 
-      <li class="dropdown">
-        <a href="#" id="linkConfig">Configuración</a>
+<!-- ================= NOTAS ================= -->
+<div id="vistaNotas">
+<div class="encabezadoNotas">
+<h2 data-i18n="misNotas">📝 Mis Notas</h2>
+<p data-i18n="descripcionNotas">Organiza tus ideas, tareas y recordatorios.</p>
+</div>
+<div class="editorNota">
+<input type="text" id="notaTitulo" placeholder="Título de la nota..." data-i18n-placeholder="tituloNotaPlaceholder" maxlength="60">
+<textarea id="notaTexto" placeholder="Escribe aquí lo que necesites recordar..." data-i18n-placeholder="textoNotaPlaceholder"></textarea>
+<p class="textoTipoNota" data-i18n="queGuardar">¿Qué quieres guardar?</p>
+<div class="tiposNota">
+<button type="button" class="tipoNota activo" data-tipo="idea">
+<span>💡</span>
+<strong data-i18n="idea">Idea</strong>
+</button>
+<button type="button" class="tipoNota" data-tipo="recordatorio">
+<span>🔔</span>
+<strong data-i18n="recordatorio">Recordatorio</strong>
+</button>
+<button type="button" class="tipoNota" data-tipo="importante">
+<span>⭐</span>
+<strong data-i18n="importante">Importante</strong>
+</button>
+</div>
+<button id="btnGuardarNota" type="button" data-i18n="guardarNota">➕ Guardar nota</button>
+</div>
+<div class="separadorNotas">
+<h3 data-i18n="misNotasLista">Mis notas</h3>
+<span id="contadorNotas">0 notas</span>
+</div>
+<ul id="listaNotas"></ul>
+<button id="btnVolverNotas" type="button" data-i18n="volver">← Volver</button>
+</div>
 
-        <ul class="submenu" id="submenuIdiomas">
-          <li><a href="#" data-lang="es">Español</a></li>
-          <li><a href="#" data-lang="en">English</a></li>
-          <li><a href="#" data-lang="fr">Français</a></li>
-          <li><a href="#" data-lang="de">Deutsch</a></li>
-          <li><a href="#" data-lang="it">Italiano</a></li>
-          <li><a href="#" data-lang="pt">Português</a></li>
-        </ul>
-      </li>
+<!-- ================= MI DÍA ================= -->
+<div id="vistaMiDia">
+<h2 data-i18n="miDiaTitulo">🌞 Mi Día</h2>
+<p id="saludo" data-i18n="saludo">Que tengas un excelente día.</p>
+<ul id="listaMiDia"></ul>
+<button id="btnVolver" type="button" data-i18n="volver">← Volver</button>
+</div>
 
-      <li>
-        <a href="#" id="linkCalendario">Calendario</a>
-      </li>
-    </ul>
-  </nav>
+<!-- ================= INICIO ================= -->
+<div id="vistaInicio">
+<h2 id="titulo">PLANNEO</h2>
+<h3 id="bienvenida" data-i18n="bienvenida">BIENVENIDO A NUESTRA AGENDA DIGITAL</h3>
+<div id="agenda">
+<input type="text" id="evento" placeholder="Escribe tu tarea pendiente" data-i18n-placeholder="tareaPlaceholder" aria-label="Tarea">
+<input type="date" id="fecha" aria-label="Fecha">
+<input type="time" id="hora" aria-label="Hora">
+<button id="btnAgregar" type="button" data-i18n="agregar">Agregar</button>
+<ul id="listaEventos"></ul>
+</div>
+<div id="calendario"></div>
+</div>
 
+<script>
+/* =====================================================
+   VARIABLES
+===================================================== */
+let calendar = null;
+const STORAGE_KEY = "planneo_eventos_v1";
+const STORAGE_NOTAS_KEY = "planneo_notas_v1";
+const LANGUAGE_KEY = "planneo_idioma_v1";
+let tipoNotaSeleccionado = "idea";
 
-  <!-- ================= NOTAS ================= -->
+/* =====================================================
+   TRADUCCIONES
+===================================================== */
+const traducciones = {
+es: {
+locale: "es",
+miDia: "🌞 Mi Día",
+notas: "📝 Notas",
+configuracion: "⚙️ Configuración",
+calendario: "📅 Calendario",
+bienvenida: "BIENVENIDO A NUESTRA AGENDA DIGITAL",
+tareaPlaceholder: "Escribe tu tarea pendiente",
+agregar: "Agregar",
+miDiaTitulo: "🌞 Mi Día",
+saludo: "Que tengas un excelente día.",
+volver: "← Volver",
+misNotas: "📝 Mis Notas",
+descripcionNotas: "Organiza tus ideas, tareas y recordatorios.",
+tituloNotaPlaceholder: "Título de la nota...",
+textoNotaPlaceholder: "Escribe aquí lo que necesites recordar...",
+queGuardar: "¿Qué quieres guardar?",
+idea: "Idea",
+recordatorio: "Recordatorio",
+importante: "Importante",
+guardarNota: "➕ Guardar nota",
+misNotasLista: "Mis notas",
+unaNota: "1 nota",
+muchasNotas: "{n} notas",
+eliminarNota: "Eliminar nota",
+escribeTarea: "📝 Escribe el nombre de la tarea.",
+fechaHora: "📅 Si indicas una hora, debes seleccionar una fecha.",
+tituloNotaError: "📝 Escribe un título para la nota.",
+textoNotaError: "✏️ Escribe algo en la nota."
+},
+en: {
+locale: "en",
+miDia: "🌞 My Day",
+notas: "📝 Notes",
+configuracion: "⚙️ Settings",
+calendario: "📅 Calendar",
+bienvenida: "WELCOME TO OUR DIGITAL AGENDA",
+tareaPlaceholder: "Write your pending task",
+agregar: "Add",
+miDiaTitulo: "🌞 My Day",
+saludo: "Have an excellent day.",
+volver: "← Back",
+misNotas: "📝 My Notes",
+descripcionNotas: "Organize your ideas, tasks and reminders.",
+tituloNotaPlaceholder: "Note title...",
+textoNotaPlaceholder: "Write here what you need to remember...",
+queGuardar: "What do you want to save?",
+idea: "Idea",
+recordatorio: "Reminder",
+importante: "Important",
+guardarNota: "➕ Save note",
+misNotasLista: "My notes",
+unaNota: "1 note",
+muchasNotas: "{n} notes",
+eliminarNota: "Delete note",
+escribeTarea: "📝 Write the task name.",
+fechaHora: "📅 If you enter a time, you must select a date.",
+tituloNotaError: "📝 Write a title for the note.",
+textoNotaError: "✏️ Write something in the note."
+},
+fr: {
+locale: "fr",
+miDia: "🌞 Ma journée",
+notas: "📝 Notes",
+configuracion: "⚙️ Configuration",
+calendario: "📅 Calendrier",
+bienvenida: "BIENVENUE DANS NOTRE AGENDA NUMÉRIQUE",
+tareaPlaceholder: "Écrivez votre tâche",
+agregar: "Ajouter",
+miDiaTitulo: "🌞 Ma journée",
+saludo: "Passez une excellente journée.",
+volver: "← Retour",
+misNotas: "📝 Mes notes",
+descripcionNotas: "Organisez vos idées, tâches et rappels.",
+tituloNotaPlaceholder: "Titre de la note...",
+textoNotaPlaceholder: "Écrivez ici ce dont vous devez vous souvenir...",
+queGuardar: "Que voulez-vous enregistrer ?",
+idea: "Idée",
+recordatorio: "Rappel",
+importante: "Important",
+guardarNota: "➕ Enregistrer la note",
+misNotasLista: "Mes notes",
+unaNota: "1 note",
+muchasNotas: "{n} notes",
+eliminarNota: "Supprimer la note",
+escribeTarea: "📝 Écrivez le nom de la tâche.",
+fechaHora: "📅 Si vous indiquez une heure, vous devez sélectionner une date.",
+tituloNotaError: "📝 Écrivez un titre pour la note.",
+textoNotaError: "✏️ Écrivez quelque chose dans la note."
+},
+de: {
+locale: "de",
+miDia: "🌞 Mein Tag",
+notas: "📝 Notizen",
+configuracion: "⚙️ Einstellungen",
+calendario: "📅 Kalender",
+bienvenida: "WILLKOMMEN IN UNSERER DIGITALEN AGENDA",
+tareaPlaceholder: "Schreibe deine Aufgabe",
+agregar: "Hinzufügen",
+miDiaTitulo: "🌞 Mein Tag",
+saludo: "Ich wünsche dir einen schönen Tag.",
+volver: "← Zurück",
+misNotas: "📝 Meine Notizen",
+descripcionNotas: "Organisiere deine Ideen, Aufgaben und Erinnerungen.",
+tituloNotaPlaceholder: "Titel der Notiz...",
+textoNotaPlaceholder: "Schreibe hier, woran du dich erinnern möchtest...",
+queGuardar: "Was möchtest du speichern?",
+idea: "Idee",
+recordatorio: "Erinnerung",
+importante: "Wichtig",
+guardarNota: "➕ Notiz speichern",
+misNotasLista: "Meine Notizen",
+unaNota: "1 Notiz",
+muchasNotas: "{n} Notizen",
+eliminarNota: "Notiz löschen",
+escribeTarea: "📝 Schreibe den Namen der Aufgabe.",
+fechaHora: "📅 Wenn du eine Uhrzeit angibst, musst du ein Datum auswählen.",
+tituloNotaError: "📝 Schreibe einen Titel für die Notiz.",
+textoNotaError: "✏️ Schreibe etwas in die Notiz."
+},
+it: {
+locale: "it",
+miDia: "🌞 La mia giornata",
+notas: "📝 Note",
+configuracion: "⚙️ Impostazioni",
+calendario: "📅 Calendario",
+bienvenida: "BENVENUTO NELLA NOSTRA AGENDA DIGITALE",
+tareaPlaceholder: "Scrivi la tua attività",
+agregar: "Aggiungi",
+miDiaTitulo: "🌞 La mia giornata",
+saludo: "Buona giornata.",
+volver: "← Indietro",
+misNotas: "📝 Le mie note",
+descripcionNotas: "Organizza idee, attività e promemoria.",
+tituloNotaPlaceholder: "Titolo della nota...",
+textoNotaPlaceholder: "Scrivi qui ciò che devi ricordare...",
+queGuardar: "Cosa vuoi salvare?",
+idea: "Idea",
+recordatorio: "Promemoria",
+importante: "Importante",
+guardarNota: "➕ Salva nota",
+misNotasLista: "Le mie note",
+unaNota: "1 nota",
+muchasNotas: "{n} note",
+eliminarNota: "Elimina nota",
+escribeTarea: "📝 Scrivi il nome dell'attività.",
+fechaHora: "📅 Se inserisci un'ora, devi selezionare una data.",
+tituloNotaError: "📝 Scrivi un titolo per la nota.",
+textoNotaError: "✏️ Scrivi qualcosa nella nota."
+},
+pt: {
+locale: "pt",
+miDia: "🌞 Meu dia",
+notas: "📝 Notas",
+configuracion: "⚙️ Configurações",
+calendario: "📅 Calendário",
+bienvenida: "BEM-VINDO À NOSSA AGENDA DIGITAL",
+tareaPlaceholder: "Escreva sua tarefa",
+agregar: "Adicionar",
+miDiaTitulo: "🌞 Meu dia",
+saludo: "Tenha um excelente dia.",
+volver: "← Voltar",
+misNotas: "📝 Minhas notas",
+descripcionNotas: "Organize suas ideias, tarefas e lembretes.",
+tituloNotaPlaceholder: "Título da nota...",
+textoNotaPlaceholder: "Escreva aqui o que você precisa lembrar...",
+queGuardar: "O que você quer salvar?",
+idea: "Ideia",
+recordatorio: "Lembrete",
+importante: "Importante",
+guardarNota: "➕ Salvar nota",
+misNotasLista: "Minhas notas",
+unaNota: "1 nota",
+muchasNotas: "{n} notas",
+eliminarNota: "Excluir nota",
+escribeTarea: "📝 Escreva o nome da tarefa.",
+fechaHora: "📅 Se você informar uma hora, deverá selecionar uma data.",
+tituloNotaError: "📝 Escreva um título para a nota.",
+textoNotaError: "✏️ Escreva algo na nota."
+}
+};
 
-  <div id="vistaNotas">
+/* =====================================================
+   IDIOMA ACTUAL
+===================================================== */
+let idiomaActual = localStorage.getItem(LANGUAGE_KEY) || "es";
 
-    <div class="encabezadoNotas">
-      <div>
-        <h2>📝 Mis Notas</h2>
-        <p>Organiza tus ideas, tareas y recordatorios.</p>
-      </div>
-    </div>
+function obtenerTraduccion(clave) {
+  const idioma = traducciones[idiomaActual] || traducciones.es;
+  return idioma[clave] || traducciones.es[clave] || clave;
+}
 
-    <div class="editorNota">
+/* =====================================================
+   CAMBIAR IDIOMA
+===================================================== */
+function cambiarIdioma(idioma) {
+  if (!traducciones[idioma]) idioma = "es";
+  idiomaActual = idioma;
+  localStorage.setItem(LANGUAGE_KEY, idioma);
+  document.documentElement.lang = idioma;
 
-      <input
-        type="text"
-        id="notaTitulo"
-        placeholder="Título de la nota..."
-        maxlength="60"
-      >
+  const t = traducciones[idioma];
 
-      <textarea
-        id="notaTexto"
-        placeholder="Escribe aquí lo que necesites recordar..."
-        aria-label="Nueva nota"
-      ></textarea>
+  document.querySelectorAll("[data-i18n]").forEach(elemento => {
+    const clave = elemento.dataset.i18n;
+    if (t[clave]) elemento.textContent = t[clave];
+  });
 
-      <p class="textoTipoNota">
-        ¿Qué quieres guardar?
-      </p>
+  document.querySelectorAll("[data-i18n-placeholder]").forEach(elemento => {
+    const clave = elemento.dataset.i18nPlaceholder;
+    if (t[clave]) elemento.placeholder = t[clave];
+  });
 
-      <div class="tiposNota">
+  if (calendar) {
+    calendar.setOption("locale", t.locale);
+  }
 
-        <button
-          type="button"
-          class="tipoNota activo"
-          data-tipo="idea"
-        >
-          <span>💡</span>
-          <strong>Idea</strong>
-        </button>
-
-        <button
-          type="button"
-          class="tipoNota"
-          data-tipo="recordatorio"
-        >
-          <span>🔔</span>
-          <strong>Recordatorio</strong>
-        </button>
-
-        <button
-          type="button"
-          class="tipoNota"
-          data-tipo="importante"
-        >
-          <span>⭐</span>
-          <strong>Importante</strong>
-        </button>
-
-      </div>
-
-      <button id="btnGuardarNota" type="button">
-        ➕ Guardar nota
-      </button>
-
-    </div>
-
-    <div class="separadorNotas">
-      <h3>Mis notas</h3>
-      <span id="contadorNotas">0 notas</span>
-    </div>
-
-    <ul id="listaNotas"></ul>
-
-    <button id="btnVolverNotas" type="button">
-      ← Volver
-    </button>
-
-  </div>
-
-
-  <!-- ================= MI DÍA ================= -->
-
-  <div id="vistaMiDia">
-
-    <h2>🌞 Mi Día</h2>
-
-    <p id="saludo">
-      Que tengas un excelente día.
-    </p>
-
-    <ul id="listaMiDia"></ul>
-
-    <button id="btnVolver" type="button">
-      ← Volver
-    </button>
-
-  </div>
-
-
-  <!-- ================= INICIO ================= -->
-
-  <div id="vistaInicio">
-
-    <h2 id="titulo">
-      PLANNEO
-    </h2>
-
-    <h3 id="bienvenida">
-      BIENVENIDO A NUESTRA AGENDA DIGITAL
-    </h3>
-
-    <div id="agenda">
-
-      <input
-        type="text"
-        id="evento"
-        placeholder="Escribe tu tarea pendiente"
-        aria-label="Tarea"
-      >
-
-      <input
-        type="date"
-        id="fecha"
-        aria-label="Fecha"
-      >
-
-      <input
-        type="time"
-        id="hora"
-        aria-label="Hora"
-      >
-
-      <button id="btnAgregar" type="button">
-        Agregar
-      </button>
-
-      <div
-        id="mensajeError"
-        role="alert"
-        aria-live="assertive"
-      ></div>
-
-      <ul id="listaEventos"></ul>
-
-    </div>
-
-    <div id="calendario"></div>
-
-  </div>
-
-
-  <!-- ================= JAVASCRIPT ================= -->
-
-  <script>
-
-    let calendar = null;
-
-    const STORAGE_KEY = "planneo_eventos_v1";
-    const STORAGE_NOTAS_KEY = "planneo_notas_v1";
-
-
-    /* ================= MENSAJES ================= */
-
-    function mostrarMensaje(texto) {
-
-      const mensaje =
-        document.getElementById("mensajeError");
-
-      mensaje.textContent = texto;
-      mensaje.style.display = "block";
-
-      clearTimeout(mensaje.timer);
-
-      mensaje.timer = setTimeout(() => {
-
-        mensaje.style.display = "none";
-
-      }, 3000);
+  document.querySelectorAll("#listaNotas li").forEach(li => {
+    const tipo = li.dataset.tipo || "idea";
+    const etiqueta = li.querySelector(".etiquetaNota");
+    if (etiqueta) {
+      const iconos = { idea: "💡", recordatorio: "🔔", importante: "⭐" };
+      etiqueta.textContent = (iconos[tipo] || "📝") + " " + obtenerTraduccion(tipo).toUpperCase();
     }
-
-
-    /* ================= IDs ================= */
-
-    function generarId() {
-
-      return "ev-" +
-        Date.now() +
-        "-" +
-        Math.floor(Math.random() * 1000);
-
-    }
-
-
-    /* ================= EVENTOS ================= */
-
-    function guardarEventosLocalStorage() {
-
-      const items = [];
-
-      document
-        .querySelectorAll(
-          "#listaEventos li.tarea, #listaMiDia li.tarea"
-        )
-        .forEach(li => {
-
-          items.push({
-
-            id: li.dataset.eventId || null,
-
-            titulo: li.dataset.titulo || "",
-
-            fecha: li.dataset.fecha || "",
-
-            hora: li.dataset.hora || "",
-
-            completada:
-              li.dataset.completada === "true"
-
-          });
-
-        });
-
-      localStorage.setItem(
-        STORAGE_KEY,
-        JSON.stringify(items)
-      );
-    }
-
-
-    function cargarEventosLocalStorage() {
-
-      const raw =
-        localStorage.getItem(STORAGE_KEY);
-
-      if (!raw) return;
-
-      try {
-
-        const items = JSON.parse(raw);
-
-        if (!Array.isArray(items)) return;
-
-        items.forEach(it => {
-
-          crearTareaEnDOM(
-            it.titulo || "",
-            it.fecha || "",
-            it.hora || "",
-            it.completada === true,
-            it.id || null,
-            false
-          );
-
-        });
-
-      } catch (e) {
-
-        console.error(
-          "Error al cargar localStorage:",
-          e
-        );
-
-      }
-    }
-
-
-    function crearTareaEnDOM(
-      titulo,
-      fecha,
-      hora,
-      completada = false,
-      existingEventId = null,
-      guardar = true
-    ) {
-
-      const li =
-        document.createElement("li");
-
-      li.className = "tarea";
-
-      li.dataset.titulo = titulo;
-      li.dataset.fecha = fecha || "";
-      li.dataset.hora = hora || "";
-
-      li.dataset.completada =
-        completada ? "true" : "false";
-
-
-      /* Texto */
-
-      const texto =
-        document.createElement("div");
-
-      const strong =
-        document.createElement("strong");
-
-      strong.textContent =
-        "📚 " + titulo;
-
-      texto.appendChild(strong);
-
-
-      /* Fecha y hora */
-
-      const infoFecha =
-        document.createElement("div");
-
-      infoFecha.style.marginTop = "6px";
-
-      let textoFecha = "";
-
-      if (fecha) {
-
-        textoFecha +=
-          "📅 " + fecha;
-
-      }
-
-      if (hora) {
-
-        textoFecha +=
-          (fecha ? "  " : "") +
-          "🕒 " +
-          hora;
-
-      }
-
-      infoFecha.textContent =
-        textoFecha;
-
-      texto.appendChild(infoFecha);
-
-
-      /* Completada */
-
-      if (completada) {
-
-        texto.style.textDecoration =
-          "line-through";
-
-        texto.style.color =
-          "gray";
-
-      }
-
-
-      /* Botones */
-
-      const botones =
-        document.createElement("div");
-
-      botones.className =
-        "botones";
-
-
-      /* Botón listo */
-
-      const botonListo =
-        document.createElement("button");
-
-      botonListo.type = "button";
-
-      botonListo.className =
-        "btnListo";
-
-      botonListo.textContent =
-        completada ? "✅" : "✔";
-
-      botonListo.disabled =
-        completada;
-
-
-      botonListo.addEventListener(
-        "click",
-        () => {
-
-          texto.style.textDecoration =
-            "line-through";
-
-          texto.style.color =
-            "gray";
-
-          botonListo.textContent =
-            "✅";
-
-          botonListo.disabled =
-            true;
-
-          li.dataset.completada =
-            "true";
-
-
-          /* Quitar del calendario */
-
-          if (
-            li.dataset.eventId &&
-            calendar
-          ) {
-
-            const ev =
-              calendar.getEventById(
-                li.dataset.eventId
-              );
-
-            if (ev) {
-
-              ev.remove();
-
-            }
-
-            delete li.dataset.eventId;
-          }
-
-
-          guardarEventosLocalStorage();
-
-          actualizarVistaInicio();
-
-        }
-      );
-
-
-      /* Botón eliminar */
-
-      const botonEliminar =
-        document.createElement("button");
-
-      botonEliminar.type = "button";
-
-      botonEliminar.className =
-        "btnEliminar";
-
-      botonEliminar.textContent =
-        "🗑";
-
-
-      botonEliminar.addEventListener(
-        "click",
-        () => {
-
-          if (
-            li.dataset.eventId &&
-            calendar
-          ) {
-
-            const ev =
-              calendar.getEventById(
-                li.dataset.eventId
-              );
-
-            if (ev) {
-
-              ev.remove();
-
-            }
-          }
-
-          li.remove();
-
-          guardarEventosLocalStorage();
-
-          actualizarVistaInicio();
-
-        }
-      );
-
-
-      botones.appendChild(
-        botonListo
-      );
-
-      botones.appendChild(
-        botonEliminar
-      );
-
-
-      li.appendChild(texto);
-
-      li.appendChild(botones);
-
-
-      document
-        .getElementById("listaEventos")
-        .appendChild(li);
-
-
-      /* Crear evento en calendario */
-
-      if (
-        !completada &&
-        fecha &&
-        calendar
-      ) {
-
-        const eventId =
-          existingEventId ||
-          generarId();
-
-        if (
-          !calendar.getEventById(eventId)
-        ) {
-
-          const fechaHora =
-            hora
-              ? `${fecha}T${hora}`
-              : fecha;
-
-          try {
-
-            const ev =
-              calendar.addEvent({
-
-                id: eventId,
-
-                title: titulo,
-
-                start: fechaHora
-
-              });
-
-            li.dataset.eventId =
-              ev.id;
-
-          } catch (e) {
-
-            console.warn(
-              "No se pudo crear el evento en el calendario:",
-              e
-            );
-
-          }
-
-        } else {
-
-          li.dataset.eventId =
-            eventId;
-
-        }
-      }
-
-
-      if (guardar) {
-
-        guardarEventosLocalStorage();
-
-        actualizarVistaInicio();
-
-      }
-
-    }
-
-
-    function agregarEvento() {
-
-      const eventoInput =
-        document.getElementById("evento");
-
-      const fechaInput =
-        document.getElementById("fecha");
-
-      const horaInput =
-        document.getElementById("hora");
-
-
-      const titulo =
-        eventoInput.value.trim();
-
-      const fecha =
-        fechaInput.value;
-
-      const hora =
-        horaInput.value;
-
-
-      if (!titulo) {
-
-        mostrarMensaje(
-          "📝 Escribe el nombre de la tarea."
-        );
-
-        eventoInput.focus();
-
-        return;
-
-      }
-
-
-      if (!fecha && hora) {
-
-        mostrarMensaje(
-          "📅 Si indicas una hora, debes seleccionar una fecha."
-        );
-
-        return;
-
-      }
-
-
+    const boton = li.querySelector(".btnEliminarNota");
+    if (boton) boton.title = obtenerTraduccion("eliminarNota");
+  });
+
+  actualizarContadorNotas();
+  actualizarVistaInicio();
+}
+
+/* =====================================================
+   MENSAJES
+===================================================== */
+function mostrarMensaje(texto) {
+  const mensaje = document.getElementById("mensajeError");
+  mensaje.textContent = texto;
+  mensaje.style.display = "block";
+  clearTimeout(mensaje.timer);
+  mensaje.timer = setTimeout(() => {
+    mensaje.style.display = "none";
+  }, 3000);
+}
+
+/* =====================================================
+   IDs
+===================================================== */
+function generarId() {
+  return "ev-" + Date.now() + "-" + Math.floor(Math.random() * 1000);
+}
+
+/* =====================================================
+   EVENTOS
+===================================================== */
+function guardarEventosLocalStorage() {
+  const items = [];
+  document.querySelectorAll("#listaEventos li.tarea, #listaMiDia li.tarea").forEach(li => {
+    items.push({
+      id: li.dataset.eventId || null,
+      titulo: li.dataset.titulo || "",
+      fecha: li.dataset.fecha || "",
+      hora: li.dataset.hora || "",
+      completada: li.dataset.completada === "true"
+    });
+  });
+  localStorage.setItem(STORAGE_KEY, JSON.stringify(items));
+}
+
+function cargarEventosLocalStorage() {
+  const raw = localStorage.getItem(STORAGE_KEY);
+  if (!raw) return;
+  try {
+    const items = JSON.parse(raw);
+    if (!Array.isArray(items)) return;
+    items.forEach(it => {
       crearTareaEnDOM(
-        titulo,
-        fecha,
-        hora,
-        false,
-        null,
-        true
+        it.titulo || "",
+        it.fecha || "",
+        it.hora || "",
+        it.completada === true,
+        it.id || null,
+        false
       );
+    });
+  } catch (e) {
+    console.error("Error al cargar eventos:", e);
+  }
+}
 
+/* =====================================================
+   CREAR TAREA
+===================================================== */
+function crearTareaEnDOM(titulo, fecha, hora, completada = false, existingEventId = null, guardar = true) {
+  const li = document.createElement("li");
+  li.className = "tarea";
+  li.dataset.titulo = titulo;
+  li.dataset.fecha = fecha || "";
+  li.dataset.hora = hora || "";
+  li.dataset.completada = completada ? "true" : "false";
 
-      eventoInput.value = "";
-      fechaInput.value = "";
-      horaInput.value = "";
+  const texto = document.createElement("div");
+  const strong = document.createElement("strong");
+  strong.textContent = "📚 " + titulo;
+  texto.appendChild(strong);
 
-      eventoInput.focus();
+  const infoFecha = document.createElement("div");
+  infoFecha.style.marginTop = "6px";
+  let textoFecha = "";
+  if (fecha) textoFecha += "📅 " + fecha;
+  if (hora) textoFecha += (fecha ? " " : "") + "🕒 " + hora;
+  infoFecha.textContent = textoFecha;
+  texto.appendChild(infoFecha);
 
+  if (completada) {
+    texto.style.textDecoration = "line-through";
+    texto.style.color = "gray";
+  }
+
+  const botones = document.createElement("div");
+  botones.className = "botones";
+
+  const botonListo = document.createElement("button");
+  botonListo.type = "button";
+  botonListo.className = "btnListo";
+  botonListo.textContent = completada ? "✅" : "✔";
+  botonListo.disabled = completada;
+  botonListo.addEventListener("click", () => {
+    texto.style.textDecoration = "line-through";
+    texto.style.color = "gray";
+    botonListo.textContent = "✅";
+    botonListo.disabled = true;
+    li.dataset.completada = "true";
+    if (li.dataset.eventId && calendar) {
+      const ev = calendar.getEventById(li.dataset.eventId);
+      if (ev) ev.remove();
+      delete li.dataset.eventId;
     }
+    guardarEventosLocalStorage();
+    actualizarVistaInicio();
+  });
 
-
-    /* ================= MI DÍA ================= */
-
-    function mostrarMiDia() {
-
-      document
-        .getElementById("vistaInicio")
-        .style.display = "none";
-
-      document
-        .getElementById("vistaNotas")
-        .style.display = "none";
-
-      document
-        .getElementById("vistaMiDia")
-        .style.display = "block";
-
-
-      const listaPrincipal =
-        document.getElementById(
-          "listaEventos"
-        );
-
-      const listaMiDia =
-        document.getElementById(
-          "listaMiDia"
-        );
-
-
-      listaMiDia.innerHTML = "";
-
-
-      Array.from(
-        listaPrincipal.querySelectorAll(
-          "li.tarea"
-        )
-      ).forEach(t => {
-
-        listaMiDia.appendChild(t);
-
-        t.style.display = "flex";
-
-      });
-
-
-      if (calendar) {
-
-        calendar.updateSize();
-
-      }
-
+  const botonEliminar = document.createElement("button");
+  botonEliminar.type = "button";
+  botonEliminar.className = "btnEliminar";
+  botonEliminar.textContent = "🗑";
+  botonEliminar.addEventListener("click", () => {
+    if (li.dataset.eventId && calendar) {
+      const ev = calendar.getEventById(li.dataset.eventId);
+      if (ev) ev.remove();
     }
-
-
-    function volverInicio() {
-
-      document
-        .getElementById("vistaMiDia")
-        .style.display = "none";
-
-      document
-        .getElementById("vistaNotas")
-        .style.display = "none";
-
-      document
-        .getElementById("vistaInicio")
-        .style.display = "block";
-
-
-      const listaPrincipal =
-        document.getElementById(
-          "listaEventos"
-        );
-
-      const listaMiDia =
-        document.getElementById(
-          "listaMiDia"
-        );
-
-
-      while (listaMiDia.firstChild) {
-
-        listaPrincipal.appendChild(
-          listaMiDia.firstChild
-        );
-
-      }
-
-
-      guardarEventosLocalStorage();
-
-      actualizarVistaInicio();
-
-
-      if (calendar) {
-
-        calendar.updateSize();
-
-      }
-
-    }
-
-
-    function actualizarVistaInicio() {
-
-      const tareas =
-        Array.from(
-          document.querySelectorAll(
-            "#listaEventos li.tarea"
-          )
-        );
-
-
-      tareas.forEach(t => {
-
-        t.style.display = "none";
-
-      });
-
-
-      const pendientes =
-        tareas.filter(
-          t =>
-            t.dataset.completada !==
-            "true"
-        );
-
-
-      const visibles =
-        pendientes.slice(-3);
-
-
-      visibles.forEach(t => {
-
-        t.style.display =
-          "flex";
-
-      });
-
-    }
-
-
-    /* ================= IDIOMAS ================= */
-
-    function cambiarIdioma(idioma) {
-
-      if (!calendar) return;
-
-
-      const titulo =
-        document.getElementById(
-          "titulo"
-        );
-
-      const bienvenida =
-        document.getElementById(
-          "bienvenida"
-        );
-
-      const evento =
-        document.getElementById(
-          "evento"
-        );
-
-      const btnAgregar =
-        document.getElementById(
-          "btnAgregar"
-        );
-
-
-      const traducciones = {
-
-        es: {
-
-          locale: "es",
-
-          bienvenida:
-            "BIENVENIDO A NUESTRA AGENDA DIGITAL",
-
-          placeholder:
-            "Escribe tu tarea pendiente",
-
-          boton:
-            "Agregar"
-
-        },
-
-        en: {
-
-          locale: "en",
-
-          bienvenida:
-            "WELCOME TO OUR DIGITAL AGENDA",
-
-          placeholder:
-            "Write your pending task",
-
-          boton:
-            "Add"
-
-        },
-
-        fr: {
-
-          locale: "fr",
-
-          bienvenida:
-            "BIENVENUE DANS NOTRE AGENDA NUMÉRIQUE",
-
-          placeholder:
-            "Écrivez votre tâche",
-
-          boton:
-            "Ajouter"
-
-        },
-
-        de: {
-
-          locale: "de",
-
-          bienvenida:
-            "WILLKOMMEN IN UNSEREM DIGITALEN KALENDER",
-
-          placeholder:
-            "Schreibe deine Aufgabe",
-
-          boton:
-            "Hinzufügen"
-
-        },
-
-        it: {
-
-          locale: "it",
-
-          bienvenida:
-            "BENVENUTO NELLA NOSTRA AGENDA DIGITALE",
-
-          placeholder:
-            "Scrivi la tua attività",
-
-          boton:
-            "Aggiungi"
-
-        },
-
-        pt: {
-
-          locale: "pt",
-
-          bienvenida:
-            "BEM-VINDO À NOSSA AGENDA DIGITAL",
-
-          placeholder:
-            "Escreva sua tarefa",
-
-          boton:
-            "Adicionar"
-
-        }
-
-      };
-
-
-      const t =
-        traducciones[idioma];
-
-      if (!t) return;
-
-
-      calendar.setOption(
-        "locale",
-        t.locale
-      );
-
-
-      document.documentElement.lang =
-        idioma;
-
-
-      titulo.textContent =
-        "PLANNEO";
-
-      bienvenida.textContent =
-        t.bienvenida;
-
-      evento.placeholder =
-        t.placeholder;
-
-      btnAgregar.textContent =
-        t.boton;
-
-    }
-
-
-    /* ================= NOTAS ================= */
-
-    let tipoNotaSeleccionado =
-      "idea";
-
-
-    function guardarNotasLocalStorage() {
-
-      const notas = [];
-
-      document
-        .querySelectorAll(
-          "#listaNotas li"
-        )
-        .forEach(li => {
-
-          notas.push({
-
-            titulo:
-              li.dataset.titulo ||
-              "Sin título",
-
-            contenido:
-              li.dataset.contenido ||
-              "",
-
-            tipo:
-              li.dataset.tipo ||
-              "idea",
-
-            fecha:
-              li.dataset.fecha ||
-              ""
-
-          });
-
-        });
-
-
-      localStorage.setItem(
-        STORAGE_NOTAS_KEY,
-        JSON.stringify(notas)
-      );
-
-
-      actualizarContadorNotas();
-
-    }
-
-
-    function cargarNotasLocalStorage() {
-
-      const raw =
-        localStorage.getItem(
-          STORAGE_NOTAS_KEY
-        );
-
-      if (!raw) return;
-
-
+    li.remove();
+    guardarEventosLocalStorage();
+    actualizarVistaInicio();
+  });
+
+  botones.appendChild(botonListo);
+  botones.appendChild(botonEliminar);
+  li.appendChild(texto);
+  li.appendChild(botones);
+
+  document.getElementById("listaEventos").appendChild(li);
+
+  if (!completada && fecha && calendar) {
+    const eventId = existingEventId || generarId();
+    if (!calendar.getEventById(eventId)) {
+      const fechaHora = hora ? `${fecha}T${hora}` : fecha;
       try {
-
-        const notas =
-          JSON.parse(raw);
-
-        if (!Array.isArray(notas)) return;
-
-
-        notas.forEach(nota => {
-
-          crearNota(
-            nota.titulo || "Sin título",
-            nota.contenido || "",
-            nota.tipo || "idea",
-            nota.fecha || null,
-            false
-          );
-
+        const ev = calendar.addEvent({
+          id: eventId,
+          title: titulo,
+          start: fechaHora
         });
-
-
-        actualizarContadorNotas();
-
+        li.dataset.eventId = ev.id;
       } catch (e) {
-
-        console.error(
-          "Error al cargar las notas:",
-          e
-        );
-
+        console.warn("Error creando evento:", e);
       }
-
+    } else {
+      li.dataset.eventId = eventId;
     }
-
-
-    function crearNota(
-      titulo,
-      textoNota,
-      tipo = "idea",
-      fecha = null,
-      guardar = true
-    ) {
-
-      const listaNotas =
-        document.getElementById(
-          "listaNotas"
-        );
-
-
-      const li =
-        document.createElement("li");
-
-
-      const fechaNota =
-        fecha ||
-        new Date().toLocaleDateString(
-          "es-CO",
-          {
-            day: "2-digit",
-            month: "short",
-            year: "numeric"
-          }
-        );
-
-
-      li.dataset.titulo =
-        titulo;
-
-      li.dataset.contenido =
-        textoNota;
-
-      li.dataset.tipo =
-        tipo;
-
-      li.dataset.fecha =
-        fechaNota;
-
-
-      li.className =
-        "nota-" + tipo;
-
-
-      const iconos = {
-
-        idea: "💡",
-
-        recordatorio: "🔔",
-
-        importante: "⭐"
-
-      };
-
-
-      const nombres = {
-
-        idea: "IDEA",
-
-        recordatorio:
-          "RECORDATORIO",
-
-        importante:
-          "IMPORTANTE"
-
-      };
-
-
-      /* Icono */
-
-      const icono =
-        document.createElement(
-          "div"
-        );
-
-      icono.className =
-        "iconoNota";
-
-      icono.textContent =
-        iconos[tipo] || "📝";
-
-
-      /* Título */
-
-      const tituloElemento =
-        document.createElement(
-          "div"
-        );
-
-      tituloElemento.className =
-        "tituloNotaGuardada";
-
-      tituloElemento.textContent =
-        titulo || "Sin título";
-
-
-      /* Contenido */
-
-      const contenido =
-        document.createElement(
-          "div"
-        );
-
-      contenido.className =
-        "contenidoNota";
-
-      contenido.textContent =
-        textoNota;
-
-
-      /* Pie */
-
-      const pie =
-        document.createElement(
-          "div"
-        );
-
-      pie.className =
-        "pieNota";
-
-
-      const etiqueta =
-        document.createElement(
-          "span"
-        );
-
-      etiqueta.className =
-        "etiquetaNota etiqueta-" +
-        tipo;
-
-      etiqueta.textContent =
-        (iconos[tipo] || "📝") +
-        " " +
-        (nombres[tipo] || "NOTA");
-
-
-      const fechaElemento =
-        document.createElement(
-          "span"
-        );
-
-      fechaElemento.textContent =
-        "📅 " + fechaNota;
-
-
-      pie.appendChild(
-        etiqueta
-      );
-
-      pie.appendChild(
-        fechaElemento
-      );
-
-
-      /* Botón eliminar */
-
-      const botonEliminar =
-        document.createElement(
-          "button"
-        );
-
-      botonEliminar.type =
-        "button";
-
-      botonEliminar.className =
-        "btnEliminarNota";
-
-      botonEliminar.textContent =
-        "🗑";
-
-      botonEliminar.title =
-        "Eliminar nota";
-
-
-      botonEliminar.addEventListener(
-        "click",
-        () => {
-
-          li.remove();
-
-          guardarNotasLocalStorage();
-
-        }
-      );
-
-
-      li.appendChild(icono);
-
-      li.appendChild(
-        tituloElemento
-      );
-
-      li.appendChild(
-        contenido
-      );
-
-      li.appendChild(pie);
-
-      li.appendChild(
-        botonEliminar
-      );
-
-
-      listaNotas.appendChild(li);
-
-
-      actualizarContadorNotas();
-
-
-      if (guardar) {
-
-        guardarNotasLocalStorage();
-
-      }
-
-    }
-
-
-    function agregarNota() {
-
-      const tituloInput =
-        document.getElementById(
-          "notaTitulo"
-        );
-
-      const textoInput =
-        document.getElementById(
-          "notaTexto"
-        );
-
-
-      const titulo =
-        tituloInput.value.trim();
-
-      const texto =
-        textoInput.value.trim();
-
-
-      if (!titulo) {
-
-        mostrarMensaje(
-          "📝 Escribe un título para la nota."
-        );
-
-        tituloInput.focus();
-
-        return;
-
-      }
-
-
-      if (!texto) {
-
-        mostrarMensaje(
-          "✏️ Escribe algo en la nota."
-        );
-
-        textoInput.focus();
-
-        return;
-
-      }
-
-
+  }
+
+  if (guardar) {
+    guardarEventosLocalStorage();
+    actualizarVistaInicio();
+  }
+}
+
+/* =====================================================
+   AGREGAR EVENTO
+===================================================== */
+function agregarEvento() {
+  const eventoInput = document.getElementById("evento");
+  const fechaInput = document.getElementById("fecha");
+  const horaInput = document.getElementById("hora");
+  const titulo = eventoInput.value.trim();
+  const fecha = fechaInput.value;
+  const hora = horaInput.value;
+
+  if (!titulo) {
+    mostrarMensaje(obtenerTraduccion("escribeTarea"));
+    eventoInput.focus();
+    return;
+  }
+  if (!fecha && hora) {
+    mostrarMensaje(obtenerTraduccion("fechaHora"));
+    return;
+  }
+
+  crearTareaEnDOM(titulo, fecha, hora, false, null, true);
+  eventoInput.value = "";
+  fechaInput.value = "";
+  horaInput.value = "";
+  eventoInput.focus();
+}
+
+/* =====================================================
+   MI DÍA (versión que mueve las tareas)
+===================================================== */
+function mostrarMiDia() {
+  document.getElementById("vistaInicio").style.display = "none";
+  document.getElementById("vistaNotas").style.display = "none";
+  document.getElementById("vistaMiDia").style.display = "block";
+
+  const listaPrincipal = document.getElementById("listaEventos");
+  const listaMiDia = document.getElementById("listaMiDia");
+  listaMiDia.innerHTML = "";
+
+  Array.from(listaPrincipal.querySelectorAll("li.tarea")).forEach(t => {
+    listaMiDia.appendChild(t);
+    t.style.display = "flex";
+  });
+
+  if (calendar) calendar.updateSize();
+}
+
+function volverInicio() {
+  document.getElementById("vistaMiDia").style.display = "none";
+  document.getElementById("vistaNotas").style.display = "none";
+  document.getElementById("vistaInicio").style.display = "block";
+
+  const listaPrincipal = document.getElementById("listaEventos");
+  const listaMiDia = document.getElementById("listaMiDia");
+
+  while (listaMiDia.firstChild) {
+    listaPrincipal.appendChild(listaMiDia.firstChild);
+  }
+
+  guardarEventosLocalStorage();
+  actualizarVistaInicio();
+  if (calendar) calendar.updateSize();
+}
+
+function actualizarVistaInicio() {
+  const tareas = Array.from(document.querySelectorAll("#listaEventos li.tarea"));
+  tareas.forEach(t => t.style.display = "none");
+
+  const pendientes = tareas.filter(t => t.dataset.completada !== "true");
+  const visibles = pendientes.slice(-3);
+  visibles.forEach(t => t.style.display = "flex");
+}
+
+/* =====================================================
+   NOTAS
+===================================================== */
+function guardarNotasLocalStorage() {
+  const notas = [];
+  document.querySelectorAll("#listaNotas li").forEach(li => {
+    notas.push({
+      titulo: li.dataset.titulo || "Sin título",
+      contenido: li.dataset.contenido || "",
+      tipo: li.dataset.tipo || "idea",
+      fecha: li.dataset.fecha || ""
+    });
+  });
+  localStorage.setItem(STORAGE_NOTAS_KEY, JSON.stringify(notas));
+  actualizarContadorNotas();
+}
+
+function cargarNotasLocalStorage() {
+  const raw = localStorage.getItem(STORAGE_NOTAS_KEY);
+  if (!raw) return;
+  try {
+    const notas = JSON.parse(raw);
+    if (!Array.isArray(notas)) return;
+    notas.forEach(nota => {
       crearNota(
-        titulo,
-        texto,
-        tipoNotaSeleccionado,
-        null,
-        true
+        nota.titulo || "Sin título",
+        nota.contenido || "",
+        nota.tipo || "idea",
+        nota.fecha || null,
+        false
       );
+    });
+    actualizarContadorNotas();
+  } catch (e) {
+    console.error("Error al cargar notas:", e);
+  }
+}
 
+function crearNota(titulo, textoNota, tipo = "idea", fecha = null, guardar = true) {
+  const listaNotas = document.getElementById("listaNotas");
+  const li = document.createElement("li");
 
-      tituloInput.value = "";
+  const fechaNota = fecha || new Date().toLocaleDateString(
+    idiomaActual === "en" ? "en-US" : idiomaActual + "-CO",
+    { day: "2-digit", month: "short", year: "numeric" }
+  );
 
-      textoInput.value = "";
+  li.dataset.titulo = titulo;
+  li.dataset.contenido = textoNota;
+  li.dataset.tipo = tipo;
+  li.dataset.fecha = fechaNota;
+  li.className = "nota-" + tipo;
 
-      tituloInput.focus();
+  const iconos = { idea: "💡", recordatorio: "🔔", importante: "⭐" };
 
+  const icono = document.createElement("div");
+  icono.className = "iconoNota";
+  icono.textContent = iconos[tipo] || "📝";
+
+  const tituloElemento = document.createElement("div");
+  tituloElemento.className = "tituloNotaGuardada";
+  tituloElemento.textContent = titulo || "Sin título";
+
+  const contenido = document.createElement("div");
+  contenido.className = "contenidoNota";
+  contenido.textContent = textoNota;
+
+  const pie = document.createElement("div");
+  pie.className = "pieNota";
+
+  const etiqueta = document.createElement("span");
+  etiqueta.className = "etiquetaNota etiqueta-" + tipo;
+  etiqueta.textContent = (iconos[tipo] || "📝") + " " + obtenerTraduccion(tipo).toUpperCase();
+
+  const fechaElemento = document.createElement("span");
+  fechaElemento.textContent = "📅 " + fechaNota;
+
+  pie.appendChild(etiqueta);
+  pie.appendChild(fechaElemento);
+
+  const botonEliminar = document.createElement("button");
+  botonEliminar.type = "button";
+  botonEliminar.className = "btnEliminarNota";
+  botonEliminar.textContent = "🗑";
+  botonEliminar.title = obtenerTraduccion("eliminarNota");
+  botonEliminar.addEventListener("click", () => {
+    li.remove();
+    guardarNotasLocalStorage();
+  });
+
+  li.appendChild(icono);
+  li.appendChild(tituloElemento);
+  li.appendChild(contenido);
+  li.appendChild(pie);
+  li.appendChild(botonEliminar);
+  listaNotas.appendChild(li);
+
+  actualizarContadorNotas();
+  if (guardar) guardarNotasLocalStorage();
+}
+
+function agregarNota() {
+  const tituloInput = document.getElementById("notaTitulo");
+  const textoInput = document.getElementById("notaTexto");
+  const titulo = tituloInput.value.trim();
+  const texto = textoInput.value.trim();
+
+  if (!titulo) {
+    mostrarMensaje(obtenerTraduccion("tituloNotaError"));
+    tituloInput.focus();
+    return;
+  }
+  if (!texto) {
+    mostrarMensaje(obtenerTraduccion("textoNotaError"));
+    textoInput.focus();
+    return;
+  }
+
+  crearNota(titulo, texto, tipoNotaSeleccionado, null, true);
+  tituloInput.value = "";
+  textoInput.value = "";
+  tituloInput.focus();
+}
+
+function actualizarContadorNotas() {
+  const contador = document.getElementById("contadorNotas");
+  if (!contador) return;
+  const cantidad = document.querySelectorAll("#listaNotas li").length;
+  if (cantidad === 1) {
+    contador.textContent = obtenerTraduccion("unaNota");
+  } else {
+    contador.textContent = obtenerTraduccion("muchasNotas").replace("{n}", cantidad);
+  }
+}
+
+function mostrarNotas() {
+  document.getElementById("vistaInicio").style.display = "none";
+  document.getElementById("vistaMiDia").style.display = "none";
+  document.getElementById("vistaNotas").style.display = "block";
+  if (calendar) calendar.updateSize();
+}
+
+function volverDesdeNotas() {
+  document.getElementById("vistaNotas").style.display = "none";
+  document.getElementById("vistaMiDia").style.display = "none";
+  document.getElementById("vistaInicio").style.display = "block";
+  actualizarVistaInicio();
+  if (calendar) calendar.updateSize();
+}
+
+/* =====================================================
+   INICIO
+===================================================== */
+document.addEventListener("DOMContentLoaded", () => {
+  const calendarEl = document.getElementById("calendario");
+  calendar = new FullCalendar.Calendar(calendarEl, {
+    initialView: "dayGridMonth",
+    locale: idiomaActual,
+    selectable: true,
+    height: "auto"
+  });
+  calendar.render();
+
+  cargarEventosLocalStorage();
+  cargarNotasLocalStorage();
+  actualizarVistaInicio();
+  cambiarIdioma(idiomaActual);
+
+  document.querySelectorAll(".tipoNota").forEach(boton => {
+    boton.addEventListener("click", () => {
+      document.querySelectorAll(".tipoNota").forEach(b => b.classList.remove("activo"));
+      boton.classList.add("activo");
+      tipoNotaSeleccionado = boton.dataset.tipo;
+    });
+  });
+
+  document.getElementById("btnAgregar").addEventListener("click", agregarEvento);
+  document.getElementById("evento").addEventListener("keydown", e => {
+    if (e.key === "Enter") {
+      e.preventDefault();
+      agregarEvento();
     }
+  });
 
+  const linkConfig = document.getElementById("linkConfig");
+  const submenu = document.getElementById("submenuIdiomas");
 
-    function actualizarContadorNotas() {
+  linkConfig.addEventListener("click", e => {
+    e.preventDefault();
+    submenu.classList.toggle("show");
+  });
 
-      const contador =
-        document.getElementById(
-          "contadorNotas"
-        );
-
-      if (!contador) return;
-
-
-      const cantidad =
-        document.querySelectorAll(
-          "#listaNotas li"
-        ).length;
-
-
-      contador.textContent =
-        cantidad === 1
-          ? "1 nota"
-          : cantidad + " notas";
-
+  document.addEventListener("click", e => {
+    if (!linkConfig.contains(e.target) && !submenu.contains(e.target)) {
+      submenu.classList.remove("show");
     }
+  });
 
+  submenu.querySelectorAll("a[data-lang]").forEach(a => {
+    a.addEventListener("click", e => {
+      e.preventDefault();
+      cambiarIdioma(a.dataset.lang);
+      submenu.classList.remove("show");
+    });
+  });
 
-    /* ================= VISTA NOTAS ================= */
+  document.getElementById("linkMiDia").addEventListener("click", e => {
+    e.preventDefault();
+    mostrarMiDia();
+  });
 
-    function mostrarNotas() {
+  document.getElementById("btnVolver").addEventListener("click", volverInicio);
 
-      document
-        .getElementById("vistaInicio")
-        .style.display = "none";
+  document.getElementById("sobre").addEventListener("click", e => {
+    e.preventDefault();
+    mostrarNotas();
+  });
 
-      document
-        .getElementById("vistaMiDia")
-        .style.display = "none";
+  document.getElementById("btnGuardarNota").addEventListener("click", agregarNota);
 
-      document
-        .getElementById("vistaNotas")
-        .style.display = "block";
-
-
-      if (calendar) {
-
-        calendar.updateSize();
-
-      }
-
+  document.getElementById("notaTexto").addEventListener("keydown", e => {
+    if (e.ctrlKey && e.key === "Enter") {
+      e.preventDefault();
+      agregarNota();
     }
-
-
-    function volverDesdeNotas() {
-
-      document
-        .getElementById("vistaNotas")
-        .style.display = "none";
-
-      document
-        .getElementById("vistaMiDia")
-        .style.display = "none";
-
-      document
-        .getElementById("vistaInicio")
-        .style.display = "block";
-
-
-      actualizarVistaInicio();
-
-
-      if (calendar) {
-
-        calendar.updateSize();
-
-      }
-
-    }
-
-
-    /* ================= INICIO ================= */
-
-    document.addEventListener(
-      "DOMContentLoaded",
-      () => {
-
-        /* Calendario */
-
-        const calendarEl =
-          document.getElementById(
-            "calendario"
-          );
-
-
-        calendar =
-          new FullCalendar.Calendar(
-            calendarEl,
-            {
-
-              initialView:
-                "dayGridMonth",
-
-              locale:
-                "es",
-
-              selectable:
-                true,
-
-              height:
-                "auto"
-
-            }
-          );
-
-
-        calendar.render();
-
-
-        /* Cargar tareas */
-
-        cargarEventosLocalStorage();
-
-        actualizarVistaInicio();
-
-
-        /* Tipos de notas */
-
-        document
-          .querySelectorAll(
-            ".tipoNota"
-          )
-          .forEach(boton => {
-
-            boton.addEventListener(
-              "click",
-              () => {
-
-                document
-                  .querySelectorAll(
-                    ".tipoNota"
-                  )
-                  .forEach(b =>
-                    b.classList.remove(
-                      "activo"
-                    )
-                  );
-
-
-                boton.classList.add(
-                  "activo"
-                );
-
-
-                tipoNotaSeleccionado =
-                  boton.dataset.tipo;
-
-              }
-            );
-
-          });
-
-
-        /* Cargar notas */
-
-        cargarNotasLocalStorage();
-
-
-        /* Agregar tarea */
-
-        document
-          .getElementById(
-            "btnAgregar"
-          )
-          .addEventListener(
-            "click",
-            agregarEvento
-          );
-
-
-        /* Enter en tarea */
-
-        document
-          .getElementById(
-            "evento"
-          )
-          .addEventListener(
-            "keydown",
-            e => {
-
-              if (e.key === "Enter") {
-
-                e.preventDefault();
-
-                agregarEvento();
-
-              }
-
-            }
-          );
-
-
-        /* Configuración */
-
-        const linkConfig =
-          document.getElementById(
-            "linkConfig"
-          );
-
-
-        const submenu =
-          document.getElementById(
-            "submenuIdiomas"
-          );
-
-
-        linkConfig.addEventListener(
-          "click",
-          e => {
-
-            e.preventDefault();
-
-            submenu.classList.toggle(
-              "show"
-            );
-
-          }
-        );
-
-
-        document.addEventListener(
-          "click",
-          e => {
-
-            if (
-              !linkConfig.contains(
-                e.target
-              ) &&
-              !submenu.contains(
-                e.target
-              )
-            ) {
-
-              submenu.classList.remove(
-                "show"
-              );
-
-            }
-
-          }
-        );
-
-
-        /* Idiomas */
-
-        submenu
-          .querySelectorAll(
-            "a[data-lang]"
-          )
-          .forEach(a => {
-
-            a.addEventListener(
-              "click",
-              e => {
-
-                e.preventDefault();
-
-                cambiarIdioma(
-                  a.dataset.lang
-                );
-
-                submenu.classList.remove(
-                  "show"
-                );
-
-              }
-            );
-
-          });
-
-
-        /* Mi Día */
-
-        document
-          .getElementById(
-            "linkMiDia"
-          )
-          .addEventListener(
-            "click",
-            e => {
-
-              e.preventDefault();
-
-              mostrarMiDia();
-
-            }
-          );
-
-
-        document
-          .getElementById(
-            "btnVolver"
-          )
-          .addEventListener(
-            "click",
-            volverInicio
-          );
-
-
-        /* Notas */
-
-        document
-          .getElementById(
-            "sobre"
-          )
-          .addEventListener(
-            "click",
-            e => {
-
-              e.preventDefault();
-
-              mostrarNotas();
-
-            }
-          );
-
-
-        document
-          .getElementById(
-            "btnGuardarNota"
-          )
-          .addEventListener(
-            "click",
-            agregarNota
-          );
-
-
-        /* Ctrl + Enter para guardar nota */
-
-        document
-          .getElementById(
-            "notaTexto"
-          )
-          .addEventListener(
-            "keydown",
-            e => {
-
-              if (
-                e.ctrlKey &&
-                e.key === "Enter"
-              ) {
-
-                e.preventDefault();
-
-                agregarNota();
-
-              }
-
-            }
-          );
-
-
-        document
-          .getElementById(
-            "btnVolverNotas"
-          )
-          .addEventListener(
-            "click",
-            volverDesdeNotas
-          );
-
-
-        /* Calendario */
-
-        document
-          .getElementById(
-            "linkCalendario"
-          )
-          .addEventListener(
-            "click",
-            e => {
-
-              e.preventDefault();
-
-              document
-                .getElementById(
-                  "vistaNotas"
-                )
-                .style.display = "none";
-
-              document
-                .getElementById(
-                  "vistaMiDia"
-                )
-                .style.display = "none";
-
-              document
-                .getElementById(
-                  "vistaInicio"
-                )
-                .style.display = "block";
-
-              actualizarVistaInicio();
-
-              if (calendar) {
-
-                calendar.updateSize();
-
-              }
-
-              document
-                .getElementById(
-                  "calendario"
-                )
-                .scrollIntoView({
-                  behavior: "smooth"
-                });
-
-            }
-          );
-
-      }
-    );
-    window.addEventListener(
-      "beforeunload",
-      () => {
-
-        guardarEventosLocalStorage();
-
-        guardarNotasLocalStorage();
-
-      }
-    );
-
-  </script>
-
+  });
+
+  document.getElementById("btnVolverNotas").addEventListener("click", volverDesdeNotas);
+
+  document.getElementById("linkCalendario").addEventListener("click", e => {
+    e.preventDefault();
+    document.getElementById("vistaNotas").style.display = "none";
+    document.getElementById("vistaMiDia").style.display = "none";
+    document.getElementById("vistaInicio").style.display = "block";
+    actualizarVistaInicio();
+    if (calendar) calendar.updateSize();
+    document.getElementById("calendario").scrollIntoView({ behavior: "smooth" });
+  });
+});
+
+window.addEventListener("beforeunload", () => {
+  guardarEventosLocalStorage();
+  guardarNotasLocalStorage();
+});
+</script>
 </body>
 </html>
