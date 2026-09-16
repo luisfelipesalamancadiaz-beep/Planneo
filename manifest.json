@@ -1,0 +1,10 @@
+{
+  "name": "Planneo - Agenda Digital",
+  "short_name": "Planneo",
+  "description": "Agenda digital para organizar tareas, notas y eventos.",
+  "start_url": "./",
+  "display": "standalone",
+  "background_color": "#fff8dc",
+  "theme_color": "#6c8ebf",
+  "lang": "es"
+}
