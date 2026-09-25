@@ -2,20 +2,6 @@
 <html lang="es">
 <head>
   <style>
-#pantallaInicio {
-    position: fixed;
-    inset: 0;
-    background: #fff8dc;
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
-    z-index: 99999;
-    overflow: hidden;
-    animation: desaparecerInicio 0.9s ease forwards;
-    animation-delay: 3.8s;
-}
-
 /* ===== ANIMACIÓN DE INICIO PLANNEO ===== */
 
 #pantallaInicio {
@@ -216,6 +202,12 @@
         visibility: hidden;
     }
 }
+
+/* Fallback: la app nunca queda bloqueada por la animación de inicio. */
+#pantallaInicio.ocultarInicio {
+    animation: desaparecerInicio 0.5s ease forwards !important;
+}
+
 </style>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -787,9 +779,37 @@
     }
 
     @media (prefers-reduced-motion: reduce) {
-      * { animation-duration: 0.01ms !important; transition-duration: 0.01ms !important; }
-    }
+  * {
+    transition-duration: 0.01ms !important;
+  }
 
+  /* La animación de inicio de Planneo siempre debe funcionar */
+  #pantallaInicio {
+    animation-duration: 0.9s !important;
+    animation-delay: 4.2s !important;
+  }
+
+  #pantallaInicio .logoP {
+    animation-duration: 0.8s !important;
+    animation-delay: 0s !important;
+  }
+
+  #pantallaInicio .logoNombre span {
+    animation-duration: 0.3s !important;
+  }
+
+  #pantallaInicio .subtituloPlanneo {
+    animation-duration: 0.7s !important;
+  }
+
+  #pantallaInicio .iconoCalendario {
+    animation-duration: 0.7s !important;
+  }
+
+  #pantallaInicio .brilloPlanneo {
+    animation-duration: 1s !important;
+  }
+}
     @media (max-width: 700px) {
       nav { padding: 12px 15px; align-items: flex-start; flex-direction: column; }
       .menu { width: 100%; gap: 4px; }
@@ -2916,7 +2936,16 @@
   /* ---------------------------------------------------------------
      16. Arranque
   ----------------------------------------------------------------*/
+  function asegurarCierrePantallaInicio() {
+    const pantalla = document.getElementById("pantallaInicio");
+    if (!pantalla) return;
+    const cerrar = () => pantalla.classList.add("ocultarInicio");
+    // La animación normal dura ~5.1 s; este respaldo evita que Android la deje fija.
+    setTimeout(cerrar, 6500);
+  }
+
   function iniciar() {
+    asegurarCierrePantallaInicio();
     cargarConfig();
     aplicarTema();
     tareas = cargarTareas();
