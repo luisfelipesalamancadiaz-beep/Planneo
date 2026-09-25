@@ -15,8 +15,7 @@
     z-index: 99999;
     overflow: hidden;
     animation: desaparecerInicio 0.9s ease forwards;
-    animation-delay: 4.2s;
-}
+    animation-delay: 7s;}
 
 /* Contenedor de la P + Planneo */
 .logoAnimacion {
@@ -2941,7 +2940,7 @@
     if (!pantalla) return;
     const cerrar = () => pantalla.classList.add("ocultarInicio");
     // La animación normal dura ~5.1 s; este respaldo evita que Android la deje fija.
-    setTimeout(cerrar, 6500);
+    setTimeout(cerrar, 9000);
   }
 
   function iniciar() {
