@@ -14,108 +14,110 @@
     align-items: center;
     z-index: 99999;
     overflow: hidden;
-    animation: desaparecerInicio 0.9s ease forwards;
-    animation-delay: 7s;}
 
-/* Contenedor de la P + Planneo */
+    /* La intro completa dura aproximadamente 2.5 segundos */
+    animation: desaparecerInicio 0.45s ease forwards;
+    animation-delay: 2.15s;
+}
+
+/* Brillo muy sutil detrás del logo */
+.brilloPlanneo {
+    position: absolute;
+    width: 230px;
+    height: 230px;
+    border-radius: 50%;
+    background: rgba(255, 209, 102, 0.16);
+    filter: blur(45px);
+    opacity: 0;
+    animation: brilloSuave 1.2s ease forwards;
+    animation-delay: 0.9s;
+    pointer-events: none;
+}
+
+/* P + Planneo en una sola línea */
 .logoAnimacion {
     display: flex;
     align-items: center;
     justify-content: center;
     gap: 0;
+    position: relative;
+    z-index: 2;
 }
 
 /* P inicial */
-
 .logoP {
-    font-size: 90px;
+    font-size: 86px;
     font-weight: 900;
     color: #6c8ebf;
     opacity: 0;
-    transform: scale(0.5);
-    animation: aparecerP 0.8s cubic-bezier(.17,.67,.3,1.3) forwards;
+    transform: scale(0.65);
+    animation: aparecerP 0.55s cubic-bezier(.17,.67,.3,1.25) forwards;
 }
 
-/* Nombre Planneo */
-
+/* Palabra Planneo */
 .logoNombre {
     display: flex;
     margin: 0;
-    font-size: 55px;
+    font-size: 54px;
     font-weight: 800;
     color: #6c8ebf;
-    letter-spacing: 2px;
+    letter-spacing: 1px;
 }
 
-/* Letras que salen desde la P hacia la derecha */
-
+/* Cada letra sale desde la P hacia la derecha */
 .logoNombre span {
     opacity: 0;
-    transform: translateX(-18px);
-    animation: aparecerLetra 0.3s ease forwards;
+    transform: translateX(-14px);
+    animation: aparecerLetra 0.22s ease-out forwards;
 }
 
-/* Retraso de cada letra */
-
 .logoNombre span:nth-child(1) {
-    animation-delay: 0.85s;
+    animation-delay: 0.38s;
 }
 
 .logoNombre span:nth-child(2) {
-    animation-delay: 1.02s;
+    animation-delay: 0.47s;
 }
 
 .logoNombre span:nth-child(3) {
-    animation-delay: 1.19s;
+    animation-delay: 0.56s;
 }
 
 .logoNombre span:nth-child(4) {
-    animation-delay: 1.36s;
+    animation-delay: 0.65s;
 }
 
 .logoNombre span:nth-child(5) {
-    animation-delay: 1.53s;
+    animation-delay: 0.74s;
 }
 
 .logoNombre span:nth-child(6) {
-    animation-delay: 1.70s;
+    animation-delay: 0.83s;
 }
 
 /* Eslogan */
-
 .subtituloPlanneo {
-    margin-top: 12px;
-    font-size: 18px;
+    margin-top: 10px;
+    font-size: 17px;
     color: #555;
     opacity: 0;
-    transform: translateY(10px);
-    animation: aparecerSubtitulo 0.7s ease forwards;
-    animation-delay: 2.15s;
+    transform: translateY(8px);
+    animation: aparecerSubtitulo 0.45s ease-out forwards;
+    animation-delay: 1.05s;
+    position: relative;
+    z-index: 2;
 }
 
-/* Calendario */
-
+/* Icono de calendario */
 .iconoCalendario {
-    margin-top: 18px;
-    font-size: 28px;
+    margin-top: 12px;
+    font-size: 24px;
     opacity: 0;
-    transform: translateY(10px) scale(0.8);
-    animation: aparecerCalendario 0.7s ease forwards;
-    animation-delay: 2.45s;
-}
-
-/* Brillo */
-
-.brilloPlanneo {
-    position: absolute;
-    width: 180px;
-    height: 180px;
-    border-radius: 50%;
-    background: rgba(255, 209, 102, 0.18);
-    filter: blur(35px);
-    opacity: 0;
-    animation: brillo 1s ease forwards;
-    animation-delay: 2.5s;
+    transform: translateY(7px) scale(0.85);
+    animation: aparecerCalendario 0.4s ease-out forwards;
+    animation-delay: 1.25s;
+    position: relative;
+    z-index: 2;
 }
 
 /* ===== KEYFRAMES ===== */
@@ -123,12 +125,12 @@
 @keyframes aparecerP {
     0% {
         opacity: 0;
-        transform: scale(0.5);
+        transform: scale(0.65);
     }
 
     70% {
         opacity: 1;
-        transform: scale(1.08);
+        transform: scale(1.06);
     }
 
     100% {
@@ -140,7 +142,7 @@
 @keyframes aparecerLetra {
     from {
         opacity: 0;
-        transform: translateX(-18px);
+        transform: translateX(-14px);
     }
 
     to {
@@ -152,7 +154,7 @@
 @keyframes aparecerSubtitulo {
     from {
         opacity: 0;
-        transform: translateY(10px);
+        transform: translateY(8px);
     }
 
     to {
@@ -164,7 +166,7 @@
 @keyframes aparecerCalendario {
     from {
         opacity: 0;
-        transform: translateY(10px) scale(0.8);
+        transform: translateY(7px) scale(0.85);
     }
 
     to {
@@ -173,20 +175,20 @@
     }
 }
 
-@keyframes brillo {
+@keyframes brilloSuave {
     0% {
         opacity: 0;
-        transform: scale(0.5);
+        transform: scale(0.65);
     }
 
     50% {
-        opacity: 1;
+        opacity: 0.8;
         transform: scale(1);
     }
 
     100% {
-        opacity: 0.5;
-        transform: scale(1.2);
+        opacity: 0.35;
+        transform: scale(1.15);
     }
 }
 
@@ -202,9 +204,9 @@
     }
 }
 
-/* Fallback: la app nunca queda bloqueada por la animación de inicio. */
+/* Si JavaScript necesita cerrar la pantalla */
 #pantallaInicio.ocultarInicio {
-    animation: desaparecerInicio 0.5s ease forwards !important;
+    animation: desaparecerInicio 0.4s ease forwards !important;
 }
 
 </style>
@@ -2935,13 +2937,17 @@
   /* ---------------------------------------------------------------
      16. Arranque
   ----------------------------------------------------------------*/
-  function asegurarCierrePantallaInicio() {
+ function asegurarCierrePantallaInicio() {
     const pantalla = document.getElementById("pantallaInicio");
     if (!pantalla) return;
-    const cerrar = () => pantalla.classList.add("ocultarInicio");
-    // La animación normal dura ~5.1 s; este respaldo evita que Android la deje fija.
-    setTimeout(cerrar, 9000);
-  }
+
+    const cerrar = () => {
+        pantalla.classList.add("ocultarInicio");
+    };
+
+    // Seguridad: la intro nunca puede quedarse bloqueada.
+    setTimeout(cerrar, 3000);
+}
 
   function iniciar() {
     asegurarCierrePantallaInicio();
