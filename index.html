@@ -15,122 +15,143 @@
     z-index: 99999;
     overflow: hidden;
 
-    /* La intro completa dura aproximadamente 2.5 segundos */
-    animation: desaparecerInicio 0.45s ease forwards;
-    animation-delay: 2.15s;
+    animation: salirIntro 0.45s ease forwards;
+    animation-delay: 2.35s;
 }
 
 /* Brillo muy sutil detrás del logo */
 .brilloPlanneo {
     position: absolute;
-    width: 230px;
-    height: 230px;
+    width: 220px;
+    height: 220px;
     border-radius: 50%;
-    background: rgba(255, 209, 102, 0.16);
-    filter: blur(45px);
+
+    background: rgba(255, 209, 102, 0.18);
+    filter: blur(55px);
+
     opacity: 0;
-    animation: brilloSuave 1.2s ease forwards;
-    animation-delay: 0.9s;
+    transform: scale(0.7);
+
+    animation: brilloIntro 1.5s ease forwards;
+    animation-delay: 0.65s;
+
     pointer-events: none;
 }
 
-/* P + Planneo en una sola línea */
+/* LOGO COMPLETO */
 .logoAnimacion {
     display: flex;
     align-items: center;
     justify-content: center;
-    gap: 0;
     position: relative;
     z-index: 2;
+
+    gap: 0;
 }
 
-/* P inicial */
+/* P */
 .logoP {
-    font-size: 86px;
+    font-size: 88px;
     font-weight: 900;
     color: #6c8ebf;
+
     opacity: 0;
-    transform: scale(0.65);
-    animation: aparecerP 0.55s cubic-bezier(.17,.67,.3,1.25) forwards;
+    transform: scale(0.55);
+
+    animation: aparecerP 0.55s cubic-bezier(.17,.67,.3,1.3) forwards;
 }
 
-/* Palabra Planneo */
+/* "lanneo" */
 .logoNombre {
     display: flex;
+
     margin: 0;
     font-size: 54px;
     font-weight: 800;
+
     color: #6c8ebf;
     letter-spacing: 1px;
 }
 
-/* Cada letra sale desde la P hacia la derecha */
+/* Letras */
 .logoNombre span {
     opacity: 0;
-    transform: translateX(-14px);
-    animation: aparecerLetra 0.22s ease-out forwards;
+    transform: translateX(-18px);
+
+    animation: aparecerLetras 0.24s cubic-bezier(.2,.8,.3,1) forwards;
 }
 
+/* Cada letra sale rápidamente desde la P */
 .logoNombre span:nth-child(1) {
-    animation-delay: 0.38s;
+    animation-delay: 0.35s;
 }
 
 .logoNombre span:nth-child(2) {
-    animation-delay: 0.47s;
+    animation-delay: 0.43s;
 }
 
 .logoNombre span:nth-child(3) {
-    animation-delay: 0.56s;
+    animation-delay: 0.51s;
 }
 
 .logoNombre span:nth-child(4) {
-    animation-delay: 0.65s;
+    animation-delay: 0.59s;
 }
 
 .logoNombre span:nth-child(5) {
-    animation-delay: 0.74s;
+    animation-delay: 0.67s;
 }
 
 .logoNombre span:nth-child(6) {
-    animation-delay: 0.83s;
+    animation-delay: 0.75s;
 }
 
-/* Eslogan */
+/* SUBTÍTULO */
 .subtituloPlanneo {
-    margin-top: 10px;
+    margin-top: 9px;
+
     font-size: 17px;
     color: #555;
+
     opacity: 0;
     transform: translateY(8px);
+
     animation: aparecerSubtitulo 0.45s ease-out forwards;
-    animation-delay: 1.05s;
+    animation-delay: 1.02s;
+
     position: relative;
     z-index: 2;
 }
 
-/* Icono de calendario */
+/* CALENDARIO */
 .iconoCalendario {
-    margin-top: 12px;
-    font-size: 24px;
+    margin-top: 11px;
+
+    font-size: 23px;
+
     opacity: 0;
-    transform: translateY(7px) scale(0.85);
+    transform: translateY(7px) scale(0.8);
+
     animation: aparecerCalendario 0.4s ease-out forwards;
-    animation-delay: 1.25s;
+    animation-delay: 1.22s;
+
     position: relative;
     z-index: 2;
 }
+
 
 /* ===== KEYFRAMES ===== */
 
 @keyframes aparecerP {
+
     0% {
         opacity: 0;
-        transform: scale(0.65);
+        transform: scale(0.55);
     }
 
     70% {
         opacity: 1;
-        transform: scale(1.06);
+        transform: scale(1.07);
     }
 
     100% {
@@ -139,10 +160,12 @@
     }
 }
 
-@keyframes aparecerLetra {
+
+@keyframes aparecerLetras {
+
     from {
         opacity: 0;
-        transform: translateX(-14px);
+        transform: translateX(-18px);
     }
 
     to {
@@ -151,7 +174,9 @@
     }
 }
 
+
 @keyframes aparecerSubtitulo {
+
     from {
         opacity: 0;
         transform: translateY(8px);
@@ -163,10 +188,12 @@
     }
 }
 
+
 @keyframes aparecerCalendario {
+
     from {
         opacity: 0;
-        transform: translateY(7px) scale(0.85);
+        transform: translateY(7px) scale(0.8);
     }
 
     to {
@@ -175,24 +202,28 @@
     }
 }
 
-@keyframes brilloSuave {
+
+@keyframes brilloIntro {
+
     0% {
         opacity: 0;
-        transform: scale(0.65);
+        transform: scale(0.7);
     }
 
-    50% {
-        opacity: 0.8;
+    45% {
+        opacity: 0.75;
         transform: scale(1);
     }
 
     100% {
-        opacity: 0.35;
+        opacity: 0.25;
         transform: scale(1.15);
     }
 }
 
-@keyframes desaparecerInicio {
+
+@keyframes salirIntro {
+
     from {
         opacity: 1;
         visibility: visible;
@@ -204,9 +235,10 @@
     }
 }
 
-/* Si JavaScript necesita cerrar la pantalla */
+
+/* Seguridad */
 #pantallaInicio.ocultarInicio {
-    animation: desaparecerInicio 0.4s ease forwards !important;
+    animation: salirIntro 0.4s ease forwards !important;
 }
 
 </style>
@@ -345,6 +377,73 @@
     .menu button.navBtn[aria-expanded="true"] {
       background: rgba(255, 255, 255, 0.2);
     }
+
+    .busquedaGlobal {
+      position: relative;
+      flex: 1;
+      max-width: 360px;
+      min-width: 180px;
+      z-index: 30;
+    }
+
+    #buscarGlobal {
+      width: 100%;
+      padding: 9px 14px 9px 38px;
+      border: 1px solid rgba(255,255,255,0.35);
+      border-radius: 999px;
+      background: rgba(255,255,255,0.16);
+      color: #fff;
+      outline: none;
+      font-size: 14px;
+    }
+
+    #buscarGlobal::placeholder { color: rgba(255,255,255,0.82); }
+    #buscarGlobal:focus { background: rgba(255,255,255,0.24); border-color: #fff; }
+
+    .iconoBusquedaGlobal {
+      position: absolute;
+      left: 13px;
+      top: 50%;
+      transform: translateY(-50%);
+      pointer-events: none;
+    }
+
+    .resultadosBusqueda {
+      display: none;
+      position: absolute;
+      top: calc(100% + 8px);
+      left: 0;
+      right: 0;
+      background: var(--surface);
+      color: var(--text);
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      box-shadow: var(--shadow);
+      max-height: 420px;
+      overflow-y: auto;
+      padding: 7px;
+    }
+
+    .resultadosBusqueda.activo { display: block; }
+
+    .resultadoBusqueda {
+      width: 100%;
+      display: block;
+      text-align: left;
+      border: none;
+      background: transparent;
+      color: var(--text);
+      padding: 10px 11px;
+      border-radius: 10px;
+      cursor: pointer;
+    }
+
+    .resultadoBusqueda:hover, .resultadoBusqueda:focus-visible { background: var(--bg-soft); }
+    .resultadoTipo { font-size: 11px; color: var(--primary-text); font-weight: 700; margin-bottom: 2px; }
+    .resultadoTitulo { font-weight: 700; font-size: 14px; overflow-wrap: anywhere; }
+    .resultadoDetalle { font-size: 12px; color: var(--muted); margin-top: 2px; overflow-wrap: anywhere; }
+    .resultadoVacio { padding: 14px 11px; color: var(--muted); font-size: 14px; text-align: center; }
+
 
     .submenu {
       display: none;
@@ -510,6 +609,87 @@
     .configBoton.secundario:hover { background: var(--border); }
     .configBoton.peligro { background: var(--danger); }
     .configBoton.peligro:hover { background: var(--danger-dark); }
+
+
+    /* --- Nueva experiencia para crear tareas --- */
+    .formularioTareaNuevo {
+      max-width: 760px;
+      margin-left: auto;
+      margin-right: auto;
+      padding: 24px;
+      border: 1px solid var(--border);
+      position: relative;
+      overflow: hidden;
+    }
+    .formularioTareaNuevo::before {
+      content: "";
+      position: absolute;
+      top: 0; left: 0; right: 0;
+      height: 4px;
+      background: linear-gradient(90deg, var(--primary), var(--warning));
+    }
+    .tareaFormEncabezado {
+      display: flex; justify-content: space-between; align-items: flex-start;
+      gap: 18px; margin-bottom: 20px;
+    }
+    .tareaFormKicker {
+      display: inline-block; font-size: 10px; font-weight: 800; letter-spacing: .16em;
+      color: var(--primary); margin-bottom: 5px;
+    }
+    .tareaFormEncabezado h2 { margin: 0 0 5px !important; font-size: 24px !important; }
+    .tareaFormEncabezado p { margin: 0; color: var(--muted); font-size: 13px; }
+    .tareaFormIcono {
+      width: 44px; height: 44px; border-radius: 14px; display: grid; place-items: center;
+      background: var(--bg-soft); border: 1px solid var(--border); color: var(--primary);
+      font-size: 20px; flex: none;
+    }
+    .grupoTituloTarea { margin-bottom: 16px; }
+    .grupoTituloTarea input {
+      min-height: 54px; padding: 14px 16px !important; border-radius: 14px !important;
+      font-size: 16px !important; box-shadow: 0 3px 12px rgba(0,0,0,.03);
+    }
+    .agendaRapida {
+      display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 12px;
+    }
+    .agendaCampo {
+      display: flex; align-items: center; gap: 10px; padding: 11px 13px;
+      border: 1px solid var(--border); background: var(--bg-soft); border-radius: 14px;
+      transition: border-color .18s, transform .18s, background .18s;
+    }
+    .agendaCampo:focus-within { border-color: var(--primary); background: var(--surface); transform: translateY(-1px); }
+    .agendaIcono {
+      width: 34px; height: 34px; border-radius: 10px; display: grid; place-items: center;
+      background: var(--surface); border: 1px solid var(--border); flex: none;
+    }
+    .agendaCampo label { display: block; font-size: 11px; font-weight: 700; color: var(--muted); margin-bottom: 1px; }
+    .agendaCampo input {
+      width: 100%; border: 0; padding: 0; background: transparent; color: var(--text); outline: none;
+      font-size: 14px; min-width: 0;
+    }
+    .btnMasOpciones {
+      width: 100%; border: 1px dashed var(--border); background: transparent; color: var(--muted);
+      border-radius: 12px; padding: 10px 12px; cursor: pointer; font-size: 13px;
+      transition: .18s ease;
+    }
+    .btnMasOpciones:hover, .btnMasOpciones[aria-expanded="true"] {
+      color: var(--primary-text); border-color: var(--primary); background: var(--bg-soft);
+    }
+    .btnMasOpciones span:first-child { font-size: 16px; margin-right: 3px; }
+    .opcionesAvanzadas {
+      margin-top: 12px; padding: 14px; border: 1px solid var(--border);
+      background: var(--bg-soft); border-radius: 14px; animation: aparecerOpciones .18s ease;
+    }
+    .opcionesAvanzadas .grupoInput { margin-bottom: 10px; }
+    .opcionesAvanzadas .grupoInput:last-child { margin-bottom: 0; }
+    @keyframes aparecerOpciones { from { opacity: 0; transform: translateY(-4px); } to { opacity: 1; transform: translateY(0); } }
+    .accionesForm { margin-top: 16px; }
+    #btnAgregar { border-radius: 13px !important; padding: 14px !important; }
+    @media (max-width: 620px) {
+      .formularioTareaNuevo { padding: 18px; }
+      .tareaFormEncabezado h2 { font-size: 21px !important; }
+      .agendaRapida { grid-template-columns: 1fr; }
+      .filaDoble { grid-template-columns: 1fr; }
+    }
 
     .listaCabecera {
       display: flex;
@@ -813,6 +993,8 @@
 }
     @media (max-width: 700px) {
       nav { padding: 12px 15px; align-items: flex-start; flex-direction: column; }
+      .busquedaGlobal { width: 100%; max-width: none; }
+      .resultadosBusqueda { position: fixed; left: 10px; right: 10px; top: 104px; max-height: 55vh; }
       .menu { width: 100%; gap: 4px; }
       .menu button.navBtn { padding: 8px 9px; font-size: 14px; }
       .submenu { position: fixed; right: 10px; left: 10px; width: auto; top: 108px; }
@@ -825,7 +1007,40 @@
       .fc .fc-toolbar-title { font-size: 19px; }
       #avisos { right: 10px; left: 10px; bottom: 10px; width: auto; }
     }
-  </style>
+  
+    /* Estadísticas */
+    .estadisticasPanel { max-width: 900px; margin-left: auto; margin-right: auto; }
+    .estadisticasEncabezado { display:flex; align-items:center; justify-content:space-between; gap:18px; margin-bottom:20px; }
+    .estadisticasEncabezado h1 { margin-bottom:6px; }
+    .estadisticasEncabezado p { margin:0; color:var(--muted); }
+    .estadisticasIcono { width:48px; height:48px; border-radius:15px; display:grid; place-items:center; background:var(--bg-soft); border:1px solid var(--border); font-size:22px; flex:none; }
+    .estadisticasGrid { display:grid; grid-template-columns:repeat(4,1fr); gap:12px; }
+    .estadisticaCard { padding:17px 14px; border:1px solid var(--border); background:var(--bg-soft); border-radius:16px; text-align:center; }
+    .estadisticaCard .estadisticaIcono { display:block; width:auto; height:auto; border:0; background:none; font-size:19px; margin-bottom:6px; }
+    .estadisticaCard b { display:block; font-size:27px; line-height:1.1; color:var(--primary-text); margin-bottom:5px; }
+    .estadisticaCard > span:last-child { font-size:12px; color:var(--muted); }
+    .progresoEstadisticas { margin-top:16px; padding:18px; border:1px solid var(--border); border-radius:16px; background:var(--surface); }
+    .progresoEstadisticasTexto > div { display:flex; justify-content:space-between; gap:12px; align-items:center; }
+    .progresoEstadisticasTexto strong { color:var(--primary-text); }
+    #estadPorcentaje { font-weight:800; color:var(--primary-text); }
+    .progresoEstadisticasTexto p { margin:5px 0 0; color:var(--muted); font-size:13px; }
+    .estadBarra { margin-top:13px; height:10px; }
+    .estadBarra > div { background:var(--primary); }
+    .estadisticasDetalle { display:grid; grid-template-columns:repeat(3,1fr); gap:10px; margin-top:12px; }
+    .estadisticasDetalle > div { display:flex; justify-content:space-between; align-items:center; gap:10px; padding:12px 13px; border-radius:13px; background:var(--bg-soft); border:1px solid var(--border); font-size:13px; }
+    .estadisticasDetalle span { color:var(--muted); }
+    .estadisticasDetalle b { color:var(--primary-text); font-size:16px; }
+    @media (max-width: 760px) {
+      .estadisticasGrid { grid-template-columns:repeat(2,1fr); }
+      .estadisticasDetalle { grid-template-columns:1fr; }
+    }
+    @media (max-width: 430px) {
+      .estadisticasEncabezado { align-items:flex-start; }
+      .estadisticasIcono { display:none; }
+      .estadisticaCard { padding:14px 9px; }
+      .estadisticaCard b { font-size:24px; }
+    }
+</style>
 </head>
 
 <body>
@@ -861,11 +1076,20 @@
 
   <nav>
     <button class="logo" id="logoPlanneo" type="button">📒 Planneo</button>
+
+    <div class="busquedaGlobal" id="busquedaGlobal">
+      <span class="iconoBusquedaGlobal">🔎</span>
+      <label class="visualmenteOculto" for="buscarGlobal" data-i18n="phBuscarGlobal">Buscar en Planneo</label>
+      <input type="search" id="buscarGlobal" data-i18n-ph="phBuscarGlobal" placeholder="Buscar en Planneo..." autocomplete="off">
+      <div class="resultadosBusqueda" id="resultadosBusqueda" role="listbox" aria-label="Resultados de búsqueda"></div>
+    </div>
+
     <ul class="menu">
       <li><button type="button" class="navBtn" id="linkInicio" data-vista="inicio" aria-current="page" data-i18n="navInicio">🏠 Inicio</button></li>
       <li><button type="button" class="navBtn" id="linkMiDia" data-vista="midia" data-i18n="navMiDia">📅 Mi día</button></li>
       <li><button type="button" class="navBtn" id="linkNotas" data-vista="notas" data-i18n="navNotas">📝 Notas</button></li>
       <li><button type="button" class="navBtn" id="linkCalendario" data-vista="calendario" data-i18n="navCalendario">🗓️ Calendario</button></li>
+      <li><button type="button" class="navBtn" id="linkEstadisticas" data-vista="estadisticas" data-i18n="navEstadisticas">📊 Estadísticas</button></li>
       <li>
         <button type="button" class="navBtn" id="linkConfiguracion" aria-expanded="false" aria-controls="submenuConfig" data-i18n="navConfig">⚙️ Ajustes</button>
         <div class="submenu" id="submenuConfig" role="dialog" aria-label="Ajustes">
@@ -964,57 +1188,67 @@
         <h1 class="tituloPrincipal">Planneo</h1>
         <p class="subtitulo" data-i18n="subtitulo">Tu agenda digital para organizar el día 📚</p>
 
-        <div class="tarjetaBienvenida">
-          <h2 data-i18n="bienvenidaTitulo">¡Bienvenido a Planneo! 👋</h2>
-          <p data-i18n="bienvenidaTexto">Organiza tus tareas, revisa tu día, guarda notas y usa el calendario para tenerlo todo bajo control.</p>
-          <div class="resumenRapido">
-            <div class="stat"><b id="statTotal">0</b><span data-i18n="statTotal">Tareas</span></div>
-            <div class="stat"><b id="statHoy">0</b><span data-i18n="statHoy">Pendientes hoy</span></div>
-            <div class="stat alerta"><b id="statAtrasadas">0</b><span data-i18n="statAtrasadas">Atrasadas</span></div>
-            <div class="stat"><b id="statHechas">0</b><span data-i18n="statHechas">Completadas</span></div>
+        <div class="formularioTarea formularioTareaNuevo">
+          <div class="tareaFormEncabezado">
+            <div>
+              <span class="tareaFormKicker">PLANNEO</span>
+              <h2 id="tituloAgregarTarea" data-i18n="formAgregar">➕ Nueva tarea</h2>
+              <p>Una cosa a la vez. Tú decides cuándo y cómo.</p>
+            </div>
+            <div class="tareaFormIcono" aria-hidden="true">✦</div>
           </div>
-          <div class="barraProgreso" role="progressbar" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0" id="barraProgreso"><div id="barraProgresoRelleno"></div></div>
-          <p class="textoProgreso" id="textoProgreso"></p>
-        </div>
 
-        <div class="formularioTarea">
-          <h2 id="tituloAgregarTarea" data-i18n="formAgregar">➕ Nueva tarea</h2>
-          <div class="grupoInput">
+          <div class="grupoInput grupoTituloTarea">
             <label for="evento" data-i18n="lblNombre">Nombre de la tarea</label>
             <input type="text" id="evento" autocomplete="off" maxlength="120" data-i18n-ph="phTarea" placeholder="Ej. Hacer tarea de matemáticas">
           </div>
-          <div class="filaDoble">
-            <div class="grupoInput">
-              <label for="fecha" data-i18n="lblFecha">Fecha</label>
-              <input type="date" id="fecha">
+
+          <div class="agendaRapida">
+            <div class="agendaCampo">
+              <span class="agendaIcono">📅</span>
+              <div>
+                <label for="fecha" data-i18n="lblFecha">Fecha</label>
+                <input type="date" id="fecha">
+              </div>
             </div>
-            <div class="grupoInput">
-              <label for="hora" data-i18n="lblHora">Hora</label>
-              <input type="time" id="hora">
-            </div>
-          </div>
-          <div class="filaDoble">
-            <div class="grupoInput">
-              <label for="prioridad" data-i18n="lblPrioridad">Prioridad</label>
-              <select id="prioridad">
-                <option value="normal" data-i18n="optNormal">Normal</option>
-                <option value="importante" data-i18n="optImportante">Importante</option>
-              </select>
-            </div>
-            <div class="grupoInput">
-              <label for="repetir" data-i18n="lblRepetir">Repetir</label>
-              <select id="repetir">
-                <option value="no" data-i18n="repNo">No se repite</option>
-                <option value="diaria" data-i18n="repDiaria">Cada día</option>
-                <option value="semanal" data-i18n="repSemanal">Cada semana</option>
-                <option value="mensual" data-i18n="repMensual">Cada mes</option>
-              </select>
+            <div class="agendaCampo">
+              <span class="agendaIcono">⏰</span>
+              <div>
+                <label for="hora" data-i18n="lblHora">Hora</label>
+                <input type="time" id="hora">
+              </div>
             </div>
           </div>
-          <div class="grupoInput">
-            <label for="detalleTarea" data-i18n="lblDetalle">Detalle (opcional)</label>
-            <input type="text" id="detalleTarea" maxlength="200" data-i18n-ph="phDetalle" placeholder="Ej. páginas 12 a 15">
+
+          <button type="button" class="btnMasOpciones" id="btnMasOpciones" aria-expanded="false">
+            <span>＋</span> <span id="textoMasOpciones">Más opciones</span>
+          </button>
+
+          <div class="opcionesAvanzadas" id="opcionesAvanzadas" hidden>
+            <div class="filaDoble">
+              <div class="grupoInput">
+                <label for="prioridad" data-i18n="lblPrioridad">Prioridad</label>
+                <select id="prioridad">
+                  <option value="normal" data-i18n="optNormal">Normal</option>
+                  <option value="importante" data-i18n="optImportante">Importante</option>
+                </select>
+              </div>
+              <div class="grupoInput">
+                <label for="repetir" data-i18n="lblRepetir">Repetir</label>
+                <select id="repetir">
+                  <option value="no" data-i18n="repNo">No se repite</option>
+                  <option value="diaria" data-i18n="repDiaria">Cada día</option>
+                  <option value="semanal" data-i18n="repSemanal">Cada semana</option>
+                  <option value="mensual" data-i18n="repMensual">Cada mes</option>
+                </select>
+              </div>
+            </div>
+            <div class="grupoInput">
+              <label for="detalleTarea" data-i18n="lblDetalle">Detalle (opcional)</label>
+              <input type="text" id="detalleTarea" maxlength="200" data-i18n-ph="phDetalle" placeholder="Ej. páginas 12 a 15">
+            </div>
           </div>
+
           <div class="accionesForm">
             <button id="btnAgregar" type="button" data-i18n="btnAgregar">Guardar tarea</button>
             <button type="button" id="btnCancelarEdicion" data-i18n="btnCancelar">Cancelar</button>
@@ -1082,6 +1316,62 @@
           <button class="botonVolver" type="button" data-volver data-i18n="volver">← Volver</button>
         </div>
       </section>
+
+      <section class="vista" id="vistaEstadisticas" aria-label="Estadísticas">
+        <div class="panel estadisticasPanel">
+          <div class="estadisticasEncabezado">
+            <div>
+              <h1 data-i18n="tituloEstadisticas">📊 Estadísticas</h1>
+              <p data-i18n="subtituloEstadisticas">Un vistazo rápido a cómo va tu organización.</p>
+            </div>
+            <div class="estadisticasIcono">✨</div>
+          </div>
+
+          <div class="estadisticasGrid">
+            <div class="estadisticaCard">
+              <span class="estadisticaIcono">📋</span>
+              <b id="estadTotal">0</b>
+              <span data-i18n="estTotal">Tareas totales</span>
+            </div>
+            <div class="estadisticaCard">
+              <span class="estadisticaIcono">✅</span>
+              <b id="estadCompletadas">0</b>
+              <span data-i18n="estCompletadas">Completadas</span>
+            </div>
+            <div class="estadisticaCard">
+              <span class="estadisticaIcono">⏳</span>
+              <b id="estadPendientes">0</b>
+              <span data-i18n="estPendientes">Pendientes</span>
+            </div>
+            <div class="estadisticaCard">
+              <span class="estadisticaIcono">📝</span>
+              <b id="estadNotas">0</b>
+              <span data-i18n="estNotas">Notas creadas</span>
+            </div>
+          </div>
+
+          <div class="progresoEstadisticas">
+            <div class="progresoEstadisticasTexto">
+              <div>
+                <strong data-i18n="estProgresoTitulo">Progreso de tareas</strong>
+                <span id="estadPorcentaje">0%</span>
+              </div>
+              <p id="estadMensaje"></p>
+            </div>
+            <div class="barraProgreso estadBarra" role="progressbar" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0" id="estadBarra">
+              <div id="estadBarraRelleno"></div>
+            </div>
+          </div>
+
+          <div class="estadisticasDetalle">
+            <div><span data-i18n="estHoy">📅 Pendientes para hoy</span><b id="estadHoy">0</b></div>
+            <div><span data-i18n="estAtrasadas">⚠️ Tareas atrasadas</span><b id="estadAtrasadas">0</b></div>
+            <div><span data-i18n="estDias">🗓️ Días con tareas</span><b id="estadDias">0</b></div>
+          </div>
+
+          <button class="botonVolver" type="button" data-volver data-i18n="volver">← Volver</button>
+        </div>
+      </section>
     </div>
   </main>
 
@@ -1121,7 +1411,8 @@
     tareas: "planneo_tareas_v3",
     notas: "planneo_notas_v2",
     config: "planneo_config_v1",
-    avisos: "planneo_avisos_enviados_v2"
+    avisos: "planneo_avisos_enviados_v2",
+    hechas: "planneo_tareas_hechas_v1"
   };
 
   const MIN = 60000;
@@ -1132,10 +1423,12 @@
   let tareas = [];
   let notas = [];
   let avisosEnviados = {};
+  let tareasHechasTotal = 0;
   let calendar = null;
   let filtroActual = "todas";
   let busquedaTarea = "";
   let busquedaNota = "";
+  let busquedaGlobal = "";
   let idEditando = null;
   let notaEditando = null;
   let eventoModalId = null;
@@ -1164,9 +1457,14 @@
       saltar: "Ir al contenido",
       navInicio: "🏠 Inicio", navMiDia: "📅 Mi día", navNotas: "📝 Notas",
       navCalendario: "🗓️ Calendario", navConfig: "⚙️ Ajustes",
+      navEstadisticas: "📊 Estadísticas",
+      tituloEstadisticas: "📊 Estadísticas", subtituloEstadisticas: "Un vistazo rápido a cómo va tu organización.",
+      estTotal: "Tareas totales", estCompletadas: "Tareas hechas", estPendientes: "Pendientes", estNotas: "Notas creadas",
+      estProgresoTitulo: "Progreso de tareas", estHoy: "📅 Pendientes para hoy", estAtrasadas: "⚠️ Tareas atrasadas", estDias: "🗓️ Días con tareas",
+      estMensaje: "Sigue así, cada tarea completada cuenta.", estVacio: "Aún no hay tareas para mostrar progreso.",
       subtitulo: "Tu agenda digital para organizar el día 📚",
-      bienvenidaTitulo: "¡Bienvenido a Planneo! 👋",
-      bienvenidaTexto: "Organiza tus tareas, revisa tu día, guarda notas y usa el calendario para tenerlo todo bajo control.",
+      bienvenidaTitulo: "",
+      bienvenidaTexto: "",
       statTotal: "Tareas", statHoy: "Pendientes hoy", statAtrasadas: "Atrasadas", statHechas: "Completadas",
       progreso: (h, tt) => `${h} de ${tt} completadas`,
       progresoVacio: "Aún no hay tareas que medir.",
@@ -1177,7 +1475,7 @@
       optNormal: "Normal", optImportante: "Importante",
       repNo: "No se repite", repDiaria: "Cada día", repSemanal: "Cada semana", repMensual: "Cada mes",
       phTarea: "Ej. Hacer tarea de matemáticas", phDetalle: "Ej. páginas 12 a 15",
-      phBuscar: "Buscar tarea...", phBuscarNota: "Buscar nota...", phNota: "Escribe tu nota...",
+      phBuscar: "Buscar tarea...", phBuscarNota: "Buscar nota...", phBuscarGlobal: "Buscar en Planneo...", resultadoTarea: "TAREA", resultadoNota: "NOTA", resultadoVacio: "No encontramos nada.", phNota: "Escribe tu nota...",
       misTareas: "📋 Mis tareas",
       filtroTodas: "Todas", filtroPendientes: "Pendientes", filtroHoy: "Hoy", filtroHechas: "Hechas",
       grupoAtrasadas: "Atrasadas", grupoHoy: "Hoy", grupoManana: "Mañana",
@@ -1257,6 +1555,11 @@
       saltar: "Skip to content",
       navInicio: "🏠 Home", navMiDia: "📅 My day", navNotas: "📝 Notes",
       navCalendario: "🗓️ Calendar", navConfig: "⚙️ Settings",
+      navEstadisticas: "📊 Statistics",
+      tituloEstadisticas: "📊 Statistics", subtituloEstadisticas: "A quick look at how your organization is going.",
+      estTotal: "Total tasks", estCompletadas: "Completed", estPendientes: "Pending", estNotas: "Notes created",
+      estProgresoTitulo: "Task progress", estHoy: "📅 Due today", estAtrasadas: "⚠️ Overdue tasks", estDias: "🗓️ Days with tasks",
+      estMensaje: "Keep going, every completed task counts.", estVacio: "No tasks to show progress yet.",
       subtitulo: "Your digital planner to organize the day 📚",
       bienvenidaTitulo: "Welcome to Planneo! 👋",
       bienvenidaTexto: "Organize your tasks, check your day, save notes and use the calendar to keep everything on track.",
@@ -1270,7 +1573,7 @@
       optNormal: "Normal", optImportante: "Important",
       repNo: "Does not repeat", repDiaria: "Every day", repSemanal: "Every week", repMensual: "Every month",
       phTarea: "E.g. Math homework", phDetalle: "E.g. pages 12 to 15",
-      phBuscar: "Search tasks...", phBuscarNota: "Search notes...", phNota: "Write your note...",
+      phBuscar: "Search tasks...", phBuscarNota: "Search notes...", phBuscarGlobal: "Search Planneo...", resultadoTarea: "TASK", resultadoNota: "NOTE", resultadoVacio: "Nothing found.", phNota: "Write your note...",
       misTareas: "📋 My tasks",
       filtroTodas: "All", filtroPendientes: "Pending", filtroHoy: "Today", filtroHechas: "Done",
       grupoAtrasadas: "Overdue", grupoHoy: "Today", grupoManana: "Tomorrow",
@@ -1350,6 +1653,11 @@
       saltar: "Aller au contenu",
       navInicio: "🏠 Accueil", navMiDia: "📅 Ma journée", navNotas: "📝 Notes",
       navCalendario: "🗓️ Calendrier", navConfig: "⚙️ Réglages",
+      navEstadisticas: "📊 Statistiques",
+      tituloEstadisticas: "📊 Statistiques", subtituloEstadisticas: "Un aperçu rapide de votre organisation.",
+      estTotal: "Tâches totales", estCompletadas: "Terminées", estPendientes: "En attente", estNotas: "Notes créées",
+      estProgresoTitulo: "Progression des tâches", estHoy: "📅 À faire aujourd'hui", estAtrasadas: "⚠️ Tâches en retard", estDias: "🗓️ Jours avec tâches",
+      estMensaje: "Continuez, chaque tâche terminée compte.", estVacio: "Aucune tâche à mesurer pour le moment.",
       subtitulo: "Votre agenda numérique pour organiser la journée 📚",
       bienvenidaTitulo: "Bienvenue sur Planneo ! 👋",
       bienvenidaTexto: "Organisez vos tâches, consultez votre journée, enregistrez des notes et utilisez le calendrier.",
@@ -1363,7 +1671,7 @@
       optNormal: "Normale", optImportante: "Importante",
       repNo: "Sans répétition", repDiaria: "Chaque jour", repSemanal: "Chaque semaine", repMensual: "Chaque mois",
       phTarea: "Ex. Devoir de maths", phDetalle: "Ex. pages 12 à 15",
-      phBuscar: "Rechercher une tâche...", phBuscarNota: "Rechercher une note...", phNota: "Écrivez votre note...",
+      phBuscar: "Rechercher une tâche...", phBuscarNota: "Rechercher une note...", phBuscarGlobal: "Rechercher dans Planneo...", resultadoTarea: "TÂCHE", resultadoNota: "NOTE", resultadoVacio: "Aucun résultat.", phNota: "Écrivez votre note...",
       misTareas: "📋 Mes tâches",
       filtroTodas: "Toutes", filtroPendientes: "En cours", filtroHoy: "Aujourd'hui", filtroHechas: "Terminées",
       grupoAtrasadas: "En retard", grupoHoy: "Aujourd'hui", grupoManana: "Demain",
@@ -1431,6 +1739,11 @@
       saltar: "Zum Inhalt",
       navInicio: "🏠 Start", navMiDia: "📅 Mein Tag", navNotas: "📝 Notizen",
       navCalendario: "🗓️ Kalender", navConfig: "⚙️ Einstellungen",
+      navEstadisticas: "📊 Statistiken",
+      tituloEstadisticas: "📊 Statistiken", subtituloEstadisticas: "Ein schneller Überblick über deine Organisation.",
+      estTotal: "Aufgaben insgesamt", estCompletadas: "Erledigt", estPendientes: "Offen", estNotas: "Notizen erstellt",
+      estProgresoTitulo: "Aufgabenfortschritt", estHoy: "📅 Heute fällig", estAtrasadas: "⚠️ Überfällige Aufgaben", estDias: "🗓️ Tage mit Aufgaben",
+      estMensaje: "Weiter so, jede erledigte Aufgabe zählt.", estVacio: "Noch keine Aufgaben zum Messen.",
       subtitulo: "Dein digitaler Planer für den Tag 📚",
       bienvenidaTitulo: "Willkommen bei Planneo! 👋",
       bienvenidaTexto: "Organisiere Aufgaben, prüfe deinen Tag, speichere Notizen und nutze den Kalender.",
@@ -1444,7 +1757,7 @@
       optNormal: "Normal", optImportante: "Wichtig",
       repNo: "Keine Wiederholung", repDiaria: "Täglich", repSemanal: "Wöchentlich", repMensual: "Monatlich",
       phTarea: "z. B. Mathehausaufgaben", phDetalle: "z. B. Seiten 12 bis 15",
-      phBuscar: "Aufgabe suchen...", phBuscarNota: "Notiz suchen...", phNota: "Notiz schreiben...",
+      phBuscar: "Aufgabe suchen...", phBuscarNota: "Notiz suchen...", phBuscarGlobal: "In Planneo suchen...", resultadoTarea: "AUFGABE", resultadoNota: "NOTIZ", resultadoVacio: "Nichts gefunden.", phNota: "Notiz schreiben...",
       misTareas: "📋 Meine Aufgaben",
       filtroTodas: "Alle", filtroPendientes: "Offen", filtroHoy: "Heute", filtroHechas: "Erledigt",
       grupoAtrasadas: "Überfällig", grupoHoy: "Heute", grupoManana: "Morgen",
@@ -1512,6 +1825,11 @@
       saltar: "Vai al contenuto",
       navInicio: "🏠 Home", navMiDia: "📅 La mia giornata", navNotas: "📝 Note",
       navCalendario: "🗓️ Calendario", navConfig: "⚙️ Impostazioni",
+      navEstadisticas: "📊 Statistiche",
+      tituloEstadisticas: "📊 Statistiche", subtituloEstadisticas: "Una rapida panoramica della tua organizzazione.",
+      estTotal: "Attività totali", estCompletadas: "Completate", estPendientes: "In sospeso", estNotas: "Note create",
+      estProgresoTitulo: "Progresso attività", estHoy: "📅 Da fare oggi", estAtrasadas: "⚠️ Attività in ritardo", estDias: "🗓️ Giorni con attività",
+      estMensaje: "Continua così, ogni attività completata conta.", estVacio: "Nessuna attività da misurare ancora.",
       subtitulo: "La tua agenda digitale per organizzare la giornata 📚",
       bienvenidaTitulo: "Benvenuto su Planneo! 👋",
       bienvenidaTexto: "Organizza le attività, controlla la giornata, salva note e usa il calendario.",
@@ -1525,7 +1843,7 @@
       optNormal: "Normale", optImportante: "Importante",
       repNo: "Non si ripete", repDiaria: "Ogni giorno", repSemanal: "Ogni settimana", repMensual: "Ogni mese",
       phTarea: "Es. Compito di matematica", phDetalle: "Es. pagine 12-15",
-      phBuscar: "Cerca attività...", phBuscarNota: "Cerca nota...", phNota: "Scrivi la tua nota...",
+      phBuscar: "Cerca attività...", phBuscarNota: "Cerca nota...", phBuscarGlobal: "Cerca in Planneo...", resultadoTarea: "ATTIVITÀ", resultadoNota: "NOTA", resultadoVacio: "Nessun risultato.", phNota: "Scrivi la tua nota...",
       misTareas: "📋 Le mie attività",
       filtroTodas: "Tutte", filtroPendientes: "In corso", filtroHoy: "Oggi", filtroHechas: "Fatte",
       grupoAtrasadas: "In ritardo", grupoHoy: "Oggi", grupoManana: "Domani",
@@ -1593,6 +1911,11 @@
       saltar: "Ir para o conteúdo",
       navInicio: "🏠 Início", navMiDia: "📅 Meu dia", navNotas: "📝 Notas",
       navCalendario: "🗓️ Calendário", navConfig: "⚙️ Definições",
+      navEstadisticas: "📊 Estatísticas",
+      tituloEstadisticas: "📊 Estatísticas", subtituloEstadisticas: "Uma visão rápida de como está sua organização.",
+      estTotal: "Tarefas totais", estCompletadas: "Concluídas", estPendientes: "Pendentes", estNotas: "Notas criadas",
+      estProgresoTitulo: "Progresso das tarefas", estHoy: "📅 Pendentes hoje", estAtrasadas: "⚠️ Tarefas atrasadas", estDias: "🗓️ Dias com tarefas",
+      estMensaje: "Continue assim, cada tarefa concluída conta.", estVacio: "Ainda não há tarefas para medir.",
       subtitulo: "A sua agenda digital para organizar o dia 📚",
       bienvenidaTitulo: "Bem-vindo ao Planneo! 👋",
       bienvenidaTexto: "Organize tarefas, confira o seu dia, guarde notas e use o calendário.",
@@ -1606,7 +1929,7 @@
       optNormal: "Normal", optImportante: "Importante",
       repNo: "Não se repete", repDiaria: "Todos os dias", repSemanal: "Toda a semana", repMensual: "Todos os meses",
       phTarea: "Ex. Trabalho de matemática", phDetalle: "Ex. páginas 12 a 15",
-      phBuscar: "Procurar tarefa...", phBuscarNota: "Procurar nota...", phNota: "Escreva a sua nota...",
+      phBuscar: "Procurar tarefa...", phBuscarNota: "Procurar nota...", phBuscarGlobal: "Procurar no Planneo...", resultadoTarea: "TAREFA", resultadoNota: "NOTA", resultadoVacio: "Nada encontrado.", phNota: "Escreva a sua nota...",
       misTareas: "📋 As minhas tarefas",
       filtroTodas: "Todas", filtroPendientes: "Pendentes", filtroHoy: "Hoje", filtroHechas: "Feitas",
       grupoAtrasadas: "Atrasadas", grupoHoy: "Hoje", grupoManana: "Amanhã",
@@ -1802,7 +2125,7 @@
     caja.appendChild(fila);
 
     contenedorAvisos.appendChild(caja);
-    const temporizador = duracion ? setTimeout(cerrar, duracion) : null;
+    const temporizador = setTimeout(cerrar, 2000);
     return cerrar;
   }
 
@@ -1836,6 +2159,7 @@
       prioridad: bruta.prioridad === "importante" ? "importante" : "normal",
       repetir: ["diaria", "semanal", "mensual"].includes(bruta.repetir) ? bruta.repetir : "no",
       completada: Boolean(bruta.completada),
+      contadaEnHistorial: Boolean(bruta.contadaEnHistorial) || Boolean(bruta.completada),
       creada: bruta.creada || new Date().toISOString()
     };
   }
@@ -1886,6 +2210,16 @@
   const guardarNotas = () => escribirJSON(DB.notas, notas);
   const guardarConfig = () => escribirJSON(DB.config, config);
   const guardarAvisos = () => escribirJSON(DB.avisos, avisosEnviados);
+  const guardarTareasHechas = () => escribirJSON(DB.hechas, tareasHechasTotal);
+
+  function cargarTareasHechas() {
+    const guardadas = leerJSON(DB.hechas, null);
+    if (typeof guardadas === "number" && Number.isFinite(guardadas)) {
+      return Math.max(0, Math.floor(guardadas));
+    }
+    // Primera vez: toma las tareas que ya aparecen como completadas.
+    return tareas.filter((t) => t.completada).length;
+  }
 
   function limpiarAvisosViejos() {
     const ahora = Date.now();
@@ -1945,6 +2279,85 @@
     renderizarTareas();
     renderizarNotas();
     renderizarMiDia();
+  }
+
+  function renderizarResultadosBusqueda() {
+    const caja = $("#resultadosBusqueda");
+    if (!caja) return;
+    const q = normalizar(busquedaGlobal);
+    caja.innerHTML = "";
+
+    if (!q) {
+      caja.classList.remove("activo");
+      return;
+    }
+
+    const resultados = [];
+    tareas.forEach((tarea) => {
+      const texto = `${tarea.titulo} ${tarea.detalle || ""} ${tarea.fecha || ""}`;
+      if (normalizar(texto).includes(q)) {
+        resultados.push({ tipo: "tarea", id: tarea.id, titulo: tarea.titulo, detalle: `${formatearFecha(tarea.fecha)} · ${tarea.hora || ""}` });
+      }
+    });
+
+    notas.forEach((nota) => {
+      const tipo = nombreTipoNota(nota.tipo);
+      const texto = `${nota.texto} ${tipo}`;
+      if (normalizar(texto).includes(q)) {
+        resultados.push({ tipo: "nota", id: nota.id, titulo: tipo, detalle: nota.texto });
+      }
+    });
+
+    resultados.sort((a, b) => a.tipo.localeCompare(b.tipo));
+    resultados.slice(0, 10).forEach((resultado) => {
+      const b = document.createElement("button");
+      b.type = "button";
+      b.className = "resultadoBusqueda";
+      b.setAttribute("role", "option");
+
+      const tipo = document.createElement("div");
+      tipo.className = "resultadoTipo";
+      tipo.textContent = resultado.tipo === "tarea" ? tr("resultadoTarea") : tr("resultadoNota");
+
+      const titulo = document.createElement("div");
+      titulo.className = "resultadoTitulo";
+      titulo.textContent = resultado.titulo;
+
+      const detalle = document.createElement("div");
+      detalle.className = "resultadoDetalle";
+      detalle.textContent = resultado.detalle;
+
+      b.append(tipo, titulo, detalle);
+      b.addEventListener("click", () => {
+        busquedaGlobal = "";
+        $("#buscarGlobal").value = "";
+        caja.classList.remove("activo");
+
+        if (resultado.tipo === "tarea") {
+          mostrarVista("inicio");
+          busquedaTarea = resultado.titulo;
+          $("#buscarTarea").value = resultado.titulo;
+          renderizarTareas();
+          setTimeout(() => $("#buscarTarea").focus(), 50);
+        } else {
+          mostrarVista("notas");
+          busquedaNota = resultado.detalle;
+          $("#buscarNota").value = resultado.detalle;
+          renderizarNotas();
+          setTimeout(() => $("#buscarNota").focus(), 50);
+        }
+      });
+      caja.appendChild(b);
+    });
+
+    if (!resultados.length) {
+      const vacio = document.createElement("div");
+      vacio.className = "resultadoVacio";
+      vacio.textContent = tr("resultadoVacio");
+      caja.appendChild(vacio);
+    }
+
+    caja.classList.add("activo");
   }
 
   /* ---------------------------------------------------------------
@@ -2079,6 +2492,7 @@
     }
 
     actualizarResumen();
+    renderizarEstadisticas();
     sincronizarCalendario();
   }
 
@@ -2130,6 +2544,7 @@
     guardarTareas();
     renderizarTareas();
     renderizarMiDia();
+    renderizarEstadisticas();
     programarRecordatorios();
   }
 
@@ -2144,6 +2559,7 @@
     $("#tituloAgregarTarea").textContent = tr("formAgregar");
     $("#btnAgregar").textContent = tr("btnAgregar");
     $("#btnCancelarEdicion").style.display = "none";
+    if (btnMasOpciones) { btnMasOpciones.setAttribute("aria-expanded", "false"); opcionesAvanzadas.hidden = true; $("#textoMasOpciones").textContent = "Más opciones"; }
   }
 
   function empezarEdicion(id) {
@@ -2159,6 +2575,7 @@
     $("#tituloAgregarTarea").textContent = tr("formEditar");
     $("#btnAgregar").textContent = tr("btnGuardarCambios");
     $("#btnCancelarEdicion").style.display = "block";
+    if (btnMasOpciones) { btnMasOpciones.setAttribute("aria-expanded", "true"); opcionesAvanzadas.hidden = false; $("#textoMasOpciones").textContent = "Menos opciones"; }
     mostrarVista("inicio");
     $("#evento").focus();
     window.scrollTo({ top: 0, behavior: "smooth" });
@@ -2212,6 +2629,12 @@
     if (!tarea) return;
     const seCompleta = !tarea.completada;
     tarea.completada = seCompleta;
+
+    if (seCompleta && !tarea.contadaEnHistorial) {
+      tarea.contadaEnHistorial = true;
+      tareasHechasTotal += 1;
+      guardarTareasHechas();
+    }
 
     if (seCompleta && tarea.repetir !== "no") {
       let nueva = siguienteFecha(tarea);
@@ -2665,6 +3088,30 @@
     if (ultimoFoco && ultimoFoco.focus) ultimoFoco.focus();
   }
 
+  function renderizarEstadisticas() {
+    const total = tareas.length;
+    const completadasActuales = tareas.filter((t) => t.completada).length;
+    const pendientes = tareas.filter((t) => !t.completada).length;
+    const hechas = Math.max(tareasHechasTotal, completadasActuales);
+    const hoy = fechaLocal();
+    const pendientesHoy = tareas.filter((t) => t.fecha === hoy && !t.completada).length;
+    const atrasadas = tareas.filter(estaAtrasada).length;
+    const dias = new Set(tareas.map((t) => t.fecha).filter(Boolean)).size;
+    const porcentaje = total ? Math.round((completadasActuales / total) * 100) : 0;
+
+    $("#estadTotal").textContent = total;
+    $("#estadCompletadas").textContent = hechas;
+    $("#estadPendientes").textContent = pendientes;
+    $("#estadNotas").textContent = notas.length;
+    $("#estadHoy").textContent = pendientesHoy;
+    $("#estadAtrasadas").textContent = atrasadas;
+    $("#estadDias").textContent = dias;
+    $("#estadPorcentaje").textContent = `${porcentaje}%`;
+    $("#estadBarraRelleno").style.width = `${porcentaje}%`;
+    $("#estadBarra").setAttribute("aria-valuenow", porcentaje);
+    $("#estadMensaje").textContent = total ? tr("estMensaje") : tr("estVacio");
+  }
+
   /* ---------------------------------------------------------------
      13. Navegación
   ----------------------------------------------------------------*/
@@ -2672,7 +3119,8 @@
     inicio: $("#vistaInicio"),
     midia: $("#vistaMiDia"),
     notas: $("#vistaNotas"),
-    calendario: $("#calendarioSeccion")
+    calendario: $("#calendarioSeccion"),
+    estadisticas: $("#vistaEstadisticas")
   };
 
   function mostrarVista(nombre) {
@@ -2683,6 +3131,7 @@
     });
     if (nombre === "midia") renderizarMiDia();
     if (nombre === "notas") renderizarNotas();
+    if (nombre === "estadisticas") renderizarEstadisticas();
     if (nombre === "calendario" && calendar) setTimeout(() => calendar.updateSize(), 60);
     if (location.hash !== `#${nombre}`) history.replaceState(null, "", `#${nombre}`);
   }
@@ -2691,14 +3140,60 @@
      14. Copia de seguridad
   ----------------------------------------------------------------*/
   function exportarDatos() {
-    const datos = { app: "planneo", version: 3, exportado: new Date().toISOString(), tareas, notas, config };
-    const blob = new Blob([JSON.stringify(datos, null, 2)], { type: "application/json" });
+    const ahora = new Date();
+    const fechaDescarga = ahora.toLocaleDateString(config.idioma || "es", {
+      year: "numeric", month: "long", day: "numeric"
+    });
+
+    let contenido = "PLANNEO - MIS DATOS\n";
+    contenido += "==============================\n\n";
+    contenido += `Descargado el: ${fechaDescarga}\n\n`;
+
+    contenido += "MIS TAREAS\n";
+    contenido += "------------------------------\n";
+
+    if (tareas.length === 0) {
+      contenido += "No tienes tareas guardadas.\n";
+    } else {
+      tareas.forEach((tarea, indice) => {
+        contenido += `${indice + 1}. ${tarea.titulo || "Sin título"}\n`;
+        contenido += `   Fecha: ${tarea.fecha || "Sin fecha"}\n`;
+        contenido += `   Hora: ${tarea.hora || "Sin hora"}\n`;
+        contenido += `   Estado: ${tarea.completada ? "Completada" : "Pendiente"}\n`;
+        if (tarea.prioridad) contenido += `   Prioridad: ${tarea.prioridad}\n`;
+        if (tarea.detalle) contenido += `   Detalle: ${tarea.detalle}\n`;
+        contenido += "\n";
+      });
+    }
+
+    contenido += "\nMIS NOTAS\n";
+    contenido += "------------------------------\n";
+
+    if (notas.length === 0) {
+      contenido += "No tienes notas guardadas.\n";
+    } else {
+      notas.forEach((nota, indice) => {
+        const tipo = nota.tipo ? nota.tipo.charAt(0).toUpperCase() + nota.tipo.slice(1) : "Nota";
+        contenido += `${indice + 1}. ${tipo}\n`;
+        contenido += `   ${nota.texto || ""}\n`;
+        if (nota.fecha) contenido += `   Fecha: ${nota.fecha}\n`;
+        contenido += "\n";
+      });
+    }
+
+    contenido += "\n------------------------------\n";
+    contenido += "Archivo generado por Planneo\n";
+
+    const blob = new Blob(["\uFEFF" + contenido], { type: "text/plain;charset=utf-8" });
     const url = URL.createObjectURL(blob);
     const a = document.createElement("a");
     a.href = url;
-    a.download = `planneo-${fechaLocal()}.json`;
+    a.download = `planneo-mis-datos-${fechaLocal()}.txt`;
+    document.body.appendChild(a);
     a.click();
+    a.remove();
     setTimeout(() => URL.revokeObjectURL(url), 2000);
+
     avisar({ texto: tr("datosExportados"), tipo: "ok", duracion: 3000 });
   }
 
@@ -2797,6 +3292,16 @@
       consultaOscuro.addEventListener("change", () => { if (config.tema === "auto") aplicarTema(); });
     }
 
+
+    const btnMasOpciones = $("#btnMasOpciones");
+    const opcionesAvanzadas = $("#opcionesAvanzadas");
+    btnMasOpciones.addEventListener("click", () => {
+      const abierto = btnMasOpciones.getAttribute("aria-expanded") === "true";
+      btnMasOpciones.setAttribute("aria-expanded", String(!abierto));
+      opcionesAvanzadas.hidden = abierto;
+      $("#textoMasOpciones").textContent = abierto ? "Más opciones" : "Menos opciones";
+    });
+
     $("#btnAgregar").addEventListener("click", guardarDesdeFormulario);
     $("#btnCancelarEdicion").addEventListener("click", limpiarFormulario);
     ["evento", "detalleTarea"].forEach((id) => {
@@ -2810,6 +3315,20 @@
         filtroActual = b.dataset.filtro;
         renderizarTareas();
       });
+    });
+
+    $("#buscarGlobal").addEventListener("input", function () {
+      busquedaGlobal = this.value.trim();
+      renderizarResultadosBusqueda();
+    });
+    $("#buscarGlobal").addEventListener("focus", () => {
+      if (busquedaGlobal) renderizarResultadosBusqueda();
+    });
+    document.addEventListener("click", (e) => {
+      const contenedorBusqueda = $("#busquedaGlobal");
+      if (contenedorBusqueda && !contenedorBusqueda.contains(e.target)) {
+        $("#resultadosBusqueda").classList.remove("activo");
+      }
     });
 
     $("#buscarTarea").addEventListener("input", function () {
@@ -2931,6 +3450,7 @@
       if (e.key === DB.tareas) { tareas = cargarTareas(); renderizarTareas(); renderizarMiDia(); programarRecordatorios(); }
       if (e.key === DB.notas) { notas = cargarNotas(); renderizarNotas(); }
       if (e.key === DB.avisos) { avisosEnviados = leerJSON(DB.avisos, {}); }
+      if (e.key === DB.hechas) { tareasHechasTotal = Number(leerJSON(DB.hechas, 0)) || 0; renderizarEstadisticas(); }
     });
   }
 
@@ -2954,6 +3474,8 @@
     cargarConfig();
     aplicarTema();
     tareas = cargarTareas();
+    tareasHechasTotal = cargarTareasHechas();
+    guardarTareasHechas();
     notas = cargarNotas();
     avisosEnviados = leerJSON(DB.avisos, {}) || {};
     limpiarAvisosViejos();
