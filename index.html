@@ -3,9 +3,9 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
-<meta name="description" content="Planneo — Agenda digital moderna para estudiantes">
+<meta name="description" content="Planneo 2.0 — Agenda digital moderna para estudiantes">
 <meta name="theme-color" content="#6366f1">
-<title>Planneo · Agenda</title>
+<title>Planneo 2.0 · Agenda</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
 <script src="https://cdn.jsdelivr.net/npm/fullcalendar@6.1.15/index.global.min.js"></script>
@@ -50,10 +50,9 @@
 }
 * { box-sizing: border-box; margin: 0; padding: 0; }
 html { -webkit-text-size-adjust: 100%; }
-body { font-family: var(--font); background: var(--bg); color: var(--text); min-height: 100vh; line-height: 1.5; }
+body { font-family: var(--font); background: var(--bg); color: var(--text); min-height: 100vh; line-height: 1.5; transition: background .2s, color .2s; }
 :focus-visible { outline: 2px solid var(--primary); outline-offset: 2px; }
 
-/* Splash */
 #splash {
   position: fixed; inset: 0; background: linear-gradient(145deg, #6366f1, #8b5cf6);
   display: flex; flex-direction: column; align-items: center; justify-content: center;
@@ -63,14 +62,13 @@ body { font-family: var(--font); background: var(--bg); color: var(--text); min-
 #splash .tag { margin-top: 8px; opacity: 0.9; font-weight: 500; }
 @keyframes fadeOut { to { opacity: 0; visibility: hidden; } }
 
-/* Nav */
 nav {
   background: var(--surface); border-bottom: 1px solid var(--border);
   padding: 10px 20px; display: flex; align-items: center; gap: 16px;
   position: sticky; top: 0; z-index: 40; box-shadow: 0 1px 2px rgba(0,0,0,.03);
 }
 .brand { font-weight: 800; font-size: 20px; color: var(--primary); background: none; border: none; cursor: pointer; font-family: inherit; }
-.nav-menu { display: flex; gap: 4px; list-style: none; margin-left: auto; }
+.nav-menu { display: flex; gap: 4px; list-style: none; margin-left: auto; flex-wrap: wrap; }
 .nav-menu button {
   background: none; border: none; padding: 8px 14px; border-radius: 10px;
   font-family: inherit; font-weight: 600; font-size: 14px; color: var(--muted);
@@ -96,9 +94,8 @@ nav {
 .search-title { font-weight: 600; }
 .search-detail { font-size: 12px; color: var(--muted); }
 
-/* Settings submenu */
 .settings-panel {
-  display: none; position: absolute; right: 16px; top: 58px; width: 320px;
+  display: none; position: absolute; right: 16px; top: 58px; width: 340px;
   background: var(--surface); border: 1px solid var(--border); border-radius: 14px;
   box-shadow: var(--shadow-lg); padding: 16px; z-index: 60; max-height: 80vh; overflow-y: auto;
 }
@@ -118,7 +115,6 @@ nav {
 .switch input:checked + .slider { background: var(--primary); }
 .switch input:checked + .slider:before { transform: translateX(18px); }
 
-/* Main */
 .container { max-width: 1080px; margin: 0 auto; padding: 24px 16px 80px; }
 .view { display: none; }
 .view.active { display: block; animation: fadeIn .25s ease; }
@@ -127,14 +123,17 @@ nav {
 .page-title { font-size: 28px; font-weight: 800; margin-bottom: 4px; }
 .page-sub { color: var(--muted); margin-bottom: 20px; }
 
-/* Cards */
 .card {
   background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius);
   padding: 20px; box-shadow: var(--shadow); margin-bottom: 16px;
 }
 .card h2 { font-size: 18px; margin-bottom: 12px; }
 
-/* Form */
+.dashboard-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 16px; margin-bottom: 20px; }
+.dash-card { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); padding: 16px; box-shadow: var(--shadow); }
+.dash-card b { display: block; font-size: 28px; font-weight: 800; color: var(--primary); }
+.dash-card span { color: var(--muted); font-size: 14px; }
+
 .form-grid { display: grid; gap: 12px; }
 .form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
 label { display: block; font-size: 13px; font-weight: 600; color: var(--muted); margin-bottom: 4px; }
@@ -147,7 +146,6 @@ textarea { min-height: 100px; resize: vertical; }
 .actions { display: flex; gap: 8px; margin-top: 12px; }
 .actions .btn { flex: 1; }
 
-/* Tasks */
 .task-list { display: flex; flex-direction: column; gap: 10px; }
 .task {
   background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius-sm);
@@ -155,8 +153,9 @@ textarea { min-height: 100px; resize: vertical; }
   transition: transform .15s, box-shadow .15s;
 }
 .task:hover { transform: translateY(-1px); box-shadow: var(--shadow); }
-.task.done { opacity: .6; border-left-color: var(--success); }
+.task.done { opacity: .65; border-left-color: var(--success); }
 .task.overdue { border-left-color: var(--danger); }
+.task.urgent { border-left-color: #dc2626; }
 .task.important { border-left-color: var(--warning); }
 .task-title { font-weight: 700; font-size: 16px; }
 .task.done .task-title { text-decoration: line-through; }
@@ -166,9 +165,9 @@ textarea { min-height: 100px; resize: vertical; }
 .tag-red { background: #fee2e2; color: #b91c1c; }
 .tag-amber { background: #fef3c7; color: #92400e; }
 .tag-blue { background: #e0e7ff; color: #3730a3; }
+.tag-green { background: #d1fae5; color: #065f46; }
 .empty { padding: 32px; text-align: center; color: var(--muted); background: var(--bg-soft); border-radius: var(--radius-sm); }
 
-/* Filters */
 .filters { display: flex; gap: 6px; flex-wrap: wrap; margin-bottom: 12px; }
 .filter-btn {
   padding: 6px 12px; border-radius: 8px; border: 1px solid var(--border);
@@ -176,7 +175,6 @@ textarea { min-height: 100px; resize: vertical; }
 }
 .filter-btn.active { background: var(--primary); color: white; border-color: var(--primary); }
 
-/* Pomodoro */
 .pomo-card { text-align: center; padding: 28px 20px; }
 .pomo-ring {
   width: 180px; height: 180px; margin: 0 auto 16px; position: relative;
@@ -191,7 +189,6 @@ textarea { min-height: 100px; resize: vertical; }
 .pomo-controls { display: flex; gap: 8px; justify-content: center; margin-top: 12px; flex-wrap: wrap; }
 .pomo-sessions { margin-top: 12px; font-size: 14px; color: var(--muted); }
 
-/* Notes */
 .note {
   background: var(--bg-soft); border: 1px solid var(--border); border-radius: var(--radius-sm);
   padding: 14px; margin-bottom: 10px;
@@ -201,20 +198,17 @@ textarea { min-height: 100px; resize: vertical; }
 .note-date { font-size: 12px; color: var(--muted-2); }
 .note-text { white-space: pre-wrap; word-break: break-word; }
 
-/* Stats */
 .stats-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(140px, 1fr)); gap: 12px; margin-bottom: 16px; }
 .stat-card { background: var(--bg-soft); border-radius: 12px; padding: 16px; text-align: center; border: 1px solid var(--border); }
 .stat-card b { display: block; font-size: 28px; font-weight: 800; color: var(--primary); }
 .progress-bar { height: 10px; background: var(--bg-soft); border-radius: 999px; overflow: hidden; margin-top: 8px; }
 .progress-bar > div { height: 100%; background: var(--success); border-radius: 999px; transition: width .4s; }
 
-/* Calendar */
 #calendar { margin-top: 12px; }
 .fc { font-family: var(--font); }
 .fc-button { border-radius: 8px !important; font-weight: 600 !important; }
 .fc-button-active { background: var(--primary) !important; }
 
-/* Toasts */
 #toasts {
   position: fixed; right: 16px; bottom: 16px; z-index: 100;
   display: flex; flex-direction: column; gap: 8px; width: min(360px, calc(100vw - 32px));
@@ -228,7 +222,6 @@ textarea { min-height: 100px; resize: vertical; }
 .toast.error { border-left-color: var(--danger); }
 @keyframes slideIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: none; } }
 
-/* Modal */
 .modal-bg {
   display: none; position: fixed; inset: 0; background: rgba(0,0,0,.5);
   z-index: 80; align-items: center; justify-content: center; padding: 20px;
@@ -240,6 +233,11 @@ textarea { min-height: 100px; resize: vertical; }
 }
 .modal-actions { display: flex; gap: 8px; justify-content: flex-end; margin-top: 16px; }
 
+.subtask { display: flex; align-items: center; gap: 8px; margin: 4px 0; font-size: 14px; }
+.subtask input[type="checkbox"] { width: auto; }
+.habit { display: flex; justify-content: space-between; align-items: center; padding: 12px; border: 1px solid var(--border); border-radius: var(--radius-sm); margin-bottom: 8px; background: var(--surface); }
+.color-dot { width: 12px; height: 12px; border-radius: 50%; display: inline-block; margin-right: 6px; }
+
 @media (max-width: 720px) {
   nav { flex-wrap: wrap; padding: 10px 12px; }
   .nav-menu { order: 3; width: 100%; justify-content: center; margin: 6px 0 0; }
@@ -247,24 +245,9 @@ textarea { min-height: 100px; resize: vertical; }
   .form-row { grid-template-columns: 1fr; }
   .page-title { font-size: 24px; }
   .settings-panel { left: 10px; right: 10px; width: auto; }
+  .dashboard-grid { grid-template-columns: 1fr; }
 }
 </style>
-```html
-<script>
-if ("serviceWorker" in navigator) {
-    window.addEventListener("load", () => {
-        navigator.serviceWorker.register("./service-worker.js")
-            .then(registro => {
-                console.log("Service Worker de Planneo registrado:", registro.scope);
-            })
-            .catch(error => {
-                console.error("Error al registrar el Service Worker:", error);
-            });
-    });
-}
-</script>
-```
-
 </head>
 <body>
 <div id="splash">
@@ -276,7 +259,7 @@ if ("serviceWorker" in navigator) {
   <button class="brand" id="brand">📒 Planneo</button>
   <div class="search-wrap">
     <span class="search-icon">🔎</span>
-    <input type="search" id="globalSearch" placeholder="Buscar tareas o notas..." autocomplete="off">
+    <input type="search" id="globalSearch" placeholder="Buscar tareas, notas o hábitos..." autocomplete="off">
     <div class="search-results" id="searchResults"></div>
   </div>
   <ul class="nav-menu">
@@ -284,6 +267,7 @@ if ("serviceWorker" in navigator) {
     <li><button data-view="day">📅 Mi día</button></li>
     <li><button data-view="notes">📝 Notas</button></li>
     <li><button data-view="calendar">🗓️ Calendario</button></li>
+    <li><button data-view="habits">✨ Hábitos</button></li>
     <li><button data-view="stats">📊 Stats</button></li>
     <li><button id="settingsBtn">⚙️</button></li>
   </ul>
@@ -327,6 +311,14 @@ if ("serviceWorker" in navigator) {
     <button class="btn btn-primary" id="allowNotif" style="width:100%;margin-top:6px;">Permitir notificaciones</button>
     <button class="btn btn-ghost" id="testNotif" style="width:100%;margin-top:6px;">Probar aviso</button>
     <hr style="border:none;border-top:1px solid var(--border);margin:12px 0;">
+    <h4 style="margin:8px 0 4px;">Categorías / Materias</h4>
+    <div id="categoryList" style="font-size:13px;margin-bottom:8px;"></div>
+    <div style="display:flex;gap:6px;">
+      <input id="newCatName" placeholder="Nueva materia..." style="flex:1;">
+      <input type="color" id="newCatColor" value="#6366f1" style="width:50px;">
+      <button class="btn btn-primary" id="addCategory">+</button>
+    </div>
+    <hr style="border:none;border-top:1px solid var(--border);margin:12px 0;">
     <button class="btn btn-ghost" id="exportBtn" style="width:100%;">⬇️ Exportar datos</button>
     <button class="btn btn-ghost" id="importBtn" style="width:100%;margin-top:6px;">⬆️ Importar</button>
     <input type="file" id="importFile" accept=".json" style="display:none;">
@@ -335,10 +327,12 @@ if ("serviceWorker" in navigator) {
 </nav>
 
 <main class="container">
-  <!-- Home -->
+  <!-- Home / Dashboard -->
   <section class="view active" id="view-home">
-    <h1 class="page-title">Planneo</h1>
-    <p class="page-sub">Tu agenda para estudiar y organizarte</p>
+    <h1 class="page-title" id="greeting">Planneo</h1>
+    <p class="page-sub" id="todayDate"></p>
+
+    <div class="dashboard-grid" id="dashCards"></div>
 
     <div class="card">
       <h2 id="formTitle">Nueva tarea</h2>
@@ -362,18 +356,14 @@ if ("serviceWorker" in navigator) {
             <label for="taskPriority">Prioridad</label>
             <select id="taskPriority">
               <option value="normal">Normal</option>
+              <option value="low">Baja</option>
               <option value="important">Importante</option>
+              <option value="urgent">Urgente</option>
             </select>
           </div>
           <div>
-            <label for="taskCategory">Categoría</label>
-            <select id="taskCategory">
-              <option value="general">General</option>
-              <option value="estudio">📚 Estudio</option>
-              <option value="personal">🏠 Personal</option>
-              <option value="proyecto">🎯 Proyecto</option>
-              <option value="salud">💪 Salud</option>
-            </select>
+            <label for="taskCategory">Categoría / Materia</label>
+            <select id="taskCategory"></select>
           </div>
         </div>
         <div class="form-row">
@@ -390,6 +380,11 @@ if ("serviceWorker" in navigator) {
             <label for="taskDuration">Duración (min)</label>
             <input type="number" id="taskDuration" min="0" placeholder="Opcional">
           </div>
+        </div>
+        <div>
+          <label>Subtareas</label>
+          <div id="subtaskList"></div>
+          <button type="button" class="btn btn-ghost" id="addSubtask" style="margin-top:6px;">+ Añadir subtarea</button>
         </div>
         <div>
           <label for="taskNotes">Notas</label>
@@ -423,12 +418,16 @@ if ("serviceWorker" in navigator) {
       <div class="pomo-ring" id="pomoRing">
         <div class="pomo-time" id="pomoTime">25:00</div>
       </div>
+      <div style="margin-bottom:12px;">
+        <label>Relacionar con tarea:</label>
+        <select id="pomoTask" style="max-width:300px;margin:0 auto;"></select>
+      </div>
       <div class="pomo-controls">
         <button class="btn btn-primary" id="pomoStart">▶ Iniciar</button>
         <button class="btn btn-ghost" id="pomoPause">⏸ Pausa</button>
         <button class="btn btn-ghost" id="pomoReset">↺ Reiniciar</button>
       </div>
-      <div class="pomo-sessions">Sesiones completadas: <b id="pomoCount">0</b></div>
+      <div class="pomo-sessions">Sesiones completadas: <b id="pomoCount">0</b> · Hoy: <b id="studyToday">0</b> min</div>
       <div style="margin-top:12px;font-size:13px;color:var(--muted);">
         <label><input type="radio" name="pomoType" value="25" checked> 25 min</label>
         <label style="margin-left:8px;"><input type="radio" name="pomoType" value="50"> 50 min</label>
@@ -445,6 +444,10 @@ if ("serviceWorker" in navigator) {
     <h1 class="page-title">Notas</h1>
     <div class="card">
       <div class="form-grid">
+        <div>
+          <label for="noteTitle">Título</label>
+          <input id="noteTitle" placeholder="Título de la nota">
+        </div>
         <div>
           <label>Tipo</label>
           <div class="filters" style="margin:0;">
@@ -478,17 +481,37 @@ if ("serviceWorker" in navigator) {
     <div id="calendar"></div>
   </section>
 
+  <!-- Habits -->
+  <section class="view" id="view-habits">
+    <h1 class="page-title">Mis hábitos</h1>
+    <p class="page-sub">Construye constancia con rachas reales</p>
+    <div class="card">
+      <div class="form-grid">
+        <div>
+          <label for="habitTitle">Nuevo hábito</label>
+          <input id="habitTitle" placeholder="Ej. Leer 20 minutos">
+        </div>
+        <div class="actions">
+          <button class="btn btn-primary" id="saveHabit">Añadir hábito</button>
+        </div>
+      </div>
+    </div>
+    <div id="habitList"></div>
+  </section>
+
   <!-- Stats -->
   <section class="view" id="view-stats">
     <h1 class="page-title">Estadísticas</h1>
     <div class="stats-grid">
-      <div class="stat-card"><b id="statTotal">0</b><span>Total</span></div>
+      <div class="stat-card"><b id="statTotal">0</b><span>Total tareas</span></div>
       <div class="stat-card"><b id="statDone">0</b><span>Completadas</span></div>
       <div class="stat-card"><b id="statPending">0</b><span>Pendientes</span></div>
       <div class="stat-card"><b id="statNotes">0</b><span>Notas</span></div>
+      <div class="stat-card"><b id="statStudy">0</b><span>Min estudio hoy</span></div>
+      <div class="stat-card"><b id="statHabits">0</b><span>Hábitos activos</span></div>
     </div>
     <div class="card">
-      <div style="display:flex;justify-content:space-between;"><strong>Progreso</strong><span id="statPercent">0%</span></div>
+      <div style="display:flex;justify-content:space-between;"><strong>Progreso general</strong><span id="statPercent">0%</span></div>
       <div class="progress-bar"><div id="statBar"></div></div>
       <p id="statMessage" style="margin-top:8px;color:var(--muted);font-size:14px;"></p>
     </div>
@@ -496,6 +519,14 @@ if ("serviceWorker" in navigator) {
       <div style="font-size:14px;color:var(--muted);">Racha actual</div>
       <div style="font-size:32px;font-weight:800;color:var(--primary);" id="streak">0 días</div>
     </div>
+  </section>
+
+  <!-- Trash -->
+  <section class="view" id="view-trash">
+    <h1 class="page-title">Papelera</h1>
+    <p class="page-sub">Elementos eliminados recientemente (se pueden recuperar)</p>
+    <div id="trashList"></div>
+    <button class="btn btn-danger" id="emptyTrash" style="margin-top:12px;">Vaciar papelera</button>
   </section>
 </main>
 
@@ -528,12 +559,24 @@ if ("serviceWorker" in navigator) {
 (function() {
   "use strict";
 
-  const DB = { tasks: "planneo_v5_tasks", notes: "planneo_v5_notes", config: "planneo_v5_config", streak: "planneo_v5_streak", done: "planneo_v5_done", pomo: "planneo_v5_pomo" };
+  const DB = {
+    tasks: "planneo_v6_tasks",
+    notes: "planneo_v6_notes",
+    config: "planneo_v6_config",
+    streak: "planneo_v6_streak",
+    done: "planneo_v6_done",
+    pomo: "planneo_v6_pomo",
+    habits: "planneo_v6_habits",
+    sessions: "planneo_v6_sessions",
+    trash: "planneo_v6_trash",
+    categories: "planneo_v6_categories"
+  };
 
-  let tasks = [], notes = [], streak = { days: 0, last: null }, doneTotal = 0, pomoSessions = 0;
+  let tasks = [], notes = [], habits = [], sessions = [], trash = [], categories = [];
+  let streak = { days: 0, last: null }, doneTotal = 0, pomoSessions = 0;
   let calendar = null, currentFilter = "all", editingTask = null, editingNote = null, noteType = "estudio";
   let pomoRemaining = 25 * 60, pomoRunning = false, pomoStart = null, pomoDuration = 25 * 60, pomoInterval = null;
-  let confirmResolve = null;
+  let confirmResolve = null, lastDeleted = null;
 
   const config = { theme: "auto", lang: "es", notif: true, remindBefore: 15, sound: true };
 
@@ -545,10 +588,11 @@ if ("serviceWorker" in navigator) {
   function load(k, def) { try { return JSON.parse(localStorage.getItem(k)) ?? def; } catch { return def; } }
   function save(k, v) { try { localStorage.setItem(k, JSON.stringify(v)); } catch { toast("No se pudo guardar (espacio lleno)", "error"); } }
 
-  function toast(text, type = "ok", duration = 3500) {
+  function toast(text, type = "ok", duration = 3500, undo = null) {
     const el = document.createElement("div");
     el.className = `toast ${type}`;
-    el.textContent = text;
+    el.innerHTML = text + (undo ? ` <button style="margin-left:8px;padding:2px 8px;border-radius:6px;border:none;background:var(--primary);color:white;cursor:pointer;">Deshacer</button>` : "");
+    if (undo) el.querySelector("button").onclick = undo;
     $("#toasts").appendChild(el);
     setTimeout(() => el.remove(), duration);
   }
@@ -568,36 +612,111 @@ if ("serviceWorker" in navigator) {
     document.documentElement.setAttribute("data-theme", dark ? "dark" : "light");
   }
 
+  function getGreeting() {
+    const h = new Date().getHours();
+    if (h < 12) return "Buenos días";
+    if (h < 18) return "Buenas tardes";
+    return "Buenas noches";
+  }
+
+  function defaultCategories() {
+    return [
+      { id: "general", name: "General", color: "#6366f1" },
+      { id: "estudio", name: "Estudio", color: "#8b5cf6" },
+      { id: "personal", name: "Personal", color: "#10b981" },
+      { id: "proyecto", name: "Proyecto", color: "#f59e0b" },
+      { id: "salud", name: "Salud", color: "#ef4444" }
+    ];
+  }
+
   function normalizeTask(t) {
     return {
       id: t.id || id(),
       title: String(t.title || "").slice(0, 120),
       date: t.date || today(),
       time: t.time || "12:00",
-      priority: t.priority === "important" ? "important" : "normal",
+      priority: ["urgent","important","normal","low"].includes(t.priority) ? t.priority : "normal",
       category: t.category || "general",
       repeat: ["daily", "weekly", "monthly"].includes(t.repeat) ? t.repeat : "none",
       duration: Number(t.duration) || 0,
       notes: String(t.notes || "").slice(0, 300),
+      subtasks: Array.isArray(t.subtasks) ? t.subtasks.map(s => ({ id: s.id || id(), title: String(s.title||"").slice(0,80), done: !!s.done })) : [],
       done: !!t.done,
-      created: t.created || new Date().toISOString()
+      created: t.created || new Date().toISOString(),
+      completedAt: t.completedAt || null
     };
   }
 
+  function migrateFromV5() {
+    const v5Tasks = load("planneo_v5_tasks", null);
+    if (v5Tasks && !load(DB.tasks, null)) {
+      tasks = v5Tasks.map(normalizeTask);
+      notes = load("planneo_v5_notes", []) || [];
+      streak = load("planneo_v5_streak", { days: 0, last: null });
+      doneTotal = load("planneo_v5_done", 0) || 0;
+      pomoSessions = load("planneo_v5_pomo", 0) || 0;
+      const oldConfig = load("planneo_v5_config", null);
+      if (oldConfig) Object.assign(config, oldConfig);
+      save(DB.tasks, tasks);
+      save(DB.notes, notes);
+      save(DB.streak, streak);
+      save(DB.done, doneTotal);
+      save(DB.pomo, pomoSessions);
+      save(DB.config, config);
+      toast("Datos migrados desde la versión anterior");
+    }
+  }
+
   function loadData() {
+    migrateFromV5();
     tasks = (load(DB.tasks, []) || []).map(normalizeTask);
     notes = load(DB.notes, []) || [];
+    habits = load(DB.habits, []) || [];
+    sessions = load(DB.sessions, []) || [];
+    trash = load(DB.trash, []) || [];
+    categories = load(DB.categories, null) || defaultCategories();
     streak = load(DB.streak, { days: 0, last: null });
     doneTotal = load(DB.done, 0) || 0;
     pomoSessions = load(DB.pomo, 0) || 0;
     const c = load(DB.config, null);
     if (c) Object.assign(config, c);
+    save(DB.categories, categories);
   }
 
   function isOverdue(t) {
     if (t.done) return false;
     const dt = new Date(`${t.date}T${t.time}:00`);
     return !isNaN(dt) && dt < new Date();
+  }
+
+  function getCategory(id) {
+    return categories.find(c => c.id === id) || categories[0];
+  }
+
+  function renderCategorySelect() {
+    const sel = $("#taskCategory");
+    sel.innerHTML = categories.map(c => `<option value="${c.id}">${c.name}</option>`).join("");
+    const list = $("#categoryList");
+    list.innerHTML = categories.map(c => `<div style="margin:4px 0;"><span class="color-dot" style="background:${c.color}"></span>${c.name} <button data-del-cat="${c.id}" style="font-size:11px;margin-left:6px;">×</button></div>`).join("");
+  }
+
+  function renderDashboard() {
+    const now = today();
+    const pending = tasks.filter(t => !t.done).length;
+    const doneToday = tasks.filter(t => t.done && t.date === now).length;
+    const overdue = tasks.filter(isOverdue).length;
+    const todayTasks = tasks.filter(t => t.date === now && !t.done);
+    const studyToday = sessions.filter(s => s.date === now).reduce((a, s) => a + (s.minutes || 0), 0);
+
+    $("#greeting").textContent = getGreeting() + " 👋";
+    $("#todayDate").textContent = new Date().toLocaleDateString("es", { weekday: "long", year: "numeric", month: "long", day: "numeric" });
+
+    $("#dashCards").innerHTML = `
+      <div class="dash-card"><b>${pending}</b><span>Pendientes</span></div>
+      <div class="dash-card"><b>${doneToday}</b><span>Hechas hoy</span></div>
+      <div class="dash-card"><b>${overdue}</b><span>Vencidas</span></div>
+      <div class="dash-card"><b>${studyToday}</b><span>Min estudiados hoy</span></div>
+    `;
   }
 
   function renderTasks() {
@@ -614,6 +733,8 @@ if ("serviceWorker" in navigator) {
     });
     filtered.sort((a, b) => {
       if (a.done !== b.done) return a.done ? 1 : -1;
+      const prio = { urgent: 0, important: 1, normal: 2, low: 3 };
+      if (prio[a.priority] !== prio[b.priority]) return prio[a.priority] - prio[b.priority];
       return new Date(`${a.date}T${a.time}`) - new Date(`${b.date}T${b.time}`);
     });
 
@@ -623,20 +744,27 @@ if ("serviceWorker" in navigator) {
       return;
     }
     filtered.forEach(t => {
+      const cat = getCategory(t.category);
       const el = document.createElement("div");
       el.className = "task";
       if (t.done) el.classList.add("done");
       else if (isOverdue(t)) el.classList.add("overdue");
+      else if (t.priority === "urgent") el.classList.add("urgent");
       else if (t.priority === "important") el.classList.add("important");
 
       const tags = [];
       if (!t.done && isOverdue(t)) tags.push('<span class="tag tag-red">Vencida</span>');
-      if (t.priority === "important") tags.push('<span class="tag tag-amber">Importante</span>');
-      if (t.category !== "general") tags.push(`<span class="tag tag-blue">${t.category}</span>`);
+      if (t.priority === "urgent") tags.push('<span class="tag tag-red">Urgente</span>');
+      else if (t.priority === "important") tags.push('<span class="tag tag-amber">Importante</span>');
+      tags.push(`<span class="tag tag-blue" style="background:${cat.color}22;color:${cat.color}">${cat.name}</span>`);
+
+      const subProgress = t.subtasks.length ? Math.round(t.subtasks.filter(s => s.done).length / t.subtasks.length * 100) : 0;
+      const subHtml = t.subtasks.length ? `<div class="progress-bar" style="margin:6px 0;"><div style="width:${subProgress}%"></div></div>` : "";
 
       el.innerHTML = `
         <div class="task-title">${t.title} ${tags.join("")}</div>
         <div class="task-meta">📅 ${t.date} · ⏰ ${t.time}${t.duration ? ` · ⏱ ${t.duration} min` : ""}</div>
+        ${subHtml}
         ${t.notes ? `<div class="task-meta">${t.notes}</div>` : ""}
         <div class="task-actions">
           <button class="btn btn-primary" style="padding:6px 10px;font-size:13px;" data-action="toggle" data-id="${t.id}">${t.done ? "Reabrir" : "Hecha"}</button>
@@ -660,7 +788,7 @@ if ("serviceWorker" in navigator) {
     }
     todayTasks.forEach(t => {
       const el = document.createElement("div");
-      el.className = "task" + (isOverdue(t) ? " overdue" : t.priority === "important" ? " important" : "");
+      el.className = "task" + (isOverdue(t) ? " overdue" : t.priority === "urgent" ? " urgent" : t.priority === "important" ? " important" : "");
       el.innerHTML = `
         <div class="task-title">${t.title}</div>
         <div class="task-meta">⏰ ${t.time}${t.duration ? ` · ${t.duration} min` : ""}</div>
@@ -670,12 +798,15 @@ if ("serviceWorker" in navigator) {
       `;
       list.appendChild(el);
     });
+    // Update pomo task select
+    const pomoSel = $("#pomoTask");
+    pomoSel.innerHTML = '<option value="">— Ninguna —</option>' + todayTasks.map(t => `<option value="${t.id}">${t.title}</option>`).join("");
   }
 
   function renderNotes() {
     const list = $("#noteList");
     const q = $("#noteSearch").value.toLowerCase().trim();
-    let filtered = notes.filter(n => !q || n.text.toLowerCase().includes(q) || (n.subject || "").toLowerCase().includes(q));
+    let filtered = notes.filter(n => !q || n.text.toLowerCase().includes(q) || (n.subject || "").toLowerCase().includes(q) || (n.title || "").toLowerCase().includes(q));
     list.innerHTML = "";
     if (!filtered.length) {
       list.innerHTML = '<div class="empty">No hay notas</div>';
@@ -686,14 +817,39 @@ if ("serviceWorker" in navigator) {
       el.className = "note";
       el.innerHTML = `
         <div class="note-header">
-          <span class="note-type">${n.type === "idea" ? "💡 Idea" : n.type === "importante" ? "📌 Importante" : "📚 Estudio"} ${n.subject ? "· " + n.subject : ""}</span>
+          <span class="note-type">${n.favorite ? "⭐ " : ""}${n.type === "idea" ? "💡 Idea" : n.type === "importante" ? "📌 Importante" : "📚 Estudio"} ${n.subject ? "· " + n.subject : ""}</span>
           <span class="note-date">${new Date(n.date).toLocaleDateString()}</span>
         </div>
+        ${n.title ? `<div style="font-weight:700;margin-bottom:4px;">${n.title}</div>` : ""}
         <div class="note-text">${n.text}</div>
         <div class="task-actions" style="margin-top:8px;">
           <button class="btn btn-ghost" style="padding:4px 8px;font-size:12px;" data-note-edit="${n.id}">Editar</button>
+          <button class="btn btn-ghost" style="padding:4px 8px;font-size:12px;" data-note-fav="${n.id}">${n.favorite ? "Quitar fav" : "Favorita"}</button>
           <button class="btn btn-ghost" style="padding:4px 8px;font-size:12px;" data-note-del="${n.id}">Borrar</button>
         </div>
+      `;
+      list.appendChild(el);
+    });
+  }
+
+  function renderHabits() {
+    const list = $("#habitList");
+    const now = today();
+    list.innerHTML = "";
+    if (!habits.length) {
+      list.innerHTML = '<div class="empty">Aún no tienes hábitos</div>';
+      return;
+    }
+    habits.forEach(h => {
+      const doneToday = h.history && h.history.includes(now);
+      const el = document.createElement("div");
+      el.className = "habit";
+      el.innerHTML = `
+        <div>
+          <strong>${h.title}</strong>
+          <div style="font-size:12px;color:var(--muted);">Racha: ${h.streak || 0} días</div>
+        </div>
+        <button class="btn ${doneToday ? "btn-ghost" : "btn-primary"}" data-habit-toggle="${h.id}">${doneToday ? "Hecho hoy" : "Marcar"}</button>
       `;
       list.appendChild(el);
     });
@@ -704,10 +860,14 @@ if ("serviceWorker" in navigator) {
     const done = tasks.filter(t => t.done).length;
     const pending = total - done;
     const pct = total ? Math.round(done / total * 100) : 0;
+    const now = today();
+    const studyToday = sessions.filter(s => s.date === now).reduce((a, s) => a + (s.minutes || 0), 0);
     $("#statTotal").textContent = total;
     $("#statDone").textContent = Math.max(doneTotal, done);
     $("#statPending").textContent = pending;
     $("#statNotes").textContent = notes.length;
+    $("#statStudy").textContent = studyToday;
+    $("#statHabits").textContent = habits.length;
     $("#statPercent").textContent = pct + "%";
     $("#statBar").style.width = pct + "%";
     $("#statMessage").textContent = total ? "Sigue así, cada tarea cuenta." : "Aún no hay tareas.";
@@ -732,13 +892,20 @@ if ("serviceWorker" in navigator) {
     const time = $("#taskTime").value;
     if (!date || !time) return toast("Fecha y hora son obligatorias", "warn");
 
+    const subtasks = Array.from(document.querySelectorAll("#subtaskList .subtask")).map(el => ({
+      id: el.dataset.id || id(),
+      title: el.querySelector("input[type=text]").value.trim(),
+      done: el.querySelector("input[type=checkbox]").checked
+    })).filter(s => s.title);
+
     const data = {
       title, date, time,
       priority: $("#taskPriority").value,
       category: $("#taskCategory").value,
       repeat: $("#taskRepeat").value,
       duration: Number($("#taskDuration").value) || 0,
-      notes: $("#taskNotes").value.trim()
+      notes: $("#taskNotes").value.trim(),
+      subtasks
     };
 
     if (editingTask) {
@@ -759,12 +926,26 @@ if ("serviceWorker" in navigator) {
     $("#taskTitle").value = "";
     $("#taskNotes").value = "";
     $("#taskPriority").value = "normal";
-    $("#taskCategory").value = "general";
+    $("#taskCategory").value = categories[0]?.id || "general";
     $("#taskRepeat").value = "none";
     $("#taskDuration").value = "";
     $("#taskDate").value = today();
     $("#taskTime").value = "";
+    $("#subtaskList").innerHTML = "";
     $("#cancelEdit").style.display = "none";
+  }
+
+  function addSubtaskRow(title = "", done = false, sid = null) {
+    const div = document.createElement("div");
+    div.className = "subtask";
+    div.dataset.id = sid || id();
+    div.innerHTML = `
+      <input type="checkbox" ${done ? "checked" : ""}>
+      <input type="text" value="${title}" placeholder="Subtarea" style="flex:1;">
+      <button type="button" style="background:none;border:none;color:var(--danger);cursor:pointer;">×</button>
+    `;
+    div.querySelector("button").onclick = () => div.remove();
+    $("#subtaskList").appendChild(div);
   }
 
   function toggleTask(id) {
@@ -773,16 +954,16 @@ if ("serviceWorker" in navigator) {
     const completing = !t.done;
     t.done = completing;
     if (completing) {
+      t.completedAt = new Date().toISOString();
       doneTotal++;
       save(DB.done, doneTotal);
       updateStreak();
       if (t.repeat !== "none") {
-        // simple next occurrence
         const next = new Date(`${t.date}T${t.time}`);
         if (t.repeat === "daily") next.setDate(next.getDate() + 1);
         else if (t.repeat === "weekly") next.setDate(next.getDate() + 7);
         else if (t.repeat === "monthly") next.setMonth(next.getMonth() + 1);
-        tasks.push(normalizeTask({ ...t, id: id(), date: next.toISOString().slice(0, 10), done: false }));
+        tasks.push(normalizeTask({ ...t, id: id(), date: next.toISOString().slice(0, 10), done: false, completedAt: null, subtasks: t.subtasks.map(s => ({...s, done: false})) }));
       }
       toast("¡Hecho! 🎉");
     }
@@ -791,10 +972,22 @@ if ("serviceWorker" in navigator) {
   }
 
   async function deleteTask(id) {
-    if (!(await confirm("¿Borrar esta tarea?"))) return;
-    tasks = tasks.filter(t => t.id !== id);
+    if (!(await confirm("¿Mover esta tarea a la papelera?"))) return;
+    const t = tasks.find(x => x.id === id);
+    if (!t) return;
+    trash.unshift({ type: "task", data: t, deletedAt: new Date().toISOString() });
+    tasks = tasks.filter(x => x.id !== id);
     save(DB.tasks, tasks);
-    toast("Tarea borrada");
+    save(DB.trash, trash);
+    lastDeleted = { type: "task", data: t };
+    toast("Tarea movida a la papelera", "ok", 5000, () => {
+      tasks.push(normalizeTask(t));
+      trash = trash.filter(x => x.data.id !== t.id);
+      save(DB.tasks, tasks);
+      save(DB.trash, trash);
+      refresh();
+      toast("Tarea recuperada");
+    });
     refresh();
   }
 
@@ -811,6 +1004,8 @@ if ("serviceWorker" in navigator) {
     $("#taskRepeat").value = t.repeat;
     $("#taskDuration").value = t.duration || "";
     $("#taskNotes").value = t.notes || "";
+    $("#subtaskList").innerHTML = "";
+    (t.subtasks || []).forEach(s => addSubtaskRow(s.title, s.done, s.id));
     $("#cancelEdit").style.display = "inline-block";
     showView("home");
     $("#taskTitle").focus();
@@ -819,12 +1014,13 @@ if ("serviceWorker" in navigator) {
   function saveNote() {
     const text = $("#noteText").value.trim();
     if (!text) return toast("Escribe algo", "warn");
+    const title = $("#noteTitle").value.trim();
     const subject = $("#noteSubject").value.trim();
     if (editingNote) {
-      notes = notes.map(n => n.id === editingNote ? { ...n, text, subject, type: noteType, edited: new Date().toISOString() } : n);
+      notes = notes.map(n => n.id === editingNote ? { ...n, title, text, subject, type: noteType, edited: new Date().toISOString() } : n);
       toast("Nota actualizada");
     } else {
-      notes.unshift({ id: id(), type: noteType, subject, text, date: new Date().toISOString() });
+      notes.unshift({ id: id(), title, type: noteType, subject, text, date: new Date().toISOString(), favorite: false });
       toast("Nota guardada");
     }
     save(DB.notes, notes);
@@ -835,19 +1031,51 @@ if ("serviceWorker" in navigator) {
 
   function cancelNote() {
     editingNote = null;
+    $("#noteTitle").value = "";
     $("#noteText").value = "";
     $("#noteSubject").value = "";
     $("#cancelNote").style.display = "none";
   }
 
+  function saveHabit() {
+    const title = $("#habitTitle").value.trim();
+    if (!title) return toast("Escribe el hábito", "warn");
+    habits.push({ id: id(), title, streak: 0, history: [], last: null });
+    save(DB.habits, habits);
+    $("#habitTitle").value = "";
+    toast("Hábito añadido");
+    renderHabits();
+    renderStats();
+  }
+
+  function toggleHabit(id) {
+    const h = habits.find(x => x.id === id);
+    if (!h) return;
+    const now = today();
+    if (!h.history) h.history = [];
+    if (h.history.includes(now)) {
+      h.history = h.history.filter(d => d !== now);
+      // simple streak recalculation
+      h.streak = Math.max(0, h.streak - 1);
+    } else {
+      h.history.push(now);
+      if (h.last === new Date(Date.now() - 86400000).toISOString().slice(0,10)) h.streak++;
+      else h.streak = 1;
+      h.last = now;
+    }
+    save(DB.habits, habits);
+    renderHabits();
+  }
+
   function refresh() {
+    renderDashboard();
     renderTasks();
     renderDay();
     renderStats();
     syncCalendar();
   }
 
-  // Pomodoro with background support
+  // Pomodoro
   function updatePomo() {
     const m = Math.floor(pomoRemaining / 60);
     const s = pomoRemaining % 60;
@@ -893,16 +1121,19 @@ if ("serviceWorker" in navigator) {
     pomoSessions++;
     save(DB.pomo, pomoSessions);
     $("#pomoCount").textContent = pomoSessions;
+    const mins = Math.round(pomoDuration / 60);
+    sessions.push({ id: id(), date: today(), minutes: mins, taskId: $("#pomoTask").value || null });
+    save(DB.sessions, sessions);
     playSound();
     toast("¡Sesión terminada! Buen trabajo.", "ok", 5000);
     if ("Notification" in window && Notification.permission === "granted") {
       new Notification("Planneo · Pomodoro", { body: "Sesión de estudio terminada. ¡Toma un descanso!" });
     }
-    // auto switch to short break
     pomoDuration = 5 * 60;
     pomoRemaining = pomoDuration;
     $("#pomoMode").textContent = "Descanso corto";
     updatePomo();
+    refresh();
   }
 
   function playSound() {
@@ -919,18 +1150,20 @@ if ("serviceWorker" in navigator) {
     } catch {}
   }
 
-  // Calendar
   function syncCalendar() {
     if (!calendar) return;
     calendar.removeAllEventSources();
-    calendar.addEventSource(tasks.filter(t => t.date && t.time).map(t => ({
-      id: t.id,
-      title: (t.done ? "✔ " : "") + t.title,
-      start: `${t.date}T${t.time}:00`,
-      backgroundColor: t.done ? "#10b981" : isOverdue(t) ? "#ef4444" : t.priority === "important" ? "#f59e0b" : t.category === "estudio" ? "#8b5cf6" : "#6366f1",
-      borderColor: "transparent",
-      textColor: "#fff"
-    })));
+    calendar.addEventSource(tasks.filter(t => t.date && t.time).map(t => {
+      const cat = getCategory(t.category);
+      return {
+        id: t.id,
+        title: (t.done ? "✔ " : "") + t.title,
+        start: `${t.date}T${t.time}:00`,
+        backgroundColor: t.done ? "#10b981" : isOverdue(t) ? "#ef4444" : t.priority === "urgent" ? "#dc2626" : t.priority === "important" ? "#f59e0b" : cat.color,
+        borderColor: "transparent",
+        textColor: "#fff"
+      };
+    }));
   }
 
   function initCalendar() {
@@ -971,7 +1204,6 @@ if ("serviceWorker" in navigator) {
   }
   function closeModal() { $("#modal").classList.remove("show"); }
 
-  // Notifications
   function updateNotifStatus() {
     const p = "Notification" in window ? Notification.permission : "unsupported";
     const el = $("#notifStatus");
@@ -1017,7 +1249,6 @@ if ("serviceWorker" in navigator) {
     });
   }
 
-  // Search
   function doSearch() {
     const q = $("#globalSearch").value.toLowerCase().trim();
     const box = $("#searchResults");
@@ -1028,8 +1259,12 @@ if ("serviceWorker" in navigator) {
         results.push({ type: "Tarea", title: t.title, detail: t.date + " " + t.time, id: t.id, kind: "task" });
     });
     notes.forEach(n => {
-      if (n.text.toLowerCase().includes(q) || (n.subject || "").toLowerCase().includes(q))
-        results.push({ type: "Nota", title: n.subject || n.type, detail: n.text.slice(0, 60), id: n.id, kind: "note" });
+      if (n.text.toLowerCase().includes(q) || (n.subject || "").toLowerCase().includes(q) || (n.title||"").toLowerCase().includes(q))
+        results.push({ type: "Nota", title: n.title || n.subject || n.type, detail: n.text.slice(0, 60), id: n.id, kind: "note" });
+    });
+    habits.forEach(h => {
+      if (h.title.toLowerCase().includes(q))
+        results.push({ type: "Hábito", title: h.title, detail: "Racha: " + (h.streak||0), id: h.id, kind: "habit" });
     });
     box.innerHTML = results.slice(0, 8).map(r => `
       <button class="search-item" data-kind="${r.kind}" data-id="${r.id}">
@@ -1048,17 +1283,40 @@ if ("serviceWorker" in navigator) {
     if (name === "calendar" && calendar) setTimeout(() => calendar.updateSize(), 50);
     if (name === "day") renderDay();
     if (name === "notes") renderNotes();
+    if (name === "habits") renderHabits();
     if (name === "stats") renderStats();
+    if (name === "trash") renderTrash();
     history.replaceState(null, "", "#" + name);
   }
 
-  // Export / Import
+  function renderTrash() {
+    const list = $("#trashList");
+    list.innerHTML = "";
+    if (!trash.length) {
+      list.innerHTML = '<div class="empty">La papelera está vacía</div>';
+      return;
+    }
+    trash.forEach(item => {
+      const el = document.createElement("div");
+      el.className = "task";
+      el.innerHTML = `
+        <div class="task-title">${item.data.title || item.data.text?.slice(0,40) || "Elemento"}</div>
+        <div class="task-meta">${item.type} · ${new Date(item.deletedAt).toLocaleString()}</div>
+        <div class="task-actions">
+          <button class="btn btn-primary" data-restore="${item.data.id}">Recuperar</button>
+          <button class="btn btn-ghost" data-perm-del="${item.data.id}">Eliminar definitivo</button>
+        </div>
+      `;
+      list.appendChild(el);
+    });
+  }
+
   function exportData() {
-    const data = { version: 5, tasks, notes, streak, doneTotal, pomoSessions, config };
+    const data = { version: 6, tasks, notes, habits, sessions, trash, categories, streak, doneTotal, pomoSessions, config };
     const blob = new Blob([JSON.stringify(data, null, 2)], { type: "application/json" });
     const a = document.createElement("a");
     a.href = URL.createObjectURL(blob);
-    a.download = "planneo-backup.json";
+    a.download = "planneo-backup-v6.json";
     a.click();
     toast("Datos exportados");
   }
@@ -1067,36 +1325,39 @@ if ("serviceWorker" in navigator) {
     try {
       const text = await file.text();
       const data = JSON.parse(text);
-      if (!data.tasks) throw new Error();
+      if (!data.tasks && !data.notes) throw new Error();
       if (!(await confirm("¿Reemplazar todos los datos actuales?"))) return;
       tasks = (data.tasks || []).map(normalizeTask);
       notes = data.notes || [];
+      habits = data.habits || [];
+      sessions = data.sessions || [];
+      trash = data.trash || [];
+      categories = data.categories || defaultCategories();
       streak = data.streak || { days: 0, last: null };
       doneTotal = data.doneTotal || 0;
       pomoSessions = data.pomoSessions || 0;
-      save(DB.tasks, tasks);
-      save(DB.notes, notes);
-      save(DB.streak, streak);
-      save(DB.done, doneTotal);
-      save(DB.pomo, pomoSessions);
+      if (data.config) Object.assign(config, data.config);
+      save(DB.tasks, tasks); save(DB.notes, notes); save(DB.habits, habits);
+      save(DB.sessions, sessions); save(DB.trash, trash); save(DB.categories, categories);
+      save(DB.streak, streak); save(DB.done, doneTotal); save(DB.pomo, pomoSessions); save(DB.config, config);
       toast("Datos importados");
-      refresh();
-      renderNotes();
+      refresh(); renderNotes(); renderHabits(); renderCategorySelect();
     } catch {
       toast("Archivo no válido", "error");
     }
   }
 
   async function clearAll() {
-    if (!(await confirm("Esto borrará todas las tareas, notas y estadísticas. ¿Continuar?"))) return;
-    tasks = []; notes = []; streak = { days: 0, last: null }; doneTotal = 0; pomoSessions = 0;
-    save(DB.tasks, tasks); save(DB.notes, notes); save(DB.streak, streak); save(DB.done, doneTotal); save(DB.pomo, pomoSessions);
+    if (!(await confirm("Esto borrará todas las tareas, notas, hábitos y estadísticas. ¿Continuar?"))) return;
+    tasks = []; notes = []; habits = []; sessions = []; trash = [];
+    streak = { days: 0, last: null }; doneTotal = 0; pomoSessions = 0;
+    categories = defaultCategories();
+    Object.values(DB).forEach(k => localStorage.removeItem(k));
+    save(DB.categories, categories);
     toast("Todo borrado");
-    refresh();
-    renderNotes();
+    refresh(); renderNotes(); renderHabits(); renderCategorySelect();
   }
 
-  // Init
   function init() {
     loadData();
     applyTheme();
@@ -1109,8 +1370,8 @@ if ("serviceWorker" in navigator) {
     $("#pomoCount").textContent = pomoSessions;
     updateNotifStatus();
     updatePomo();
+    renderCategorySelect();
 
-    // Events
     $("#brand").onclick = () => showView("home");
     $$(".nav-menu button[data-view]").forEach(b => b.onclick = () => showView(b.dataset.view));
     $("#settingsBtn").onclick = e => { e.stopPropagation(); $("#settingsPanel").classList.toggle("open"); };
@@ -1129,8 +1390,30 @@ if ("serviceWorker" in navigator) {
       else toast("Primero permite las notificaciones", "warn");
     };
 
+    $("#addCategory").onclick = () => {
+      const name = $("#newCatName").value.trim();
+      if (!name) return;
+      const color = $("#newCatColor").value;
+      const cid = id();
+      categories.push({ id: cid, name, color });
+      save(DB.categories, categories);
+      $("#newCatName").value = "";
+      renderCategorySelect();
+      toast("Categoría añadida");
+    };
+    $("#categoryList").onclick = e => {
+      const btn = e.target.closest("[data-del-cat]");
+      if (!btn) return;
+      const cid = btn.dataset.delCat;
+      if (categories.length <= 1) return toast("Debe quedar al menos una categoría", "warn");
+      categories = categories.filter(c => c.id !== cid);
+      save(DB.categories, categories);
+      renderCategorySelect();
+    };
+
     $("#saveTask").onclick = saveTask;
     $("#cancelEdit").onclick = clearForm;
+    $("#addSubtask").onclick = () => addSubtaskRow();
     $$(".filter-btn[data-filter]").forEach(b => b.onclick = () => {
       $$(".filter-btn[data-filter]").forEach(x => x.classList.remove("active"));
       b.classList.add("active");
@@ -1162,10 +1445,12 @@ if ("serviceWorker" in navigator) {
     $("#noteList").onclick = async e => {
       const edit = e.target.closest("[data-note-edit]");
       const del = e.target.closest("[data-note-del]");
+      const fav = e.target.closest("[data-note-fav]");
       if (edit) {
         const n = notes.find(x => x.id === edit.dataset.noteEdit);
         if (n) {
           editingNote = n.id;
+          $("#noteTitle").value = n.title || "";
           $("#noteText").value = n.text;
           $("#noteSubject").value = n.subject || "";
           noteType = n.type;
@@ -1174,12 +1459,24 @@ if ("serviceWorker" in navigator) {
           $("#noteText").focus();
         }
       }
-      if (del && await confirm("¿Borrar esta nota?")) {
-        notes = notes.filter(n => n.id !== del.dataset.noteDel);
-        save(DB.notes, notes);
-        renderNotes();
-        toast("Nota borrada");
+      if (fav) {
+        const n = notes.find(x => x.id === fav.dataset.noteFav);
+        if (n) { n.favorite = !n.favorite; save(DB.notes, notes); renderNotes(); }
       }
+      if (del && await confirm("¿Borrar esta nota?")) {
+        const n = notes.find(x => x.id === del.dataset.noteDel);
+        if (n) trash.unshift({ type: "note", data: n, deletedAt: new Date().toISOString() });
+        notes = notes.filter(x => x.id !== del.dataset.noteDel);
+        save(DB.notes, notes); save(DB.trash, trash);
+        renderNotes();
+        toast("Nota movida a la papelera");
+      }
+    };
+
+    $("#saveHabit").onclick = saveHabit;
+    $("#habitList").onclick = e => {
+      const btn = e.target.closest("[data-habit-toggle]");
+      if (btn) toggleHabit(btn.dataset.habitToggle);
     };
 
     // Pomodoro
@@ -1203,10 +1500,12 @@ if ("serviceWorker" in navigator) {
         showView("home");
         $("#taskSearch").value = tasks.find(t => t.id === item.dataset.id)?.title || "";
         renderTasks();
-      } else {
+      } else if (item.dataset.kind === "note") {
         showView("notes");
         $("#noteSearch").value = notes.find(n => n.id === item.dataset.id)?.text.slice(0, 20) || "";
         renderNotes();
+      } else if (item.dataset.kind === "habit") {
+        showView("habits");
       }
     };
     document.addEventListener("click", e => {
@@ -1218,6 +1517,36 @@ if ("serviceWorker" in navigator) {
     $("#importBtn").onclick = () => $("#importFile").click();
     $("#importFile").onchange = function() { if (this.files[0]) importData(this.files[0]); this.value = ""; };
     $("#clearBtn").onclick = clearAll;
+
+    // Trash
+    $("#trashList").onclick = e => {
+      const restore = e.target.closest("[data-restore]");
+      const perm = e.target.closest("[data-perm-del]");
+      if (restore) {
+        const item = trash.find(x => x.data.id === restore.dataset.restore);
+        if (item) {
+          if (item.type === "task") tasks.push(normalizeTask(item.data));
+          else if (item.type === "note") notes.unshift(item.data);
+          trash = trash.filter(x => x.data.id !== item.data.id);
+          save(DB.tasks, tasks); save(DB.notes, notes); save(DB.trash, trash);
+          refresh(); renderNotes(); renderTrash();
+          toast("Elemento recuperado");
+        }
+      }
+      if (perm) {
+        trash = trash.filter(x => x.data.id !== perm.dataset.permDel);
+        save(DB.trash, trash);
+        renderTrash();
+      }
+    };
+    $("#emptyTrash").onclick = async () => {
+      if (await confirm("¿Vaciar la papelera permanentemente?")) {
+        trash = [];
+        save(DB.trash, trash);
+        renderTrash();
+        toast("Papelera vaciada");
+      }
+    };
 
     // Modals
     $("#modalClose").onclick = closeModal;
@@ -1240,7 +1569,6 @@ if ("serviceWorker" in navigator) {
       }
     });
 
-    // Visibility / reminders
     document.addEventListener("visibilitychange", () => {
       if (!document.hidden && pomoRunning) {
         const elapsed = Math.floor((Date.now() - pomoStart) / 1000);
@@ -1255,9 +1583,10 @@ if ("serviceWorker" in navigator) {
     initCalendar();
     refresh();
     renderNotes();
+    renderHabits();
 
     const hash = location.hash.slice(1);
-    if (["home", "day", "notes", "calendar", "stats"].includes(hash)) showView(hash);
+    if (["home", "day", "notes", "calendar", "stats", "habits", "trash"].includes(hash)) showView(hash);
 
     setTimeout(() => $("#splash").style.display = "none", 2200);
   }
@@ -1265,6 +1594,15 @@ if ("serviceWorker" in navigator) {
   if (document.readyState === "loading") document.addEventListener("DOMContentLoaded", init);
   else init();
 })();
+</script>
+<script>
+if ("serviceWorker" in navigator) {
+  window.addEventListener("load", () => {
+    navigator.serviceWorker.register("./service-worker.js")
+      .then(reg => console.log("SW registrado:", reg.scope))
+      .catch(err => console.error("Error SW:", err));
+  });
+}
 </script>
 </body>
 </html>
