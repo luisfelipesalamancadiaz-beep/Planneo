@@ -1,9 +1,9 @@
-```javascript
-const CACHE_NAME = "planneo-v5";
+const CACHE_NAME = "planneo-v6";
 
 const ARCHIVOS = [
     "./",
     "./index.html",
+    "./planneo-2.0.html",
     "./manifest.json"
 ];
 
@@ -35,12 +35,10 @@ self.addEventListener("fetch", event => {
             .then(respuesta => {
                 if (respuesta && respuesta.ok && new URL(event.request.url).origin === self.location.origin) {
                     const copia = respuesta.clone();
-
                     caches.open(CACHE_NAME).then(cache => {
                         cache.put(event.request, copia);
                     });
                 }
-
                 return respuesta;
             })
             .catch(() => caches.match(event.request))
@@ -49,20 +47,12 @@ self.addEventListener("fetch", event => {
 
 self.addEventListener("notificationclick", event => {
     event.notification.close();
-
     event.waitUntil(
-        self.clients.matchAll({
-            type: "window",
-            includeUncontrolled: true
-        }).then(clientes => {
+        self.clients.matchAll({ type: "window", includeUncontrolled: true }).then(clientes => {
             for (const cliente of clientes) {
-                if ("focus" in cliente) {
-                    return cliente.focus();
-                }
+                if ("focus" in cliente) return cliente.focus();
             }
-
             return self.clients.openWindow("./");
         })
     );
 });
-```
