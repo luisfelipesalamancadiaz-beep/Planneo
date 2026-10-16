@@ -1,92 +1,68 @@
-const CACHE_NAME = "planneo-v2";
+```javascript
+const CACHE_NAME = "planneo-v5";
 
 const ARCHIVOS = [
-  "./",
-  "./index.html",
-  "./manifest.json"
+    "./",
+    "./index.html",
+    "./manifest.json"
 ];
 
-/* INSTALACIÓN */
-self.addEventListener("install", (event) => {
-  event.waitUntil(
-    caches.open(CACHE_NAME).then((cache) => {
-      return cache.addAll(ARCHIVOS);
-    })
-  );
-
-  self.skipWaiting();
+self.addEventListener("install", event => {
+    event.waitUntil(
+        caches.open(CACHE_NAME)
+            .then(cache => cache.addAll(ARCHIVOS))
+            .then(() => self.skipWaiting())
+    );
 });
 
-/* ACTIVACIÓN */
-self.addEventListener("activate", (event) => {
-  event.waitUntil(
-    caches.keys().then((keys) => {
-      return Promise.all(
-        keys
-          .filter((key) => key !== CACHE_NAME)
-          .map((key) => caches.delete(key))
-      );
-    })
-  );
-
-  self.clients.claim();
+self.addEventListener("activate", event => {
+    event.waitUntil(
+        caches.keys()
+            .then(nombres => Promise.all(
+                nombres
+                    .filter(nombre => nombre.startsWith("planneo-") && nombre !== CACHE_NAME)
+                    .map(nombre => caches.delete(nombre))
+            ))
+            .then(() => self.clients.claim())
+    );
 });
 
-/* CARGA DE ARCHIVOS */
-self.addEventListener("fetch", (event) => {
+self.addEventListener("fetch", event => {
+    if (event.request.method !== "GET") return;
 
-  // Para HTML: primero busca la versión NUEVA en internet
-  if (event.request.mode === "navigate") {
     event.respondWith(
-      fetch(event.request)
-        .then((respuesta) => {
+        fetch(event.request)
+            .then(respuesta => {
+                if (respuesta && respuesta.ok && new URL(event.request.url).origin === self.location.origin) {
+                    const copia = respuesta.clone();
 
-          const copia = respuesta.clone();
+                    caches.open(CACHE_NAME).then(cache => {
+                        cache.put(event.request, copia);
+                    });
+                }
 
-          caches.open(CACHE_NAME).then((cache) => {
-            cache.put(event.request, copia);
-          });
+                return respuesta;
+            })
+            .catch(() => caches.match(event.request))
+    );
+});
 
-          return respuesta;
-        })
-        .catch(() => {
-          return caches.match(event.request);
+self.addEventListener("notificationclick", event => {
+    event.notification.close();
+
+    event.waitUntil(
+        self.clients.matchAll({
+            type: "window",
+            includeUncontrolled: true
+        }).then(clientes => {
+            for (const cliente of clientes) {
+                if ("focus" in cliente) {
+                    return cliente.focus();
+                }
+            }
+
+            return self.clients.openWindow("./");
         })
     );
-
-    return;
-  }
-
-  // Para los demás archivos:
-  // caché primero, internet como respaldo
-  event.respondWith(
-    caches.match(event.request).then((respuesta) => {
-      return respuesta || fetch(event.request);
-    })
-  );
 });
-
-/* NOTIFICACIONES PUSH */
-self.addEventListener("push", (event) => {
-
-  let datos = {
-    titulo: "Planneo",
-    mensaje: "Tienes un nuevo recordatorio."
-  };
-
-  if (event.data) {
-    try {
-      datos = event.data.json();
-    } catch {
-      datos.mensaje = event.data.text();
-    }
-  }
-
-  event.waitUntil(
-    self.registration.showNotification(datos.titulo, {
-      body: datos.mensaje,
-      icon: "./icono.png",
-      badge: "./icono.png"
-    })
-  );
-});
+```
