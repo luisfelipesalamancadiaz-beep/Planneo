@@ -1,4 +1,4 @@
-```javascript
+
 const CACHE_NAME = "planneo-v7";
 
 const ARCHIVOS = [
