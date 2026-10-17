@@ -238,6 +238,34 @@ textarea { min-height: 100px; resize: vertical; }
 .habit { display: flex; justify-content: space-between; align-items: center; padding: 12px; border: 1px solid var(--border); border-radius: var(--radius-sm); margin-bottom: 8px; background: var(--surface); }
 .color-dot { width: 12px; height: 12px; border-radius: 50%; display: inline-block; margin-right: 6px; }
 
+
+/* Asistente de personalización inicial */
+.onboarding-backdrop {
+  display: none; position: fixed; inset: 0; z-index: 10000; overflow-y: auto;
+  padding: 24px 14px; background: radial-gradient(circle at top right, rgba(99,102,241,.18), transparent 36%), var(--bg);
+}
+.onboarding-backdrop.show { display: flex; align-items: center; justify-content: center; }
+.onboarding-card { width: min(760px, 100%); background: var(--surface); border: 1px solid var(--border); border-radius: 26px; padding: clamp(20px, 4vw, 36px); box-shadow: var(--shadow-lg); }
+.onboarding-brand { color: var(--primary); font-weight: 800; letter-spacing: -.8px; font-size: 14px; text-transform: uppercase; }
+.onboarding-card h1 { font-size: clamp(27px, 5vw, 38px); line-height: 1.12; letter-spacing: -1px; margin: 8px 0; }
+.onboarding-lead { color: var(--muted); margin-bottom: 24px; }
+.onboarding-section { border-top: 1px solid var(--border); padding-top: 20px; margin-top: 20px; }
+.onboarding-section h2 { font-size: 16px; margin-bottom: 5px; }
+.onboarding-help { color: var(--muted); font-size: 13px; margin-bottom: 13px; }
+.choice-grid { display: grid; grid-template-columns: repeat(3, minmax(0,1fr)); gap: 10px; }
+.choice-card { display: flex; align-items: center; gap: 10px; border: 1px solid var(--border); border-radius: 14px; padding: 12px; cursor: pointer; min-height: 62px; background: var(--surface); }
+.choice-card:has(input:checked) { border-color: var(--primary); background: var(--primary-light); }
+.choice-card input { width: auto; accent-color: var(--primary); }
+.theme-swatch { width: 30px; height: 30px; flex: 0 0 30px; border-radius: 10px; border: 1px solid var(--border); }
+.color-options { display: flex; gap: 10px; flex-wrap: wrap; }
+.color-choice { display: inline-flex; align-items: center; gap: 7px; padding: 7px 10px; border: 1px solid var(--border); border-radius: 999px; cursor: pointer; font-size: 13px; }
+.color-choice input { width: auto; accent-color: var(--primary); }
+.onboarding-footer { display: flex; gap: 10px; justify-content: flex-end; margin-top: 26px; flex-wrap: wrap; }
+.onboarding-footer .btn { padding: 12px 18px; }
+.settings-customize { width: 100%; margin: 0 0 12px; }
+@media (max-width: 600px) { .choice-grid { grid-template-columns: repeat(2,minmax(0,1fr)); } .onboarding-card { border-radius: 20px; } }
+@media (max-width: 390px) { .choice-grid { grid-template-columns: 1fr; } }
+
 @media (max-width: 720px) {
   nav { flex-wrap: wrap; padding: 10px 12px; }
   .nav-menu { order: 3; width: 100%; justify-content: center; margin: 6px 0 0; }
@@ -255,6 +283,69 @@ textarea { min-height: 100px; resize: vertical; }
   <div class="tag">Organiza tu día ✨</div>
 </div>
 
+<div class="onboarding-backdrop" id="onboarding" role="dialog" aria-modal="true" aria-labelledby="onboardingTitle">
+  <form class="onboarding-card" id="onboardingForm">
+    <div class="onboarding-brand">📒 PLANNEO · TU ESPACIO</div>
+    <h1 id="onboardingTitle">Tu agenda, a tu manera.</h1>
+    <p class="onboarding-lead">Configúrala una sola vez. La próxima vez que vuelvas, entrarás directamente a tu agenda personalizada.</p>
+
+    <div class="onboarding-section" style="border-top:0;padding-top:0;margin-top:0;">
+      <h2>1. Elige tu apariencia</h2>
+      <p class="onboarding-help">Puedes cambiarla más adelante desde Configuración.</p>
+      <div class="choice-grid">
+        <label class="choice-card"><input type="radio" name="theme" value="light" checked><span class="theme-swatch" style="background:linear-gradient(135deg,#fff 50%,#e2e8f0 50%);"></span><span><b>Claro</b><br><small>Fresco y limpio</small></span></label>
+        <label class="choice-card"><input type="radio" name="theme" value="dark"><span class="theme-swatch" style="background:linear-gradient(135deg,#0b1220 50%,#334155 50%);"></span><span><b>Oscuro</b><br><small>Suave para la vista</small></span></label>
+        <label class="choice-card"><input type="radio" name="theme" value="auto"><span class="theme-swatch" style="background:linear-gradient(135deg,#fff 50%,#0b1220 50%);"></span><span><b>Automático</b><br><small>Según tu sistema</small></span></label>
+      </div>
+      <h2 style="margin-top:18px;">Color principal</h2>
+      <div class="color-options" style="margin-top:10px;">
+        <label class="color-choice"><input type="radio" name="accent" value="#6366f1" checked><span class="theme-swatch" style="width:18px;height:18px;min-width:18px;background:#6366f1;border:0;border-radius:50%;"></span>Índigo</label>
+        <label class="color-choice"><input type="radio" name="accent" value="#0ea5e9"><span class="theme-swatch" style="width:18px;height:18px;min-width:18px;background:#0ea5e9;border:0;border-radius:50%;"></span>Azul</label>
+        <label class="color-choice"><input type="radio" name="accent" value="#10b981"><span class="theme-swatch" style="width:18px;height:18px;min-width:18px;background:#10b981;border:0;border-radius:50%;"></span>Verde</label>
+        <label class="color-choice"><input type="radio" name="accent" value="#f43f5e"><span class="theme-swatch" style="width:18px;height:18px;min-width:18px;background:#f43f5e;border:0;border-radius:50%;"></span>Rosa</label>
+        <label class="color-choice"><input type="radio" name="accent" value="#f59e0b"><span class="theme-swatch" style="width:18px;height:18px;min-width:18px;background:#f59e0b;border:0;border-radius:50%;"></span>Ámbar</label>
+      </div>
+    </div>
+
+    <div class="onboarding-section">
+      <h2>2. ¿Qué quieres tener en tu agenda?</h2>
+      <p class="onboarding-help">Marca las secciones que quieras ver en el menú. Siempre podrás volver a activarlas.</p>
+      <div class="choice-grid">
+        <label class="choice-card"><input type="checkbox" name="module" value="day" checked><span>📅 <b>Mi día</b></span></label>
+        <label class="choice-card"><input type="checkbox" name="module" value="calendar" checked><span>🗓️ <b>Calendario</b></span></label>
+        <label class="choice-card"><input type="checkbox" name="module" value="notes" checked><span>📝 <b>Notas</b></span></label>
+        <label class="choice-card"><input type="checkbox" name="module" value="habits" checked><span>✨ <b>Hábitos</b></span></label>
+        <label class="choice-card"><input type="checkbox" name="module" value="stats" checked><span>📊 <b>Estadísticas</b></span></label>
+        <label class="choice-card"><input type="checkbox" name="module" value="trash"><span>🗑️ <b>Papelera</b></span></label>
+      </div>
+    </div>
+
+    <div class="onboarding-section">
+      <h2>3. ¿Qué quieres ver al entrar?</h2>
+      <p class="onboarding-help">Elige la pantalla que se abrirá automáticamente en tus próximas visitas.</p>
+      <select id="onboardingStartView" name="startView">
+        <option value="home">🏠 Inicio · resumen y nuevas tareas</option>
+        <option value="day">📅 Mi día</option>
+        <option value="calendar">🗓️ Calendario</option>
+        <option value="notes">📝 Notas</option>
+        <option value="habits">✨ Hábitos</option>
+        <option value="stats">📊 Estadísticas</option>
+      </select>
+    </div>
+
+    <div class="onboarding-section">
+      <h2>4. Recordatorios</h2>
+      <p class="onboarding-help">Puedes ajustar los permisos del navegador y el tiempo de aviso después.</p>
+      <label class="choice-card"><input type="checkbox" name="notifications" id="onboardingNotifications" checked><span>🔔 Quiero activar los recordatorios de Planneo</span></label>
+    </div>
+
+    <div class="onboarding-footer">
+      <button type="button" class="btn btn-ghost" id="cancelOnboarding" style="display:none;">Cancelar</button>
+      <button type="submit" class="btn btn-primary">Crear mi espacio <span aria-hidden="true">→</span></button>
+    </div>
+  </form>
+</div>
+
 <nav>
   <button class="brand" id="brand">📒 Planneo</button>
   <div class="search-wrap">
@@ -269,10 +360,12 @@ textarea { min-height: 100px; resize: vertical; }
     <li><button data-view="calendar">🗓️ Calendario</button></li>
     <li><button data-view="habits">✨ Hábitos</button></li>
     <li><button data-view="stats">📊 Stats</button></li>
+    <li><button data-view="trash">🗑️ Papelera</button></li>
     <li><button id="settingsBtn">⚙️</button></li>
   </ul>
   <div class="settings-panel" id="settingsPanel">
     <h3>Ajustes</h3>
+    <button class="btn btn-primary settings-customize" id="customizeBtn">✨ Personalizar mi agenda</button>
     <div class="setting-row">
       <span>Tema</span>
       <select id="themeSelect">
@@ -306,25 +399,7 @@ textarea { min-height: 100px; resize: vertical; }
     <div class="setting-row">
       <span>Sonido</span>
       <label class="switch"><input type="checkbox" id="soundToggle" checked><span class="slider"></span></label>
-    </div>
-    <p id="notifStatus" style="font-size:13px;color:var(--muted);margin:8px 0;"></p>
-    <button class="btn btn-primary" id="allowNotif" style="width:100%;margin-top:6px;">Permitir notificaciones</button>
-    <button class="btn btn-ghost" id="testNotif" style="width:100%;margin-top:6px;">Probar aviso</button>
-    <hr style="border:none;border-top:1px solid var(--border);margin:12px 0;">
-    <h4 style="margin:8px 0 4px;">Categorías / Materias</h4>
-    <div id="categoryList" style="font-size:13px;margin-bottom:8px;"></div>
-    <div style="display:flex;gap:6px;">
-      <input id="newCatName" placeholder="Nueva materia..." style="flex:1;">
-      <input type="color" id="newCatColor" value="#6366f1" style="width:50px;">
-      <button class="btn btn-primary" id="addCategory">+</button>
-    </div>
-    <hr style="border:none;border-top:1px solid var(--border);margin:12px 0;">
-    <button class="btn btn-ghost" id="exportBtn" style="width:100%;">⬇️ Exportar datos</button>
-    <button class="btn btn-ghost" id="importBtn" style="width:100%;margin-top:6px;">⬆️ Importar</button>
-    <input type="file" id="importFile" accept=".json" style="display:none;">
-    <button class="btn btn-danger" id="clearBtn">🗑️ Borrar todo</button>
-  </div>
-</nav>
+    addEventListener
 
 <main class="container">
   <!-- Home / Dashboard -->
@@ -578,7 +653,11 @@ textarea { min-height: 100px; resize: vertical; }
   let pomoRemaining = 25 * 60, pomoRunning = false, pomoStart = null, pomoDuration = 25 * 60, pomoInterval = null;
   let confirmResolve = null, lastDeleted = null;
 
-  const config = { theme: "auto", lang: "es", notif: true, remindBefore: 15, sound: true };
+  const config = {
+    theme: "auto", lang: "es", notif: true, remindBefore: 15, sound: true,
+    accent: "#6366f1", onboardingComplete: false, startView: "home",
+    modules: { day: true, notes: true, calendar: true, habits: true, stats: true, trash: false }
+  };
 
   const $ = s => document.querySelector(s);
   const $$ = s => Array.from(document.querySelectorAll(s));
@@ -610,6 +689,66 @@ textarea { min-height: 100px; resize: vertical; }
   function applyTheme() {
     const dark = config.theme === "dark" || (config.theme === "auto" && window.matchMedia("(prefers-color-scheme: dark)").matches);
     document.documentElement.setAttribute("data-theme", dark ? "dark" : "light");
+    const accent = /^#[0-9a-f]{6}$/i.test(config.accent || "") ? config.accent : "#6366f1";
+    const darken = (hex, amount = 24) => {
+      const n = parseInt(hex.slice(1), 16);
+      const r = Math.max(0, (n >> 16) - amount), g = Math.max(0, ((n >> 8) & 255) - amount), b = Math.max(0, (n & 255) - amount);
+      return "#" + ((1 << 24) + (r << 16) + (g << 8) + b).toString(16).slice(1);
+    };
+    const lighten = (hex, amount = 178) => {
+      const n = parseInt(hex.slice(1), 16);
+      const r = Math.min(255, (n >> 16) + amount), g = Math.min(255, ((n >> 8) & 255) + amount), b = Math.min(255, (n & 255) + amount);
+      return "#" + ((1 << 24) + (r << 16) + (g << 8) + b).toString(16).slice(1);
+    };
+    document.documentElement.style.setProperty("--primary", accent);
+    document.documentElement.style.setProperty("--primary-dark", darken(accent));
+    document.documentElement.style.setProperty("--primary-light", dark ? lighten(accent, 20) : lighten(accent, 178));
+  }
+
+  function applyModules() {
+    const modules = config.modules || {};
+    Object.entries({ day: "Mi día", notes: "Notas", calendar: "Calendario", habits: "Hábitos", stats: "Stats", trash: "Papelera" }).forEach(([key]) => {
+      const button = document.querySelector(`.nav-menu button[data-view="${key}"]`);
+      if (button) button.closest("li").style.display = modules[key] === false ? "none" : "";
+    });
+    const current = location.hash.slice(1);
+    if (current && modules[current] === false) showView("home");
+  }
+
+  function openOnboarding(editing = false) {
+    const form = $("#onboardingForm");
+    form.querySelectorAll('input[name="theme"]').forEach(el => el.checked = el.value === config.theme);
+    form.querySelectorAll('input[name="accent"]').forEach(el => el.checked = el.value === (config.accent || "#6366f1"));
+    form.querySelectorAll('input[name="module"]').forEach(el => el.checked = (config.modules || {})[el.value] !== false);
+    $("#onboardingStartView").value = config.startView || "home";
+    $("#onboardingNotifications").checked = !!config.notif;
+    $("#cancelOnboarding").style.display = editing ? "inline-flex" : "none";
+    $("#onboarding").classList.add("show");
+    $("#settingsPanel").classList.remove("open");
+    setTimeout(() => $("#onboardingTitle").focus(), 50);
+  }
+
+  function closeOnboarding() { $("#onboarding").classList.remove("show"); }
+
+  function saveOnboarding(event) {
+    event.preventDefault();
+    const previousComplete = !!config.onboardingComplete;
+    config.theme = $('#onboardingForm input[name="theme"]:checked')?.value || "light";
+    config.accent = $('#onboardingForm input[name="accent"]:checked')?.value || "#6366f1";
+    const selected = Array.from($("#onboardingForm").querySelectorAll('input[name="module"]:checked')).map(el => el.value);
+    config.modules = { day: selected.includes("day"), notes: selected.includes("notes"), calendar: selected.includes("calendar"), habits: selected.includes("habits"), stats: selected.includes("stats"), trash: selected.includes("trash") };
+    config.startView = $("#onboardingStartView").value || "home";
+    if (config.modules[config.startView] === false) config.startView = "home";
+    config.notif = $("#onboardingNotifications").checked;
+    config.onboardingComplete = true;
+    save(DB.config, config);
+    $("#themeSelect").value = config.theme;
+    $("#notifToggle").checked = config.notif;
+    applyTheme();
+    applyModules();
+    closeOnboarding();
+    showView(previousComplete ? config.startView : config.startView);
+    toast(previousComplete ? "Personalización actualizada" : "¡Tu espacio de Planneo está listo!");
   }
 
   function getGreeting() {
@@ -1368,6 +1507,7 @@ textarea { min-height: 100px; resize: vertical; }
     $("#remindBefore").value = config.remindBefore;
     $("#soundToggle").checked = config.sound;
     $("#pomoCount").textContent = pomoSessions;
+    applyModules();
     updateNotifStatus();
     updatePomo();
     renderCategorySelect();
@@ -1375,6 +1515,9 @@ textarea { min-height: 100px; resize: vertical; }
     $("#brand").onclick = () => showView("home");
     $$(".nav-menu button[data-view]").forEach(b => b.onclick = () => showView(b.dataset.view));
     $("#settingsBtn").onclick = e => { e.stopPropagation(); $("#settingsPanel").classList.toggle("open"); };
+    $("#customizeBtn").onclick = () => openOnboarding(true);
+    $("#onboardingForm").addEventListener("submit", saveOnboarding);
+    $("#cancelOnboarding").onclick = closeOnboarding;
     document.addEventListener("click", e => {
       if (!$("#settingsPanel").contains(e.target) && e.target.id !== "settingsBtn")
         $("#settingsPanel").classList.remove("open");
@@ -1385,10 +1528,35 @@ textarea { min-height: 100px; resize: vertical; }
     $("#remindBefore").onchange = function() { config.remindBefore = Number(this.value); save(DB.config, config); };
     $("#soundToggle").onchange = function() { config.sound = this.checked; save(DB.config, config); };
     $("#allowNotif").onclick = requestNotif;
-    $("#testNotif").onclick = () => {
-      if (Notification.permission === "granted") new Notification("Prueba Planneo", { body: "Las notificaciones funcionan." });
-      else toast("Primero permite las notificaciones", "warn");
-    };
+    
+$("#testNotif").onclick = async () => {
+  if (!("Notification" in window)) {
+    toast("Tu navegador no admite notificaciones", "error");
+    return;
+  }
+
+  if (Notification.permission !== "granted") {
+    toast("Primero pulsa «Permitir notificaciones»", "warn");
+    return;
+  }
+
+  try {
+    const registro = await navigator.serviceWorker.ready;
+
+    await registro.showNotification("🌟 Prueba Planneo", {
+      body: "¡Perfecto! Las notificaciones están funcionando.",
+      icon: "./icon-192.png",
+      tag: "planneo-prueba"
+    });
+
+    toast("¡Notificación enviada!");
+  } catch (error) {
+    console.error("Error al mostrar la notificación:", error);
+    toast("No se pudo mostrar el aviso. Revisa la consola.", "error");
+  }
+};
+```
+
 
     $("#addCategory").onclick = () => {
       const name = $("#newCatName").value.trim();
@@ -1586,7 +1754,16 @@ textarea { min-height: 100px; resize: vertical; }
     renderHabits();
 
     const hash = location.hash.slice(1);
-    if (["home", "day", "notes", "calendar", "stats", "habits", "trash"].includes(hash)) showView(hash);
+    const allowedViews = ["home", "day", "notes", "calendar", "stats", "habits", "trash"];
+    if (config.onboardingComplete) {
+      const preferred = config.startView || "home";
+      const target = allowedViews.includes(hash) && (hash === "home" || (config.modules || {})[hash] !== false) ? hash : preferred;
+      showView(target || "home");
+    } else {
+      showView("home");
+      // La configuración inicial se muestra una sola vez; los datos existentes se conservan.
+      setTimeout(() => openOnboarding(false), 2250);
+    }
 
     setTimeout(() => $("#splash").style.display = "none", 2200);
   }
@@ -1597,11 +1774,32 @@ textarea { min-height: 100px; resize: vertical; }
 </script>
 <script>
 if ("serviceWorker" in navigator) {
-  window.addEventListener("load", () => {
-    navigator.serviceWorker.register("./service-worker.js")
-      .then(reg => console.log("SW registrado:", reg.scope))
-      .catch(err => console.error("Error SW:", err));
-  });
+    window.addEventListener("load", async () => {
+        try {
+            const registro = await navigator.serviceWorker.register(
+                "./service-worker.js"
+            );
+
+            await navigator.serviceWorker.ready;
+
+            console.log("✅ Planneo: Service Worker registrado");
+            console.log("📂 Alcance:", registro.scope);
+            console.log(
+                "⚙️ Estado:",
+                registro.active?.state || "Esperando activación"
+            );
+
+        } catch (error) {
+            console.error(
+                "❌ Error al registrar el Service Worker:",
+                error
+            );
+        }
+    });
+} else {
+    console.error(
+        "Este navegador no admite Service Workers."
+    );
 }
 </script>
 </body>
