@@ -1,0 +1,23 @@
+PLANNEO — VERSIÓN 2.3: PRESENTACIÓN + INSTALACIÓN
+
+ARCHIVOS
+- index.html: página de presentación y agenda.
+- manifest.json: configuración para instalar Planneo como aplicación web.
+- service-worker.js: caché y soporte básico sin conexión.
+- icono-192.png e icono-512.png: iconos de la aplicación.
+
+CÓMO PUBLICAR
+1. Haz una copia de seguridad de los archivos actuales.
+2. Sube/reemplaza TODOS estos archivos en la raíz del repositorio de GitHub Pages.
+3. Espera a que termine la publicación. Abre la página y prueba Ctrl+Shift+R en el computador.
+4. En celular, abre la dirección publicada mediante HTTPS. Pulsa “Instalar en mi celular”. Si el navegador no ofrece instalación automática, usa el menú del navegador (Android) o Compartir > Añadir a pantalla de inicio (iPhone/Safari).
+
+CAMBIOS
+- La página de presentación aparece cada vez que se abre la web para que sea visible y se pueda entrar a las novedades.
+- “Personalizar mi agenda” abre la configuración inicial.
+- “Entrar a Planneo” abre la agenda existente; si aún no se ha configurado, inicia la personalización.
+- Botones para instalar con el diálogo del navegador cuando esté disponible y mostrar instrucciones alternativas.
+- La agenda sigue usando el almacenamiento local del navegador. No borres los datos del sitio si quieres conservar tareas y notas.
+
+IMPORTANTE
+La instalación requiere publicar por HTTPS y cumplir los requisitos del navegador. El comportamiento puede variar entre navegadores y sistemas. Esta versión se ha revisado estáticamente, pero debe probarse en la página publicada y en un celular real.

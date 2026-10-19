@@ -1,25 +1,17 @@
 {
+  "id": "./",
   "name": "Planneo - Agenda Digital",
   "short_name": "Planneo",
-  "description": "Agenda digital para organizar tareas, notas y eventos.",
-  "start_url": "./",
+  "description": "Tu agenda digital para organizar tareas, estudio y hábitos.",
+  "lang": "es-CO",
+  "start_url": "./?origen=instalada",
+  "scope": "./",
   "display": "standalone",
-  "background_color": "#fff8dc",
-  "theme_color": "#6c8ebf",
-  "lang": "es",
-  "orientation": "portrait",
-  "categories": ["productivity"],
-
+  "orientation": "portrait-primary",
+  "background_color": "#f8fafc",
+  "theme_color": "#6366f1",
   "icons": [
-    {
-      "src": "icono-192.png",
-      "sizes": "192x192",
-      "type": "image/png"
-    },
-    {
-      "src": "icono-512.png",
-      "sizes": "512x512",
-      "type": "image/png"
-    }
+    { "src": "./icono-192.png", "sizes": "192x192", "type": "image/png", "purpose": "any maskable" },
+    { "src": "./icono-512.png", "sizes": "512x512", "type": "image/png", "purpose": "any maskable" }
   ]
 }

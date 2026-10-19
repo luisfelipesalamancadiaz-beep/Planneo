@@ -3,11 +3,12 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
-<meta name="description" content="Planneo 2.0 — Agenda digital moderna y personalizable para estudiantes">
+<meta name="description" content="Planneo — Tu agenda digital para organizar tareas, estudio y hábitos">
 <meta name="theme-color" content="#6366f1">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <link rel="manifest" href="./manifest.json">
-<title>Planneo 2.0 · Agenda</title>
+<link rel="apple-touch-icon" href="./icono-192.png">
+<title>Planneo · Tu agenda digital</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
 <script src="https://cdn.jsdelivr.net/npm/fullcalendar@6.1.15/index.global.min.js"></script>
@@ -543,6 +544,106 @@ textarea { min-height: 100px; resize: vertical; }
   .settings-panel { left: 10px; right: 10px; width: auto; }
   .dashboard-grid { grid-template-columns: 1fr; }
 }
+
+/* Presentación Planneo: estilo limpio, profesional y adaptable */
+.landing { overflow:hidden; background:var(--bg); color:var(--text); }
+.landing-topbar { max-width:1120px; margin:auto; padding:20px 28px; display:flex; align-items:center; justify-content:space-between; gap:16px; }
+.landing-wordmark { display:inline-flex; align-items:center; gap:10px; color:var(--text); text-decoration:none; font-size:20px; font-weight:850; letter-spacing:-.5px; }
+.landing-mark { width:34px; height:34px; display:inline-grid; place-items:center; color:#fff; background:var(--primary); border-radius:11px; box-shadow:0 5px 15px rgba(99,102,241,.22); }
+.landing-topnote { color:var(--muted); font-size:13px; }
+.landing-hero { padding:65px 22px 55px; text-align:center; background:radial-gradient(ellipse at 50% 0%,rgba(99,102,241,.12),transparent 62%),linear-gradient(180deg,var(--bg) 0%,var(--bg-soft) 100%); border-bottom:1px solid var(--border); }
+.hero-pill,.section-kicker { color:var(--primary); font-size:11px; font-weight:800; letter-spacing:1.6px; }
+.hero-pill { display:inline-flex; gap:8px; align-items:center; padding:8px 12px; border:1px solid var(--border); border-radius:999px; background:var(--surface); }
+.landing-hero h1 { font-size:clamp(38px,6vw,66px); line-height:1.05; letter-spacing:-2.6px; margin:23px auto 18px; font-weight:850; }
+.landing-hero h1 span { color:var(--primary); }
+.landing-hero p { max-width:650px; margin:0 auto 25px; font-size:17px; line-height:1.7; color:var(--muted); }
+.landing-cta { display:inline-flex; align-items:center; justify-content:center; gap:12px; padding:14px 22px; background:var(--primary); color:#fff; border:0; border-radius:12px; font-size:15px; font-weight:750; cursor:pointer; box-shadow:0 7px 20px rgba(99,102,241,.22); transition:transform .2s,box-shadow .2s; }
+.landing-cta:hover { transform:translateY(-2px); box-shadow:0 10px 26px rgba(99,102,241,.28); }
+.hero-trust { display:flex; justify-content:center; flex-wrap:wrap; gap:12px 22px; margin:20px auto 0; color:var(--muted); font-size:12px; }
+.hero-trust span::first-letter { color:var(--primary); }
+.hero-preview { max-width:650px; margin:40px auto 0; padding:0; text-align:left; overflow:hidden; border:1px solid var(--border); border-radius:18px; background:var(--surface); box-shadow:0 22px 60px rgba(15,23,42,.09); }
+.preview-top { display:flex; align-items:center; gap:5px; padding:13px 17px; border-bottom:1px solid var(--border); background:var(--bg-soft); }
+.preview-dot { width:7px; height:7px; border-radius:50%; background:var(--border); }
+.preview-label { margin-left:9px; color:var(--muted); font-size:10px; font-weight:800; letter-spacing:1.2px; }
+.preview-content { padding:22px; }
+.preview-greeting { display:flex; flex-direction:column; gap:5px; margin-bottom:18px; }
+.preview-greeting small,.preview-task small,.preview-progress small { color:var(--muted); font-size:10px; }
+.preview-greeting strong { font-size:20px; letter-spacing:-.5px; }
+.preview-greeting span { color:var(--muted); font-size:12px; }
+.preview-task { display:flex; align-items:center; gap:12px; padding:13px 0; border-top:1px solid var(--border); }
+.preview-task>span:nth-child(2) { display:flex; flex-direction:column; gap:4px; flex:1; }
+.preview-task b,.preview-progress b { font-size:12px; }
+.preview-check,.preview-empty { width:18px; height:18px; border-radius:6px; display:grid; place-items:center; flex:0 0 18px; border:1px solid var(--border); color:#fff; font-size:11px; }
+.preview-check { background:var(--primary); border-color:var(--primary); }
+.preview-tag { padding:5px 8px; border-radius:7px; background:rgba(99,102,241,.1); color:var(--primary); font-size:10px; font-weight:700; }
+.preview-progress { margin-top:10px; padding:14px; border-radius:12px; display:flex; justify-content:space-between; align-items:center; background:var(--bg-soft); }
+.preview-progress>span:first-child { display:flex; flex-direction:column; gap:5px; }
+.preview-ring { display:grid; place-items:center; width:44px; height:44px; border:4px solid var(--primary); border-left-color:var(--border); border-radius:50%; font-size:10px; font-weight:800; }
+.landing-section { max-width:1080px; padding:74px 24px; margin:0 auto; }
+.landing-section h2 { margin:10px auto 12px; text-align:center; font-size:clamp(27px,4vw,38px); line-height:1.15; letter-spacing:-1px; font-weight:850; }
+.landing-section .subtitle { max-width:650px; margin:0 auto 34px; text-align:center; color:var(--muted); font-size:15px; line-height:1.65; }
+.landing-about { text-align:center; }
+.landing-feature-grid { margin-top:34px; grid-template-columns:repeat(3,minmax(0,1fr)); gap:16px; text-align:left; }
+.landing-feature-grid .feature-card { padding:24px; border-radius:15px; box-shadow:none; transition:transform .2s,border-color .2s; }
+.landing-feature-grid .feature-card:hover { transform:translateY(-3px); border-color:var(--primary); }
+.feature-icon { display:grid; place-items:center; width:38px; height:38px; border-radius:11px; background:var(--bg-soft); color:var(--primary); font-size:21px; font-weight:800; }
+.landing-feature-grid .feature-card h3 { margin:15px 0 8px; font-size:16px; }
+.landing-feature-grid .feature-card p { margin:0; font-size:13px; line-height:1.7; }
+.landing-how { background:var(--bg-soft); border-top:1px solid var(--border); border-bottom:1px solid var(--border); }
+.landing-steps { max-width:700px; margin:32px auto 0; }
+.landing-steps .step { padding:20px; border-radius:14px; background:var(--surface); }
+.landing-steps .step p { margin:6px 0 0; color:var(--muted); line-height:1.6; font-size:13px; }
+.landing-customize h2 { max-width:700px; }
+.customize-points { max-width:720px; margin:32px auto 0; }
+.customize-points>div { display:flex; align-items:flex-start; gap:18px; padding:17px 0; border-bottom:1px solid var(--border); }
+.customize-points>div>span { color:var(--primary); font-size:12px; font-weight:850; letter-spacing:1px; padding-top:2px; }
+.customize-points p { margin:0; display:flex; flex-direction:column; gap:5px; }
+.customize-points b { font-size:14px; }
+.customize-points small { color:var(--muted); font-size:13px; line-height:1.5; }
+.landing-final-cta { margin:54px auto 0; padding:36px 24px; max-width:800px; border:1px solid var(--border); border-radius:20px; background:var(--bg-soft); text-align:center; }
+.landing-final-cta h2 { font-size:clamp(24px,4vw,32px); }
+.landing-final-cta p { color:var(--muted); font-size:14px; line-height:1.6; margin:0 auto 22px; }
+.landing-faq { max-width:800px; }
+.landing-faq details { padding:18px 2px; border-bottom:1px solid var(--border); }
+.landing-faq summary { cursor:pointer; font-size:14px; font-weight:750; list-style:none; display:flex; align-items:center; justify-content:space-between; gap:14px; }
+.landing-faq summary::-webkit-details-marker { display:none; }
+.landing-faq summary::after { content:'+'; color:var(--primary); font-size:21px; font-weight:500; }
+.landing-faq details[open] summary::after { content:'−'; }
+.landing-faq details p { color:var(--muted); font-size:13px; line-height:1.7; margin:12px 25px 0 0; }
+.landing-footer { display:flex; flex-direction:column; align-items:center; gap:10px; padding:32px 20px 28px; border-top:1px solid var(--border); background:var(--bg-soft); text-align:center; }
+.landing-footer p { color:var(--muted); margin:0; font-size:12px; }
+.landing-footer small { color:var(--muted); font-size:11px; }
+.privacy-link { padding:6px; border:0; background:none; color:var(--primary); cursor:pointer; text-decoration:underline; font-size:12px; }
+.privacy-notice { position:fixed; z-index:10000; left:18px; right:18px; bottom:18px; max-width:920px; margin:auto; padding:18px 20px; display:flex; align-items:center; justify-content:space-between; gap:22px; border:1px solid var(--border); border-radius:16px; background:var(--surface); color:var(--text); box-shadow:0 12px 40px rgba(15,23,42,.2); }
+.privacy-notice[hidden],.privacy-modal-backdrop[hidden] { display:none !important; }
+.privacy-notice-copy strong { font-size:14px; }
+.privacy-notice-copy p { margin:5px 0 0; max-width:600px; color:var(--muted); font-size:12px; line-height:1.55; }
+.privacy-notice-actions { display:flex; align-items:center; gap:10px; flex-shrink:0; }
+.privacy-more,.privacy-accept { border-radius:9px; padding:10px 13px; cursor:pointer; font-size:12px; font-weight:750; }
+.privacy-more { border:1px solid var(--border); background:transparent; color:var(--text); }
+.privacy-accept { border:1px solid var(--primary); background:var(--primary); color:#fff; }
+.privacy-modal-backdrop { position:fixed; z-index:10001; inset:0; display:grid; place-items:center; padding:18px; background:rgba(15,23,42,.58); backdrop-filter:blur(4px); }
+.privacy-modal { position:relative; width:min(100%,620px); max-height:min(85vh,760px); overflow:auto; padding:32px; border:1px solid var(--border); border-radius:20px; background:var(--surface); color:var(--text); box-shadow:0 24px 80px rgba(0,0,0,.25); }
+.privacy-modal h2 { margin:10px 0 18px; font-size:28px; letter-spacing:-.7px; }
+.privacy-modal p { color:var(--muted); font-size:13px; line-height:1.75; }
+.privacy-modal p b { color:var(--text); }
+.privacy-close { position:absolute; top:12px; right:14px; width:34px; height:34px; border:0; border-radius:9px; background:var(--bg-soft); color:var(--text); cursor:pointer; font-size:24px; }
+.privacy-note-small { font-size:11px !important; }
+.privacy-modal-done { margin-top:8px; }
+@media(max-width:760px) { .landing-topbar { padding:16px 18px; } .landing-topnote { font-size:11px; text-align:right; } .landing-hero { padding:48px 18px 42px; } .landing-hero h1 { letter-spacing:-1.7px; } .landing-hero p { font-size:15px; } .hero-trust { gap:9px 14px; font-size:11px; } .hero-preview { margin-top:30px; } .preview-content { padding:16px; } .landing-section { padding:54px 18px; } .landing-feature-grid { grid-template-columns:repeat(2,minmax(0,1fr)); gap:12px; } .landing-feature-grid .feature-card { padding:17px; } .landing-final-cta { padding:28px 18px; } .privacy-notice { left:10px; right:10px; bottom:10px; flex-direction:column; align-items:stretch; gap:13px; padding:16px; } .privacy-notice-actions { justify-content:flex-end; } .privacy-modal { padding:27px 20px 22px; } }
+@media(max-width:430px) { .landing-feature-grid { grid-template-columns:1fr; } .landing-topnote { max-width:150px; } .privacy-notice-actions { flex-direction:column-reverse; align-items:stretch; } .privacy-more,.privacy-accept { width:100%; } }
+
+
+/* Acciones de la página de presentación e instalación */
+.landing-top-actions{display:flex;align-items:center;gap:10px;flex-wrap:wrap;justify-content:flex-end}
+.landing-small-btn{border:1px solid var(--border);background:var(--surface);color:var(--text);padding:10px 13px;border-radius:10px;font:700 12px var(--font);cursor:pointer}
+.landing-small-primary{background:var(--primary);border-color:var(--primary);color:#fff}
+.landing-actions{display:flex;justify-content:center;gap:12px;flex-wrap:wrap}
+.landing-cta-secondary{background:var(--surface);border:1px solid var(--border);color:var(--text);box-shadow:none}
+.landing-cta-secondary:hover{background:var(--bg-soft);box-shadow:none}
+.install-help{font-size:12px!important;margin:13px auto 0!important;color:var(--muted);min-height:18px}
+@media(max-width:600px){.landing-topbar{align-items:flex-start}.landing-top-actions{gap:6px}.landing-topnote{display:none}.landing-small-btn{padding:9px 10px}.landing-actions{flex-direction:column;align-items:stretch}.landing-actions .landing-cta{width:100%}}
+
 </style>
 </head>
 <body>
@@ -551,76 +652,99 @@ textarea { min-height: 100px; resize: vertical; }
   <div class="tag">Tu agenda inteligente</div>
 </div>
 
-<!-- Landing page profesional -->
+<!-- Presentación de Planneo: diseño limpio y contenido completo -->
 <div id="landing" class="landing" style="display:none;">
+  <header class="landing-topbar">
+    <a class="landing-wordmark" href="#landing" aria-label="Planneo, inicio"><span class="landing-mark">P</span> Planneo</a>
+    <div class="landing-top-actions">
+      <span class="landing-topnote">Tu espacio para organizarte mejor</span>
+      <button type="button" class="landing-small-btn" id="installTopBtn">↓ Instalar</button>
+      <button type="button" class="landing-small-btn landing-small-primary" id="enterTopBtn">Entrar a Planneo →</button>
+    </div>
+  </header>
+
   <section class="landing-hero">
-    <div style="color:var(--primary);font-weight:700;letter-spacing:1px;font-size:14px;text-transform:uppercase;">Planneo</div>
-    <h1>Tu agenda, organizada de verdad.</h1>
-    <p>Planneo es una agenda digital pensada para estudiantes. Personalízala a tu ritmo de estudio, elige qué ves cada día y mantén el control de tus tareas, hábitos y tiempo.</p>
-    <button class="landing-cta" id="startConfig">Configurar mi agenda</button>
-  </section>
-
-  <section class="landing-section">
-    <h2>Quiénes somos</h2>
-    <p class="subtitle">Una herramienta simple para organizarte mejor</p>
-    <div class="about-text">
-      Planneo nace para ayudar a estudiantes a tener una visión clara de su día sin complicaciones. No es otra app genérica: es un espacio que puedes adaptar a tus materias, tus metas de estudio y tu forma de trabajar. Todo se guarda en tu navegador, funciona offline y no requiere cuenta.
+    <div class="hero-pill"><span aria-hidden="true">✦</span> ORGANIZA · ESTUDIA · AVANZA</div>
+    <h1>Tu día, tus metas,<br><span>todo en su lugar.</span></h1>
+    <p>Una agenda digital creada para estudiantes. Organiza tareas, planifica tu tiempo y construye una rutina que se adapte a ti, sin complicarte.</p>
+    <div class="landing-actions">
+      <button class="landing-cta" id="startConfig">Personalizar mi agenda <span aria-hidden="true">→</span></button>
+      <button class="landing-cta landing-cta-secondary" id="installHeroBtn" type="button">↓ Instalar en mi celular</button>
     </div>
-  </section>
-
-  <section class="landing-section" style="background:var(--bg-soft);border-radius:0;">
-    <h2>Cómo funciona Planneo</h2>
-    <p class="subtitle">Tres pasos para empezar</p>
-    <div class="steps">
-      <div class="step">
-        <div class="step-number">1</div>
-        <div>
-          <strong>Configura tu espacio</strong>
-          <p style="margin-top:4px;color:var(--muted);">Elige tema, módulos que quieres ver, vista inicial y meta diaria de estudio.</p>
-        </div>
-      </div>
-      <div class="step">
-        <div class="step-number">2</div>
-        <div>
-          <strong>Añade tus tareas y hábitos</strong>
-          <p style="margin-top:4px;color:var(--muted);">Crea tareas con prioridades, subtareas y repeticiones. Marca hábitos y usa el Pomodoro.</p>
-        </div>
-      </div>
-      <div class="step">
-        <div class="step-number">3</div>
-        <div>
-          <strong>Entra cada día a Mi día</strong>
-          <p style="margin-top:4px;color:var(--muted);">Revisa lo pendiente, avanza en tu meta de estudio y mantén tu racha.</p>
-        </div>
+    <p class="install-help" id="installHelp" role="status" aria-live="polite">Instálala para abrir Planneo desde el icono de tu celular.</p>
+    <div class="hero-trust"><span>✓ Sin crear una cuenta</span><span>✓ Personalizable</span><span>✓ Con funciones sin conexión</span></div>
+    <div class="hero-preview" aria-label="Vista ilustrativa de las funciones de Planneo">
+      <div class="preview-top"><span class="preview-dot"></span><span class="preview-dot"></span><span class="preview-dot"></span><span class="preview-label">MI DÍA</span></div>
+      <div class="preview-content">
+        <div class="preview-greeting"><small>HOY ES UN BUEN DÍA PARA AVANZAR</small><strong>Un paso a la vez ✨</strong><span>Tu progreso también cuenta.</span></div>
+        <div class="preview-task"><span class="preview-check">✓</span><span><b>Repasar para el examen</b><small>Estudio · Prioridad alta</small></span><span class="preview-tag">En curso</span></div>
+        <div class="preview-task"><span class="preview-empty"></span><span><b>Terminar el trabajo</b><small>Entrega · Hoy</small></span></div>
+        <div class="preview-progress"><span><b>Tu meta de estudio</b><small>25 de 60 minutos</small></span><span class="preview-ring">42%</span></div>
       </div>
     </div>
   </section>
 
-  <section class="landing-section">
-    <h2>Lo que puedes personalizar</h2>
-    <p class="subtitle">No solo colores. Adapta la agenda a tu forma de estudiar.</p>
-    <div class="feature-grid">
-      <div class="feature-card">
-        <h3>Módulos visibles</h3>
-        <p>Activa solo lo que usas: Mi día, Calendario, Notas, Hábitos, Estadísticas o Papelera.</p>
-      </div>
-      <div class="feature-card">
-        <h3>Vista al entrar</h3>
-        <p>Elige si al abrir Planneo quieres ir directo a Inicio, Mi día, Calendario o Notas.</p>
-      </div>
-      <div class="feature-card">
-        <h3>Meta de estudio</h3>
-        <p>Define cuántos minutos quieres estudiar al día y sigue tu progreso en Mi día.</p>
-      </div>
-      <div class="feature-card">
-        <h3>Secciones de Mi día</h3>
-        <p>Muestra u oculta el Pomodoro, los hábitos del día, las tareas y el anillo de progreso.</p>
-      </div>
-    </div>
-    <div style="text-align:center;margin-top:40px;">
-      <button class="landing-cta" id="startConfig2">Configurar mi agenda ahora</button>
+  <section class="landing-section landing-about">
+    <div class="section-kicker">MENOS DESORDEN, MÁS CLARIDAD</div>
+    <h2>Una agenda que se adapta a ti</h2>
+    <p class="subtitle">Planneo reúne en un solo lugar lo que necesitas para organizar tus días de estudio.</p>
+    <div class="feature-grid landing-feature-grid">
+      <article class="feature-card"><span class="feature-icon">▦</span><h3>Mi día y calendario</h3><p>Ten a la vista tus pendientes y distribuye tus tareas por fecha para saber qué sigue.</p></article>
+      <article class="feature-card"><span class="feature-icon">◷</span><h3>Tiempo de estudio</h3><p>Usa el temporizador Pomodoro y registra tus sesiones para estudiar con descansos.</p></article>
+      <article class="feature-card"><span class="feature-icon">✓</span><h3>Hábitos y progreso</h3><p>Haz seguimiento a tus hábitos, revisa tus avances y celebra la constancia.</p></article>
+      <article class="feature-card"><span class="feature-icon">✎</span><h3>Notas y organización</h3><p>Guarda ideas y apuntes, y mantén tus cosas importantes a mano.</p></article>
+      <article class="feature-card"><span class="feature-icon">⚙</span><h3>A tu manera</h3><p>Personaliza la apariencia, el color, la vista inicial y los módulos que quieres usar.</p></article>
+      <article class="feature-card"><span class="feature-icon">▤</span><h3>Estadísticas</h3><p>Consulta tu actividad y visualiza el tiempo que has dedicado a tus objetivos.</p></article>
     </div>
   </section>
+
+  <section class="landing-how">
+    <div class="landing-section">
+      <div class="section-kicker">EMPIEZA EN MINUTOS</div>
+      <h2>Así de sencillo</h2>
+      <p class="subtitle">Tú eliges cómo quieres organizarte; Planneo te ayuda a mantener el rumbo.</p>
+      <div class="steps landing-steps">
+        <div class="step"><div class="step-number">1</div><div><strong>Personaliza tu espacio</strong><p>Elige tu apariencia, los módulos y la meta de estudio que mejor encaje contigo.</p></div></div>
+        <div class="step"><div class="step-number">2</div><div><strong>Organiza tus actividades</strong><p>Añade tareas, fechas, hábitos y notas según tus clases y responsabilidades.</p></div></div>
+        <div class="step"><div class="step-number">3</div><div><strong>Revisa tu progreso</strong><p>Entra a Mi día, avanza poco a poco y ajusta tu agenda cuando lo necesites.</p></div></div>
+      </div>
+    </div>
+  </section>
+
+  <section class="landing-section landing-customize">
+    <div class="section-kicker">HECHA PARA TU RITMO</div>
+    <h2>Tu agenda no tiene que parecerse a la de nadie más</h2>
+    <p class="subtitle">Puedes cambiar tus preferencias más adelante desde la configuración.</p>
+    <div class="customize-points"><div><span>01</span><p><b>Elige tu vista inicial</b><small>Abre directamente la sección que más utilizas.</small></p></div><div><span>02</span><p><b>Muestra solo lo necesario</b><small>Activa u oculta módulos y apartados de Mi día.</small></p></div><div><span>03</span><p><b>Define una meta realista</b><small>Ajusta tus minutos diarios de estudio a tu rutina.</small></p></div></div>
+    <div class="landing-final-cta"><h2>¿Listo para poner tus ideas en orden?</h2><p>Configura tu espacio una vez y empieza a usar Planneo a tu manera.</p><div class="landing-actions"><button class="landing-cta" id="startConfig2">Personalizar mi agenda <span aria-hidden="true">→</span></button><button class="landing-cta landing-cta-secondary" id="enterBottomBtn" type="button">Ya tengo una agenda · Entrar</button></div></div>
+  </section>
+
+  <section class="landing-section landing-faq">
+    <div class="section-kicker">PREGUNTAS FRECUENTES</div><h2>Antes de empezar</h2>
+    <details><summary>¿Necesito crear una cuenta?</summary><p>No. Puedes empezar sin registrarte. Tus datos de agenda se guardan en el almacenamiento de este navegador.</p></details>
+    <details><summary>¿Puedo cambiar mi configuración después?</summary><p>Sí. La configuración inicial se muestra la primera vez; después puedes cambiar tus preferencias desde la sección de configuración de Planneo.</p></details>
+    <details><summary>¿Puedo instalar Planneo en mi celular?</summary><p>Sí. En navegadores compatibles aparecerá la opción de instalación. Si no aparece el aviso, en Android puedes abrir el menú del navegador y elegir “Instalar aplicación” o “Añadir a pantalla principal”. En iPhone, abre la página en Safari, pulsa Compartir y elige “Añadir a pantalla de inicio”.</p></details>
+    <details><summary>¿Mis datos se sincronizan automáticamente entre dispositivos?</summary><p>No. Como los datos se guardan en el navegador de cada dispositivo, no se sincronizan automáticamente entre celulares y computadores.</p></details>
+    <details><summary>¿Qué pasa si borro los datos del navegador?</summary><p>Podrías perder las tareas, notas y preferencias guardadas en ese navegador. Evita borrar sus datos si quieres conservar tu información.</p></details>
+  </section>
+
+  <footer class="landing-footer"><a class="landing-wordmark" href="#landing"><span class="landing-mark">P</span> Planneo</a><p>Organiza tu presente. Avanza hacia tus metas.</p><button type="button" class="privacy-link" id="openPrivacy">Privacidad y almacenamiento de datos</button><small>© <span id="landingYear"></span> Planneo · Agenda digital para estudiantes</small></footer>
+</div>
+
+<!-- Aviso informativo de privacidad. No se presenta como consentimiento de cookies porque Planneo guarda sus datos de agenda en el navegador. -->
+<div class="privacy-notice" id="privacyNotice" role="region" aria-label="Aviso de privacidad" hidden>
+  <div class="privacy-notice-copy"><strong>Tu privacidad importa</strong><p>Planneo guarda tus tareas y preferencias en este navegador y no necesita una cuenta. Consulta cómo se almacenan tus datos antes de empezar.</p></div>
+  <div class="privacy-notice-actions"><button type="button" class="privacy-more" id="privacyNoticeMore">Más información</button><button type="button" class="privacy-accept" id="privacyNoticeAccept">Entendido</button></div>
+</div>
+<div class="privacy-modal-backdrop" id="privacyModal" role="dialog" aria-modal="true" aria-labelledby="privacyModalTitle" hidden>
+  <div class="privacy-modal"><button type="button" class="privacy-close" id="closePrivacy" aria-label="Cerrar">×</button><div class="section-kicker">INFORMACIÓN CLARA</div><h2 id="privacyModalTitle">Privacidad y almacenamiento</h2>
+    <p><b>Datos guardados localmente.</b> Las tareas, notas, hábitos y preferencias de Planneo se guardan en el almacenamiento local del navegador que estás usando. No se crea una cuenta ni se envían esos datos a un servidor propio de Planneo para sincronizarlos.</p>
+    <p><b>Sincronización y eliminación.</b> La información no se sincroniza automáticamente con otros dispositivos. Si borras los datos del sitio o el almacenamiento del navegador, puedes perder la información guardada.</p>
+    <p><b>Conexiones externas.</b> Planneo puede cargar recursos de terceros necesarios para algunas funciones o estilos, como bibliotecas y fuentes. Esos proveedores pueden recibir datos técnicos de la conexión, como la dirección IP, según sus propias políticas.</p>
+    <p><b>Notificaciones.</b> Si activas los recordatorios, el navegador te pedirá permiso. Puedes gestionar ese permiso desde la configuración del navegador.</p>
+    <p class="privacy-note-small">Este aviso describe el funcionamiento actual de la agenda; no sustituye una revisión jurídica de las obligaciones aplicables al proyecto.</p>
+    <button type="button" class="landing-cta privacy-modal-done" id="privacyModalDone">Volver a Planneo</button>
+  </div>
 </div>
 
 <div class="onboarding-backdrop" id="onboarding" role="dialog" aria-modal="true" aria-labelledby="onboardingTitle">
@@ -2380,18 +2504,16 @@ textarea { min-height: 100px; resize: vertical; }
 
     const hash = location.hash.slice(1);
     const allowedViews = ["home", "day", "notes", "calendar", "stats", "habits", "trash"];
+    // La presentación se muestra SIEMPRE al abrir la web, para que las actualizaciones sean visibles.
+    // La agenda y sus datos siguen guardados; el usuario puede entrar cuando quiera.
     if (config.onboardingComplete) {
       const preferred = config.startView || "home";
       const target = allowedViews.includes(hash) && (hash === "home" || (config.modules || {})[hash] !== false) ? hash : preferred;
       showView(target || "home");
-      $("#landing").style.display = "none";
-    } else {
-      // Mostrar landing profesional en la primera visita
-      $("#landing").style.display = "block";
-      // Ocultar nav y container mientras se muestra la landing
-      document.querySelector("nav").style.display = "none";
-      document.querySelector(".container").style.display = "none";
     }
+    $("#landing").style.display = "block";
+    document.querySelector("nav").style.display = "none";
+    document.querySelector(".container").style.display = "none";
 
     setTimeout(() => $("#splash").style.display = "none", 1800);
 
@@ -2409,7 +2531,72 @@ textarea { min-height: 100px; resize: vertical; }
     const btn2 = document.getElementById("startConfig2");
     if (btn1) btn1.onclick = openConfig;
     if (btn2) btn2.onclick = openConfig;
+
+    const enterAgenda = () => {
+      const landing = document.getElementById("landing");
+      if (landing) landing.style.display = "none";
+      document.querySelector("nav").style.display = "";
+      document.querySelector(".container").style.display = "";
+      if (!config.onboardingComplete) { openOnboarding(false); return; }
+      const allowed = ["home", "day", "notes", "calendar", "stats", "habits", "trash"];
+      const hashView = location.hash.slice(1);
+      const target = allowed.includes(hashView) && (hashView === "home" || (config.modules || {})[hashView] !== false) ? hashView : (config.startView || "home");
+      showView(target);
+    };
+    ["enterTopBtn", "enterBottomBtn"].forEach(id => { const b = document.getElementById(id); if (b) b.onclick = enterAgenda; });
+
+    // Instalación PWA: se usa el diálogo nativo cuando el navegador lo ofrece.
+    let installPrompt = null;
+    const installHelp = document.getElementById("installHelp");
+    const installButtons = ["installTopBtn", "installHeroBtn"].map(id => document.getElementById(id)).filter(Boolean);
+    const setInstallMessage = (message) => { if (installHelp) installHelp.textContent = message; };
+    window.addEventListener("beforeinstallprompt", event => {
+      event.preventDefault(); installPrompt = event;
+      installButtons.forEach(b => { b.hidden = false; });
+      setInstallMessage("¡Planneo está lista para instalarse en este dispositivo!");
+    });
+    const installApp = async () => {
+      if (window.matchMedia("(display-mode: standalone)").matches || window.navigator.standalone) {
+        setInstallMessage("Planneo ya está instalada en este dispositivo. ¡Ábrela desde tu pantalla de inicio!"); return;
+      }
+      if (installPrompt) {
+        installPrompt.prompt();
+        const choice = await installPrompt.userChoice;
+        setInstallMessage(choice && choice.outcome === "accepted" ? "¡Listo! Sigue los pasos del navegador para terminar la instalación." : "No pasa nada; puedes instalarla cuando quieras.");
+        installPrompt = null; return;
+      }
+      const isIOS = /iphone|ipad|ipod/i.test(navigator.userAgent);
+      setInstallMessage(isIOS ? "En iPhone: abre esta página en Safari, pulsa Compartir y elige ‘Añadir a pantalla de inicio’." : "Si no aparece la ventana automática, abre el menú ⋮ del navegador y busca ‘Instalar aplicación’ o ‘Añadir a pantalla principal’. En algunos navegadores esta opción aparece después de publicar la web por HTTPS.");
+    };
+    installButtons.forEach(b => b.addEventListener("click", installApp));
+    window.addEventListener("appinstalled", () => { installPrompt = null; setInstallMessage("¡Planneo quedó instalada! Ya puedes abrirla desde tu pantalla de inicio."); });
+
+    // Aviso informativo de privacidad: se muestra una vez y puede consultarse desde el pie de página.
+    const privacyNotice = document.getElementById("privacyNotice");
+    const privacyModal = document.getElementById("privacyModal");
+    const privacyKey = "planneo_privacy_notice_seen_v1";
+    const privacyAccept = document.getElementById("privacyNoticeAccept");
+    const privacyMore = document.getElementById("privacyNoticeMore");
+    const openPrivacy = document.getElementById("openPrivacy");
+    const closePrivacy = document.getElementById("closePrivacy");
+    const privacyDone = document.getElementById("privacyModalDone");
+    const showPrivacy = () => { if (privacyModal) privacyModal.hidden = false; };
+    const hidePrivacy = () => { if (privacyModal) privacyModal.hidden = true; };
+    if (privacyNotice && !localStorage.getItem(privacyKey)) privacyNotice.hidden = false;
+    if (privacyAccept) privacyAccept.onclick = () => {
+      try { localStorage.setItem(privacyKey, "1"); } catch (e) {}
+      privacyNotice.hidden = true;
+    };
+    if (privacyMore) privacyMore.onclick = showPrivacy;
+    if (openPrivacy) openPrivacy.onclick = showPrivacy;
+    if (closePrivacy) closePrivacy.onclick = hidePrivacy;
+    if (privacyDone) privacyDone.onclick = hidePrivacy;
+    if (privacyModal) privacyModal.addEventListener("click", e => { if (e.target === privacyModal) hidePrivacy(); });
+    document.addEventListener("keydown", e => { if (e.key === "Escape" && privacyModal && !privacyModal.hidden) hidePrivacy(); });
+    const landingYear = document.getElementById("landingYear");
+    if (landingYear) landingYear.textContent = new Date().getFullYear();
   }
+
   if (document.readyState === "loading") document.addEventListener("DOMContentLoaded", init);
   else init();
 })();
