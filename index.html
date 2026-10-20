@@ -1394,6 +1394,7 @@ textarea { min-height: 100px; resize: vertical; }
   let calendar = null, currentFilter = "all", editingTask = null, editingNote = null, noteType = "estudio";
   let pomoRemaining = 25 * 60, pomoRunning = false, pomoStart = null, pomoDuration = 25 * 60, pomoInterval = null;
   let confirmResolve = null, lastDeleted = null;
+  let alarmInterval = null;
 
   const config = {
     theme: "auto", lang: "es", notif: true, remindBefore: 15, sound: true,
@@ -2139,6 +2140,20 @@ function renderAlarms() {
   }
 
   function playSound() {
+    function triggerAlarm(title) {
+
+  $("#alarmOverlay").style.display = "flex";
+
+  $("#alarmOverlayText").textContent =
+    title;
+
+  alarmInterval = setInterval(() => {
+
+    playSound();
+
+  }, 1200);
+
+}
     if (!config.sound) return;
     try {
       const ctx = new (window.AudioContext || window.webkitAudioContext)();
@@ -2777,6 +2792,15 @@ function checkAlarms() {
     $("#pomoStart").onclick = startPomo;
     $("#pomoPause").onclick = pausePomo;
     $("#pomoReset").onclick = resetPomo;
+    $("#stopAlarm").onclick = () => {
+
+  $("#alarmOverlay").style.display = "none";
+
+  clearInterval(alarmInterval);
+
+  alarmInterval = null;
+
+};
     $$('input[name="pomoType"]').forEach(r => r.onchange = () => {
       $("#customMinutes").style.display = r.value === "custom" && r.checked ? "inline-block" : "none";
       if (!pomoRunning) resetPomo();
@@ -3006,5 +3030,47 @@ window.addEventListener("load", async () => {
     }
 });
 </script>
+<div id="alarmOverlay" style="
+  display:none;
+  position:fixed;
+  inset:0;
+  background:#000000ee;
+  z-index:99999;
+  align-items:center;
+  justify-content:center;
+">
+
+  <div style="
+    text-align:center;
+    color:white;
+    max-width:500px;
+    padding:30px;
+  ">
+
+    <div style="font-size:90px;">⏰</div>
+
+    <h1 id="alarmOverlayTitle"
+        style="font-size:42px;margin:20px 0;">
+      ALARMA
+    </h1>
+
+    <p id="alarmOverlayText"
+       style="font-size:22px;margin-bottom:30px;">
+    </p>
+
+    <button
+      id="stopAlarm"
+      class="btn btn-danger"
+      style="
+        max-width:250px;
+        margin:auto;
+        font-size:20px;
+      ">
+      Detener
+    </button>
+
+  </div>
+
+</div>
 </body>
 </html>
