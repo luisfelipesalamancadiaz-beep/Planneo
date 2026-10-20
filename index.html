@@ -1278,44 +1278,31 @@ textarea { min-height: 100px; resize: vertical; }
 
 
   <div class="card" id="advisorCard">
-
-  <h2>🤖 Planneo Advisor Beta</h2>
-
-  <p style="margin-bottom:12px;color:var(--muted);">
-    Cuéntame qué tienes esta semana y te daré una recomendación.
-  </p>
-
-  <textarea
-    id="advisorInput"
-    placeholder="Ej: Tengo examen de química el viernes y una exposición el lunes">
-  </textarea>
-
-  <div class="actions">
-
-    <button
-      class="btn btn-primary"
-      id="advisorGenerate">
-
-      ✨ Generar sugerencia
-
-    </button>
-
-    <button
-      class="btn btn-ghost"
-      id="advisorAnother">
-
-      🎲 Otra sugerencia
-
-    </button>
-
+    <h2>🤖 Planneo Advisor</h2>
+    <p style="margin-bottom:12px;color:var(--muted);">
+      Escribe lo que tienes pendiente como se lo contarías a alguien. Advisor lo convierte en un plan real.
+    </p>
+    <textarea
+      id="advisorInput"
+      placeholder="Ej: Tengo examen de química el miércoles&#10;Debo entregar un trabajo de historia el viernes&#10;Tengo una exposición la próxima semana"
+      style="min-height:90px;"></textarea>
+    <div class="form-row" style="margin-top:12px;">
+      <div>
+        <label for="advisorIntensity">Tipo de plan</label>
+        <select id="advisorIntensity">
+          <option value="balanced">Equilibrado</option>
+          <option value="light">Ligero</option>
+          <option value="intensive">Intensivo</option>
+        </select>
+      </div>
+      <div style="display:flex;align-items:flex-end;">
+        <button class="btn btn-primary" id="advisorGenerate" style="width:100%;">
+          ✨ Generar plan
+        </button>
+      </div>
+    </div>
+    <div id="advisorResponse" style="margin-top:16px;"></div>
   </div>
-
-  <div
-    id="advisorResponse"
-    style="margin-top:15px;">
-  </div>
-
-</div>
   <details class="card" id="pomoWrapper">
   <summary style="
     cursor:pointer;
@@ -2011,150 +1998,248 @@ function renderAlarms() {
   });
 
 }
-function renderAdvisor() {
+  let lastAdvisorPlan = null;
 
-  const container = $("#advisorList");
-  const summary = $("#advisorSummary");
+  function parseAdvisorText(text) {
+    const original = text.trim();
+    const lower = original.toLowerCase()
+      .normalize("NFD").replace(/[\u0300-\u036f]/g, ""); // quitar acentos para matching
 
-  if (!container) return;
+    // Tipo de actividad
+    let type = "estudio";
+    if (/\b(examen|prueba|parcial|quiz|evaluacion)\b/.test(lower)) type = "examen";
+    else if (/\b(entrega|trabajo|ensayo|informe)\b/.test(lower)) type = "entrega";
+    else if (/\b(proyecto)\b/.test(lower)) type = "proyecto";
+    else if (/\b(exposicion|presentacion|oral)\b/.test(lower)) type = "exposicion";
 
-  const pending =
-    tasks.filter(t => !t.done);
+    // Materia / tema
+    let subject = "";
+    const subjectMatch = lower.match(/(?:de|para)\s+([a-z0-9áéíóúñ\s]{3,30})(?:\s+(?:el|la|para|mañana|proximo|proxima)|$)/i);
+    if (subjectMatch) {
+      subject = subjectMatch[1]
+        .replace(/\b(el|la|los|las|mi|un|una)\b/g, "")
+        .trim()
+        .split(" ")
+        .slice(0, 4)
+        .join(" ");
+    }
+    if (!subject) {
+      const subjects = ["matematicas","matematica","fisica","quimica","historia","biologia","ingles","literatura","geografia","economia","programacion","informatica","lengua","filosofia"];
+      for (const s of subjects) {
+        if (lower.includes(s)) { subject = s; break; }
+      }
+    }
+    subject = subject || "general";
 
-  const ranked =
-    pending
-      .map(task => {
+    // Fecha
+    const todayDate = new Date();
+    todayDate.setHours(0,0,0,0);
+    let targetDate = null;
+    const dayNames = {
+      "domingo": 0, "lunes": 1, "martes": 2, "miercoles": 3, "miércoles": 3,
+      "jueves": 4, "viernes": 5, "sabado": 6, "sábado": 6
+    };
 
-        let score = 0;
+    if (/\b(manana|mañana)\b/.test(lower)) {
+      targetDate = new Date(todayDate); targetDate.setDate(targetDate.getDate() + 1);
+    } else if (/\b(pasado manana|pasado mañana)\b/.test(lower)) {
+      targetDate = new Date(todayDate); targetDate.setDate(targetDate.getDate() + 2);
+    } else if (/\b(proxima semana|próxima semana|la proxima)\b/.test(lower)) {
+      targetDate = new Date(todayDate); targetDate.setDate(targetDate.getDate() + 7);
+    } else {
+      for (const [name, dayNum] of Object.entries(dayNames)) {
+        if (lower.includes(name)) {
+          const current = todayDate.getDay();
+          let diff = dayNum - current;
+          if (diff <= 0) diff += 7;
+          targetDate = new Date(todayDate);
+          targetDate.setDate(targetDate.getDate() + diff);
+          break;
+        }
+      }
+    }
 
-        if (task.priority === "urgent")
-          score += 100;
+    // Fecha numérica simple (ej: 25/10 o 25 de octubre)
+    if (!targetDate) {
+      const numMatch = lower.match(/(\d{1,2})\s*(?:de\s+)?(enero|febrero|marzo|abril|mayo|junio|julio|agosto|septiembre|octubre|noviembre|diciembre|\d{1,2})/);
+      if (numMatch) {
+        const day = parseInt(numMatch[1], 10);
+        const months = ["enero","febrero","marzo","abril","mayo","junio","julio","agosto","septiembre","octubre","noviembre","diciembre"];
+        let month = months.indexOf(numMatch[2]);
+        if (month === -1 && !isNaN(numMatch[2])) month = parseInt(numMatch[2], 10) - 1;
+        if (month >= 0 && day >= 1 && day <= 31) {
+          targetDate = new Date(todayDate.getFullYear(), month, day);
+          if (targetDate < todayDate) targetDate.setFullYear(targetDate.getFullYear() + 1);
+        }
+      }
+    }
 
-        if (task.priority === "important")
-          score += 50;
+    if (!targetDate) {
+      targetDate = new Date(todayDate);
+      targetDate.setDate(targetDate.getDate() + 3); // por defecto en 3 días
+    }
 
-        if (isOverdue(task))
-          score += 200;
+    const daysLeft = Math.max(1, Math.ceil((targetDate - todayDate) / 86400000));
 
-        const daysLeft =
-          Math.ceil(
-            (
-              new Date(task.date) -
-              new Date(today())
-            ) / 86400000
-          );
+    return {
+      original,
+      type,
+      subject: subject.charAt(0).toUpperCase() + subject.slice(1),
+      targetDate: targetDate.toISOString().slice(0, 10),
+      daysLeft
+    };
+  }
 
-        if (daysLeft <= 1)
-          score += 40;
+  function generateStudyPlan(parsed, intensity) {
+    const { type, subject, targetDate, daysLeft } = parsed;
+    const sessions = [];
+    const baseMinutes = intensity === "intensive" ? 50 : intensity === "light" ? 25 : 35;
 
-        if (daysLeft <= 3)
-          score += 20;
+    // Distribuye sesiones hacia atrás desde el día del evento
+    const availableDays = Math.min(daysLeft, intensity === "light" ? 3 : intensity === "intensive" ? 6 : 5);
+    const startOffset = Math.max(0, daysLeft - availableDays);
 
-        return {
-          task,
-          score
-        };
+    for (let i = 0; i < availableDays; i++) {
+      const d = new Date(targetDate + "T12:00:00");
+      d.setDate(d.getDate() - (availableDays - 1 - i));
+      const dateStr = d.toISOString().slice(0, 10);
+      if (dateStr < today()) continue;
 
-      })
-      .sort(
-        (a,b) => b.score - a.score
-      )
-      .slice(0,3);
+      let title = "";
+      let minutes = baseMinutes;
 
-  summary.textContent =
-    `Tienes ${pending.length} tareas pendientes`;
+      if (type === "examen") {
+        if (i === 0) title = `Repasar teoría de ${subject}`;
+        else if (i === availableDays - 1) { title = `Repaso final de ${subject}`; minutes = Math.round(baseMinutes * 0.8); }
+        else title = `Practicar ejercicios de ${subject}`;
+      } else if (type === "entrega" || type === "proyecto") {
+        if (i === 0) title = `Investigar y planear ${subject}`;
+        else if (i === availableDays - 1) title = `Revisar y terminar ${subject}`;
+        else title = `Avanzar en ${subject}`;
+      } else if (type === "exposicion") {
+        if (i === 0) title = `Preparar contenido de ${subject}`;
+        else if (i === availableDays - 1) title = `Practicar exposición de ${subject}`;
+        else title = `Organizar y practicar ${subject}`;
+      } else {
+        title = `Estudiar ${subject}`;
+      }
 
-  container.innerHTML =
-    ranked.map((item,index) => `
-      <div class="habit">
+      sessions.push({
+        title,
+        date: dateStr,
+        time: "16:00",
+        duration: minutes,
+        priority: daysLeft <= 2 ? "urgent" : "important",
+        category: "estudio"
+      });
+    }
 
-        <div>
-          <strong>#${index + 1}</strong>
+    if (!sessions.length) {
+      sessions.push({
+        title: `Preparar ${subject}`,
+        date: today(),
+        time: "16:00",
+        duration: baseMinutes,
+        priority: "important",
+        category: "estudio"
+      });
+    }
 
-          <div>
-            ${item.task.title}
-          </div>
+    return sessions;
+  }
 
+  function generateAdvisorSuggestion() {
+    const text = ($("#advisorInput")?.value || "").trim();
+    if (!text) return toast("Escribe qué tienes pendiente", "warn");
+
+    const parsed = parseAdvisorText(text);
+    const intensity = $("#advisorIntensity")?.value || "balanced";
+    const plan = generateStudyPlan(parsed, intensity);
+    lastAdvisorPlan = { parsed, intensity, plan };
+
+    const typeLabel = {
+      examen: "Examen",
+      entrega: "Entrega / Trabajo",
+      proyecto: "Proyecto",
+      exposicion: "Exposición",
+      estudio: "Estudio"
+    }[parsed.type] || "Actividad";
+
+    const intensityLabel = {
+      light: "Ligero",
+      balanced: "Equilibrado",
+      intensive: "Intensivo"
+    }[intensity];
+
+    let html = `
+      <div class="card" style="background:var(--bg-soft);">
+        <div style="margin-bottom:10px;">
+          <strong>${typeLabel} · ${parsed.subject}</strong><br>
+          <span style="color:var(--muted);font-size:13px;">
+            Fecha detectada: ${parsed.targetDate} · ${parsed.daysLeft} día(s) · Plan ${intensityLabel}
+          </span>
         </div>
+        <div style="margin:12px 0;">
+    `;
 
-        <span>
-          ${item.score}
-        </span>
+    plan.forEach((s, idx) => {
+      html += `
+        <div class="habit" style="margin-bottom:8px;">
+          <div>
+            <strong>${idx + 1}. ${s.title}</strong>
+            <div style="font-size:12px;color:var(--muted);">${s.date} · ${s.duration} min</div>
+          </div>
+        </div>
+      `;
+    });
 
+    html += `
+        </div>
+        <button class="btn btn-primary" id="advisorApply" style="width:100%;margin-top:8px;">
+          ✅ Aplicar plan a mis tareas
+        </button>
       </div>
-    `).join("");
+    `;
 
-}
-function generateAdvisorSuggestion() {
+    $("#advisorResponse").innerHTML = html;
 
-  const text =
-    $("#advisorInput")
-      .value
-      .toLowerCase();
-
-  let advice = "";
-
-  if (text.includes("examen")) {
-
-    advice =
-      "📚 Veo que tienes un examen. Mi consejo es estudiar un poco cada día hasta la fecha del examen.";
-
+    const applyBtn = document.getElementById("advisorApply");
+    if (applyBtn) applyBtn.onclick = applyAdvisorPlan;
   }
 
-  else if (text.includes("entrega")) {
+  function applyAdvisorPlan() {
+    if (!lastAdvisorPlan || !lastAdvisorPlan.plan?.length) {
+      return toast("Genera un plan primero", "warn");
+    }
 
-    advice =
-      "📝 Tienes una entrega pendiente. Divide el trabajo en partes pequeñas y empieza hoy mismo.";
+    const plan = lastAdvisorPlan.plan;
+    plan.forEach(s => {
+      tasks.push(normalizeTask({
+        title: s.title,
+        date: s.date,
+        time: s.time || "16:00",
+        priority: s.priority || "important",
+        category: s.category || "estudio",
+        duration: s.duration || 30,
+        notes: "Creado por Planneo Advisor",
+        subtasks: []
+      }));
+    });
 
+    save(DB.tasks, tasks);
+    refresh();
+    toast(`Se añadieron ${plan.length} tareas al calendario`, "ok");
+    $("#advisorResponse").innerHTML = `
+      <div class="empty" style="color:var(--success);">
+        ✅ Plan aplicado. Revisa Mi día y el Calendario.
+      </div>
+    `;
+    lastAdvisorPlan = null;
   }
 
-  else if (text.includes("exposición")) {
-
-    advice =
-      "🎤 Tienes una exposición próxima. Practica unos minutos cada día.";
-
+  function renderAdvisor() {
+    // Se mantiene por compatibilidad; el Advisor principal es por texto
   }
-
-  else if (text.includes("proyecto")) {
-
-    advice =
-      "🚀 Los proyectos grandes funcionan mejor si los divides en tareas pequeñas.";
-
-  }
-
-  else {
-
-    const ideas = [
-
-      "✅ Empieza por la tarea más importante.",
-
-      "🍅 Haz una sesión Pomodoro de 25 minutos.",
-
-      "📅 Divide tu objetivo en pasos más pequeños.",
-
-      "🎯 Prioriza lo que vence primero.",
-
-      "⚡ Elimina distracciones durante 30 minutos."
-
-    ];
-
-    advice =
-      ideas[
-        Math.floor(
-          Math.random() *
-          ideas.length
-        )
-      ];
-
-  }
-
-  $("#advisorResponse").innerHTML = `
-    <div class="card">
-      ${advice}
-    </div>
-  `;
-
-}
   function renderStats() {
     const total = tasks.length;
     const done = tasks.filter(t => t.done).length;
@@ -3090,20 +3175,7 @@ function checkAlarms() {
     };
 
     $("#addSubtask").onclick = () => addSubtaskRow();
-    $("#advisorGenerate").onclick =
-  generateAdvisorSuggestion;
-
-$("#advisorAnother").onclick =
-  generateAdvisorSuggestion;
-$("#advisorOrganize").onclick = () => {
-
-  toast(
-    "🤖 Advisor analizó tus tareas"
-  );
-
-  renderAdvisor();
-
-};
+    $("#advisorGenerate").onclick = generateAdvisorSuggestion;
     $$(".filter-btn[data-filter]").forEach(b => b.onclick = () => {
       $$(".filter-btn[data-filter]").forEach(x => x.classList.remove("active"));
       b.classList.add("active");
