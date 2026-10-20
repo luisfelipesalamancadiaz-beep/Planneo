@@ -3,12 +3,11 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
-<meta name="description" content="Planneo — Tu agenda digital para organizar tareas, estudio y hábitos">
+<meta name="description" content="Planneo 2.0 — Agenda digital moderna y personalizable para estudiantes">
 <meta name="theme-color" content="#6366f1">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <link rel="manifest" href="./manifest.json">
-<link rel="apple-touch-icon" href="./icono-192.png">
-<title>Planneo · Tu agenda digital</title>
+<title>Planneo 2.0 · Agenda</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
 <script src="https://cdn.jsdelivr.net/npm/fullcalendar@6.1.15/index.global.min.js"></script>
@@ -634,20 +633,122 @@ textarea { min-height: 100px; resize: vertical; }
 @media(max-width:430px) { .landing-feature-grid { grid-template-columns:1fr; } .landing-topnote { max-width:150px; } .privacy-notice-actions { flex-direction:column-reverse; align-items:stretch; } .privacy-more,.privacy-accept { width:100%; } }
 
 
-/* Acciones de la página de presentación e instalación */
-.landing-top-actions{display:flex;align-items:center;gap:10px;flex-wrap:wrap;justify-content:flex-end}
-.landing-small-btn{border:1px solid var(--border);background:var(--surface);color:var(--text);padding:10px 13px;border-radius:10px;font:700 12px var(--font);cursor:pointer}
-.landing-small-primary{background:var(--primary);border-color:var(--primary);color:#fff}
-.landing-actions{display:flex;justify-content:center;gap:12px;flex-wrap:wrap}
-.landing-cta-secondary{background:var(--surface);border:1px solid var(--border);color:var(--text);box-shadow:none}
-.landing-cta-secondary:hover{background:var(--bg-soft);box-shadow:none}
-.install-help{font-size:12px!important;margin:13px auto 0!important;color:var(--muted);min-height:18px}
-@media(max-width:600px){.landing-topbar{align-items:flex-start}.landing-top-actions{gap:6px}.landing-topnote{display:none}.landing-small-btn{padding:9px 10px}.landing-actions{flex-direction:column;align-items:stretch}.landing-actions .landing-cta{width:100%}}
+
+/* ===== AJUSTES MÓVILES: PLANNEO MÁS CÓMODO EN CELULAR ===== */
+@media (max-width: 720px) {
+  html { scroll-padding-top: 120px; }
+  body { padding-bottom: env(safe-area-inset-bottom, 0); }
+  nav {
+    display: grid;
+    grid-template-columns: auto minmax(0, 1fr);
+    align-items: center;
+    gap: 10px;
+    padding: 10px 12px 0;
+    top: 0;
+  }
+  .brand { font-size: 18px; white-space: nowrap; }
+  .search-wrap { order: initial; width: 100%; max-width: none; min-width: 0; }
+  .search-wrap input { min-height: 42px; font-size: 16px; }
+  .nav-menu {
+    grid-column: 1 / -1;
+    order: initial;
+    width: calc(100% + 24px);
+    margin: 0 -12px;
+    padding: 7px 10px calc(8px + env(safe-area-inset-bottom, 0));
+    display: flex;
+    flex-wrap: nowrap;
+    justify-content: flex-start;
+    gap: 5px;
+    overflow-x: auto;
+    overscroll-behavior-x: contain;
+    scrollbar-width: none;
+    border-top: 1px solid var(--border);
+    -webkit-overflow-scrolling: touch;
+  }
+  .nav-menu::-webkit-scrollbar { display: none; }
+  .nav-menu li { flex: 0 0 auto; }
+  .nav-menu button {
+    min-height: 40px;
+    padding: 9px 12px;
+    white-space: nowrap;
+    font-size: 13px;
+    border-radius: 11px;
+  }
+  .settings-panel {
+    position: absolute;
+    top: calc(100% + 8px);
+    left: 10px;
+    right: 10px;
+    width: auto;
+    max-height: min(72vh, 620px);
+    border-radius: 18px;
+    padding: 17px;
+  }
+  .container { width: 100%; padding: 16px 13px 28px; }
+  .page-title { font-size: clamp(23px, 6vw, 29px); line-height: 1.2; }
+  .dashboard-grid, .stats-grid, .cards-grid { grid-template-columns: minmax(0, 1fr) !important; }
+  .dash-card, .card, .panel, .feature-card, .task, .note-card, .habit-card {
+    border-radius: 16px;
+  }
+  button, .btn, select { touch-action: manipulation; }
+  .btn { min-height: 42px; }
+  input:not([type="checkbox"]):not([type="radio"]), textarea, select {
+    max-width: 100%;
+    font-size: 16px;
+  }
+  .form-row { gap: 12px; }
+  .modal-bg { padding: 12px; align-items: end; }
+  .modal {
+    width: 100%;
+    max-width: 560px;
+    max-height: 88dvh;
+    overflow-y: auto;
+    border-radius: 22px 22px 16px 16px;
+    padding: 20px 16px;
+  }
+  .onboarding-backdrop { padding: 12px; align-items: center; }
+  .onboarding-card {
+    width: 100%;
+    max-width: 560px;
+    max-height: calc(100dvh - 24px);
+    overflow-y: auto;
+    padding: 22px 17px 18px;
+    border-radius: 22px;
+  }
+  .onboarding-card h1 { font-size: 25px; line-height: 1.2; }
+  .onboarding-lead { margin-bottom: 22px; font-size: 14px; }
+  .onboarding-section { padding-top: 16px; margin-top: 16px; }
+  .choice-grid { gap: 9px; }
+  .choice-card { min-height: 54px; padding: 12px; border-radius: 13px; }
+  .color-options { gap: 8px; }
+  .color-choice { min-height: 40px; }
+  .wizard-nav { position: sticky; bottom: -18px; padding: 12px 0 2px; margin-top: 22px; background: var(--surface); }
+  .wizard-nav .btn { flex: 1; min-width: 0; }
+  .landing-topbar { gap: 10px; }
+  .landing-wordmark { font-size: 18px; }
+  .landing-mark { width: 32px; height: 32px; }
+  .landing-hero h1 { font-size: clamp(34px, 10vw, 48px); }
+  .landing-cta { width: 100%; max-width: 340px; }
+  .landing-feature-grid { grid-template-columns: minmax(0, 1fr) !important; }
+  .privacy-notice { max-height: 70dvh; overflow-y: auto; }
+}
+@media (max-width: 390px) {
+  .landing-topnote { max-width: 125px; }
+  .onboarding-progress { margin-bottom: 20px; }
+  .progress-step { width: 29px; height: 29px; }
+  .onboarding-progress::before, .onboarding-progress-fill { top: 12px; }
+  .choice-grid { grid-template-columns: minmax(0, 1fr) !important; }
+  .setting-row { align-items: flex-start; }
+  .setting-row select, .setting-row input { max-width: 54%; }
+}
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after { scroll-behavior: auto !important; animation-duration: .01ms !important; animation-iteration-count: 1 !important; transition-duration: .01ms !important; }
+}
 
 </style>
 </head>
 <body>
-<div id="splash">
+<div id="splash" style="display:none;">
   <div class="logo">Planneo</div>
   <div class="tag">Tu agenda inteligente</div>
 </div>
@@ -656,22 +757,14 @@ textarea { min-height: 100px; resize: vertical; }
 <div id="landing" class="landing" style="display:none;">
   <header class="landing-topbar">
     <a class="landing-wordmark" href="#landing" aria-label="Planneo, inicio"><span class="landing-mark">P</span> Planneo</a>
-    <div class="landing-top-actions">
-      <span class="landing-topnote">Tu espacio para organizarte mejor</span>
-      <button type="button" class="landing-small-btn" id="installTopBtn">↓ Instalar</button>
-      <button type="button" class="landing-small-btn landing-small-primary" id="enterTopBtn">Entrar a Planneo →</button>
-    </div>
+    <span class="landing-topnote">Tu espacio para organizarte mejor</span>
   </header>
 
   <section class="landing-hero">
     <div class="hero-pill"><span aria-hidden="true">✦</span> ORGANIZA · ESTUDIA · AVANZA</div>
     <h1>Tu día, tus metas,<br><span>todo en su lugar.</span></h1>
     <p>Una agenda digital creada para estudiantes. Organiza tareas, planifica tu tiempo y construye una rutina que se adapte a ti, sin complicarte.</p>
-    <div class="landing-actions">
-      <button class="landing-cta" id="startConfig">Personalizar mi agenda <span aria-hidden="true">→</span></button>
-      <button class="landing-cta landing-cta-secondary" id="installHeroBtn" type="button">↓ Instalar en mi celular</button>
-    </div>
-    <p class="install-help" id="installHelp" role="status" aria-live="polite">Instálala para abrir Planneo desde el icono de tu celular.</p>
+    <button class="landing-cta" id="startConfig">Personalizar mi agenda <span aria-hidden="true">→</span></button>
     <div class="hero-trust"><span>✓ Sin crear una cuenta</span><span>✓ Personalizable</span><span>✓ Con funciones sin conexión</span></div>
     <div class="hero-preview" aria-label="Vista ilustrativa de las funciones de Planneo">
       <div class="preview-top"><span class="preview-dot"></span><span class="preview-dot"></span><span class="preview-dot"></span><span class="preview-label">MI DÍA</span></div>
@@ -716,14 +809,14 @@ textarea { min-height: 100px; resize: vertical; }
     <h2>Tu agenda no tiene que parecerse a la de nadie más</h2>
     <p class="subtitle">Puedes cambiar tus preferencias más adelante desde la configuración.</p>
     <div class="customize-points"><div><span>01</span><p><b>Elige tu vista inicial</b><small>Abre directamente la sección que más utilizas.</small></p></div><div><span>02</span><p><b>Muestra solo lo necesario</b><small>Activa u oculta módulos y apartados de Mi día.</small></p></div><div><span>03</span><p><b>Define una meta realista</b><small>Ajusta tus minutos diarios de estudio a tu rutina.</small></p></div></div>
-    <div class="landing-final-cta"><h2>¿Listo para poner tus ideas en orden?</h2><p>Configura tu espacio una vez y empieza a usar Planneo a tu manera.</p><div class="landing-actions"><button class="landing-cta" id="startConfig2">Personalizar mi agenda <span aria-hidden="true">→</span></button><button class="landing-cta landing-cta-secondary" id="enterBottomBtn" type="button">Ya tengo una agenda · Entrar</button></div></div>
+    <div class="landing-final-cta"><h2>¿Listo para poner tus ideas en orden?</h2><p>Configura tu espacio una vez y empieza a usar Planneo a tu manera.</p><button class="landing-cta" id="startConfig2">Empezar ahora <span aria-hidden="true">→</span></button></div>
   </section>
 
   <section class="landing-section landing-faq">
     <div class="section-kicker">PREGUNTAS FRECUENTES</div><h2>Antes de empezar</h2>
     <details><summary>¿Necesito crear una cuenta?</summary><p>No. Puedes empezar sin registrarte. Tus datos de agenda se guardan en el almacenamiento de este navegador.</p></details>
     <details><summary>¿Puedo cambiar mi configuración después?</summary><p>Sí. La configuración inicial se muestra la primera vez; después puedes cambiar tus preferencias desde la sección de configuración de Planneo.</p></details>
-    <details><summary>¿Puedo instalar Planneo en mi celular?</summary><p>Sí. En navegadores compatibles aparecerá la opción de instalación. Si no aparece el aviso, en Android puedes abrir el menú del navegador y elegir “Instalar aplicación” o “Añadir a pantalla principal”. En iPhone, abre la página en Safari, pulsa Compartir y elige “Añadir a pantalla de inicio”.</p></details>
+    <details><summary>¿Puedo usar Planneo en mi celular?</summary><p>Sí, la interfaz está pensada para adaptarse a pantallas de computadora y de celular. Puedes abrirla desde el navegador.</p></details>
     <details><summary>¿Mis datos se sincronizan automáticamente entre dispositivos?</summary><p>No. Como los datos se guardan en el navegador de cada dispositivo, no se sincronizan automáticamente entre celulares y computadores.</p></details>
     <details><summary>¿Qué pasa si borro los datos del navegador?</summary><p>Podrías perder las tareas, notas y preferencias guardadas en ese navegador. Evita borrar sus datos si quieres conservar tu información.</p></details>
   </section>
@@ -1190,6 +1283,9 @@ textarea { min-height: 100px; resize: vertical; }
 (function() {
   "use strict";
 
+  const ONBOARDING_KEY = "planneo_onboarding_complete_v1";
+  const SPLASH_KEY = "planneo_splash_seen_v1";
+
   const DB = {
     tasks: "planneo_v8_tasks",
     notes: "planneo_v8_notes",
@@ -1343,6 +1439,7 @@ textarea { min-height: 100px; resize: vertical; }
     config.studyGoal = Number($("#onboardingStudyGoal").value) || 60;
     config.notif = $("#onboardingNotifications").checked;
     config.onboardingComplete = true;
+    try { localStorage.setItem(ONBOARDING_KEY, "1"); } catch (e) {}
     save(DB.config, config);
     $("#themeSelect").value = config.theme;
     $("#accentColor").value = config.accent;
@@ -1420,7 +1517,25 @@ textarea { min-height: 100px; resize: vertical; }
     doneTotal = load(DB.done, 0) || 0;
     pomoSessions = load(DB.pomo, 0) || 0;
     const c = load(DB.config, null);
-    if (c) Object.assign(config, c);
+    if (c) {
+      Object.assign(config, c);
+      // If an older settings object already exists but predates the onboarding flag,
+      // treat it as an existing user instead of showing the welcome screen again.
+      if (typeof c.onboardingComplete !== "boolean" && Object.keys(c).length) {
+        config.onboardingComplete = true;
+      }
+    } else {
+      // Compatibility with settings saved by earlier Planneo versions.
+      const oldConfig = load("planneo_v7_config", null) || load("planneo_v6_config", null) || load("planneo_v5_config", null);
+      if (oldConfig && typeof oldConfig === "object") {
+        Object.assign(config, oldConfig);
+        if (typeof oldConfig.onboardingComplete !== "boolean") config.onboardingComplete = true;
+      }
+    }
+    try {
+      if (localStorage.getItem(ONBOARDING_KEY) === "1") config.onboardingComplete = true;
+      if (config.onboardingComplete) localStorage.setItem(ONBOARDING_KEY, "1");
+    } catch (e) {}
     save(DB.categories, categories);
   }
 
@@ -2504,18 +2619,35 @@ textarea { min-height: 100px; resize: vertical; }
 
     const hash = location.hash.slice(1);
     const allowedViews = ["home", "day", "notes", "calendar", "stats", "habits", "trash"];
-    // La presentación se muestra SIEMPRE al abrir la web, para que las actualizaciones sean visibles.
-    // La agenda y sus datos siguen guardados; el usuario puede entrar cuando quiera.
     if (config.onboardingComplete) {
+      try { localStorage.setItem(ONBOARDING_KEY, "1"); } catch (e) {}
       const preferred = config.startView || "home";
       const target = allowedViews.includes(hash) && (hash === "home" || (config.modules || {})[hash] !== false) ? hash : preferred;
       showView(target || "home");
+      $("#landing").style.display = "none";
+    } else {
+      // Mostrar landing profesional en la primera visita
+      $("#landing").style.display = "block";
+      // Ocultar nav y container mientras se muestra la landing
+      document.querySelector("nav").style.display = "none";
+      document.querySelector(".container").style.display = "none";
     }
-    $("#landing").style.display = "block";
-    document.querySelector("nav").style.display = "none";
-    document.querySelector(".container").style.display = "none";
 
-    setTimeout(() => $("#splash").style.display = "none", 1800);
+    // La animación de bienvenida se muestra solo en la primera apertura.
+    const splash = $("#splash");
+    let showSplash = false;
+    try {
+      showSplash = localStorage.getItem(SPLASH_KEY) !== "1";
+      if (showSplash) localStorage.setItem(SPLASH_KEY, "1");
+    } catch (e) {}
+    if (splash) {
+      if (showSplash) {
+        splash.style.display = "flex";
+        setTimeout(() => { splash.style.display = "none"; }, 1800);
+      } else {
+        splash.style.display = "none";
+      }
+    }
 
     // Botones de configurar
     const openConfig = () => {
@@ -2531,45 +2663,6 @@ textarea { min-height: 100px; resize: vertical; }
     const btn2 = document.getElementById("startConfig2");
     if (btn1) btn1.onclick = openConfig;
     if (btn2) btn2.onclick = openConfig;
-
-    const enterAgenda = () => {
-      const landing = document.getElementById("landing");
-      if (landing) landing.style.display = "none";
-      document.querySelector("nav").style.display = "";
-      document.querySelector(".container").style.display = "";
-      if (!config.onboardingComplete) { openOnboarding(false); return; }
-      const allowed = ["home", "day", "notes", "calendar", "stats", "habits", "trash"];
-      const hashView = location.hash.slice(1);
-      const target = allowed.includes(hashView) && (hashView === "home" || (config.modules || {})[hashView] !== false) ? hashView : (config.startView || "home");
-      showView(target);
-    };
-    ["enterTopBtn", "enterBottomBtn"].forEach(id => { const b = document.getElementById(id); if (b) b.onclick = enterAgenda; });
-
-    // Instalación PWA: se usa el diálogo nativo cuando el navegador lo ofrece.
-    let installPrompt = null;
-    const installHelp = document.getElementById("installHelp");
-    const installButtons = ["installTopBtn", "installHeroBtn"].map(id => document.getElementById(id)).filter(Boolean);
-    const setInstallMessage = (message) => { if (installHelp) installHelp.textContent = message; };
-    window.addEventListener("beforeinstallprompt", event => {
-      event.preventDefault(); installPrompt = event;
-      installButtons.forEach(b => { b.hidden = false; });
-      setInstallMessage("¡Planneo está lista para instalarse en este dispositivo!");
-    });
-    const installApp = async () => {
-      if (window.matchMedia("(display-mode: standalone)").matches || window.navigator.standalone) {
-        setInstallMessage("Planneo ya está instalada en este dispositivo. ¡Ábrela desde tu pantalla de inicio!"); return;
-      }
-      if (installPrompt) {
-        installPrompt.prompt();
-        const choice = await installPrompt.userChoice;
-        setInstallMessage(choice && choice.outcome === "accepted" ? "¡Listo! Sigue los pasos del navegador para terminar la instalación." : "No pasa nada; puedes instalarla cuando quieras.");
-        installPrompt = null; return;
-      }
-      const isIOS = /iphone|ipad|ipod/i.test(navigator.userAgent);
-      setInstallMessage(isIOS ? "En iPhone: abre esta página en Safari, pulsa Compartir y elige ‘Añadir a pantalla de inicio’." : "Si no aparece la ventana automática, abre el menú ⋮ del navegador y busca ‘Instalar aplicación’ o ‘Añadir a pantalla principal’. En algunos navegadores esta opción aparece después de publicar la web por HTTPS.");
-    };
-    installButtons.forEach(b => b.addEventListener("click", installApp));
-    window.addEventListener("appinstalled", () => { installPrompt = null; setInstallMessage("¡Planneo quedó instalada! Ya puedes abrirla desde tu pantalla de inicio."); });
 
     // Aviso informativo de privacidad: se muestra una vez y puede consultarse desde el pie de página.
     const privacyNotice = document.getElementById("privacyNotice");
