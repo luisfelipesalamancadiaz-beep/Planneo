@@ -771,11 +771,126 @@ textarea { min-height: 100px; resize: vertical; }
   border-radius: 20px;
   padding: 16px;
   box-shadow: var(--shadow);
+  overflow: hidden;
 }
 
+.fc {
+  font-family: var(--font);
+  font-size: 14px;
+}
+.fc-button {
+  border-radius: 10px !important;
+  font-weight: 600 !important;
+  padding: 6px 12px !important;
+  text-transform: none !important;
+  box-shadow: none !important;
+}
+.fc-button-primary {
+  background: var(--primary) !important;
+  border-color: var(--primary) !important;
+}
+.fc-button-primary:not(:disabled):hover,
+.fc-button-primary:not(:disabled).fc-button-active {
+  background: var(--primary-dark) !important;
+  border-color: var(--primary-dark) !important;
+}
+.fc-toolbar-title {
+  font-weight: 800;
+  font-size: 1.15em;
+}
+.fc-daygrid-day-number,
+.fc-col-header-cell-cushion {
+  font-weight: 600;
+  color: var(--text);
+  text-decoration: none;
+}
+.fc-day-today {
+  background: var(--primary-light) !important;
+}
 .fc-daygrid-day:hover {
   background: var(--bg-soft);
   transition: 0.2s;
+}
+.fc-event {
+  border-radius: 6px !important;
+  font-size: 12px;
+  font-weight: 600;
+  padding: 2px 4px;
+  border: none !important;
+}
+.fc-list-event-title {
+  font-weight: 600;
+}
+
+/* Mejoras específicas para celular */
+@media (max-width: 720px) {
+  #calendar {
+    padding: 8px;
+    border-radius: 16px;
+    margin-top: 8px;
+    max-width: 100%;
+    overflow-x: auto;
+  }
+  .fc {
+    font-size: 13px;
+  }
+  .fc-toolbar {
+    flex-wrap: wrap;
+    gap: 8px;
+    margin-bottom: 10px !important;
+  }
+  .fc-toolbar-chunk {
+    display: flex;
+    justify-content: center;
+  }
+  .fc-toolbar-title {
+    font-size: 1.05em;
+    margin: 4px 0;
+  }
+  .fc-button {
+    min-height: 38px !important;
+    padding: 8px 10px !important;
+    font-size: 13px !important;
+  }
+  .fc-daygrid-day-frame {
+    min-height: 52px;
+  }
+  .fc-daygrid-day-number {
+    font-size: 14px;
+    padding: 4px 6px;
+  }
+  .fc-col-header-cell {
+    padding: 6px 2px;
+  }
+  .fc-event {
+    font-size: 11px;
+    margin: 1px 2px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+  .fc-daygrid-event-harness {
+    margin-top: 1px;
+  }
+  .fc-list {
+    border-radius: 12px;
+    overflow: hidden;
+  }
+  .fc-list-day-cushion {
+    background: var(--bg-soft);
+    font-weight: 700;
+  }
+  .fc-list-event:hover td {
+    background: var(--primary-light);
+  }
+  .fc-list-event-time {
+    font-size: 12px;
+    font-weight: 600;
+    color: var(--primary);
+  }
+  .fc-list-event-title {
+    font-size: 14px;
+  }
 }
 </style>
 </head>
@@ -2251,24 +2366,34 @@ function renderAlarms() {
       return;
     }
     calendar = new FullCalendar.Calendar(el, {
-      initialView: window.innerWidth < 768
-  ? "listWeek"
-  : "dayGridMonth",
+      initialView: window.innerWidth < 768 ? "dayGridMonth" : "dayGridMonth",
       locale: "es",
       height: "auto",
+      contentHeight: "auto",
       nowIndicator: true,
       firstDay: 1,
+      dayMaxEvents: window.innerWidth < 768 ? 2 : 3,
+      dayMaxEventRows: window.innerWidth < 768 ? 2 : true,
+      eventDisplay: "block",
       headerToolbar: window.innerWidth < 768
-  ? {
-      left: "prev,next",
-      center: "title",
-      right: "dayGridMonth"
-    }
-  : {
-      left: "prev,next today",
-      center: "title",
-      right: "dayGridMonth,timeGridWeek,listWeek"
-    },
+        ? {
+            left: "prev,next",
+            center: "title",
+            right: "dayGridMonth,listWeek"
+          }
+        : {
+            left: "prev,next today",
+            center: "title",
+            right: "dayGridMonth,timeGridWeek,listWeek"
+          },
+      views: {
+        dayGridMonth: {
+          titleFormat: { year: "numeric", month: "short" }
+        },
+        listWeek: {
+          listDayFormat: { weekday: "short", day: "numeric", month: "short" }
+        }
+      },
       dateClick(info) {
         $("#taskDate").value = info.dateStr.slice(0, 10);
         if (!$("#taskTime").value) $("#taskTime").value = "12:00";
