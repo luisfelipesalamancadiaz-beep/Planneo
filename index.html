@@ -1195,6 +1195,27 @@ textarea { min-height: 100px; resize: vertical; }
     </div>
   </div>
 </details>
+<div class="card">
+  <h2>⏰ Alarmas</h2>
+
+  <div class="form-row">
+    <input type="time" id="alarmTime">
+
+    <input
+      type="text"
+      id="alarmTitle"
+      placeholder="Nombre de la alarma">
+  </div>
+
+  <button
+    class="btn btn-primary"
+    id="addAlarm"
+    style="margin-top:10px;">
+    Crear alarma
+  </button>
+
+  <div id="alarmList" style="margin-top:12px;"></div>
+</div>
     <div id="habitsDaySection" class="card" style="display:none;">
       <h2>Hábitos de hoy</h2>
       <div id="habitsDayList"></div>
@@ -1331,6 +1352,7 @@ textarea { min-height: 100px; resize: vertical; }
 
   const DB = {
     tasks: "planneo_v8_tasks",
+      alarms: "planneo_v8_alarms",
     notes: "planneo_v8_notes",
     config: "planneo_v8_config",
     streak: "planneo_v8_streak",
@@ -1342,7 +1364,13 @@ textarea { min-height: 100px; resize: vertical; }
     categories: "planneo_v8_categories"
   };
 
-  let tasks = [], notes = [], habits = [], sessions = [], trash = [], categories = [];
+  let tasks = [],
+    alarms = [],
+    notes = [],
+    habits = [],
+    sessions = [],
+    trash = [],
+    categories = [];
   let streak = { days: 0, last: null }, doneTotal = 0, pomoSessions = 0;
   let currentStep = 1;
   const totalSteps = 5;
@@ -1550,6 +1578,7 @@ textarea { min-height: 100px; resize: vertical; }
 
   function loadData() {
     migrateFromOld();
+    alarms = load(DB.alarms, []) || [];
     tasks = (load(DB.tasks, []) || []).map(normalizeTask);
     notes = load(DB.notes, []) || [];
     habits = load(DB.habits, []) || [];
@@ -1790,7 +1819,43 @@ textarea { min-height: 100px; resize: vertical; }
       list.appendChild(el);
     });
   }
+function renderAlarms() {
 
+  const list = $("#alarmList");
+
+  if (!list) return;
+
+  list.innerHTML = "";
+
+  if (!alarms.length) {
+    list.innerHTML =
+      '<div class="empty">No hay alarmas</div>';
+    return;
+  }
+
+  alarms.forEach(alarm => {
+
+    const div = document.createElement("div");
+
+    div.className = "habit";
+
+    div.innerHTML = `
+      <div>
+        <strong>${alarm.time}</strong>
+        <div>${alarm.title}</div>
+      </div>
+
+      <button
+        class="btn btn-ghost"
+        data-alarm-delete="${alarm.id}">
+        Eliminar
+      </button>
+    `;
+
+    list.appendChild(div);
+  });
+
+}
   function renderStats() {
     const total = tasks.length;
     const done = tasks.filter(t => t.done).length;
@@ -2009,6 +2074,7 @@ textarea { min-height: 100px; resize: vertical; }
     renderTasks();
     renderDay();
     renderStats();
+    renderAlarms();
     syncCalendar();
   }
 
@@ -2330,6 +2396,41 @@ textarea { min-height: 100px; resize: vertical; }
     }
   });
 }
+function checkAlarms() {
+
+  const now = new Date();
+
+  const currentTime =
+    String(now.getHours()).padStart(2, "0")
+    + ":" +
+    String(now.getMinutes()).padStart(2, "0");
+
+  alarms.forEach(alarm => {
+
+    const key =
+      "alarm_" +
+      alarm.id +
+      "_" +
+      today();
+
+    if (
+      currentTime === alarm.time &&
+      !localStorage.getItem(key)
+    ) {
+
+      showNotification(
+        "⏰ " + alarm.title,
+        "Es hora"
+      );
+
+      playSound();
+
+      localStorage.setItem(key, "1");
+    }
+
+  });
+
+}
 
   function doSearch() {
     const q = $("#globalSearch").value.toLowerCase().trim();
@@ -2457,6 +2558,7 @@ textarea { min-height: 100px; resize: vertical; }
   }
 
   function init() {
+
     loadData();
     applyTheme();
     $("#taskDate").value = today();
@@ -2570,8 +2672,76 @@ textarea { min-height: 100px; resize: vertical; }
     };
 
     $("#saveTask").onclick = saveTask;
-    $("#cancelEdit").onclick = clearForm;
-    $("#addSubtask").onclick = () => addSubtaskRow();
+$("#cancelEdit").onclick = clearForm;
+
+$("#addAlarm").onclick = () => {
+
+  const time = $("#alarmTime").value;
+  const title = $("#alarmTitle").value.trim();
+
+  if (!time) {
+    return toast("Selecciona una hora", "warn");
+  }
+
+  alarms.push({
+    id: id(),
+    time: time,
+    title: title || "Alarma"
+  });
+
+  save(DB.alarms, alarms);
+
+  $("#alarmTime").value = "";
+
+  renderAlarms();
+
+  toast("Alarma creada");
+
+};
+
+$("#alarmList").onclick = e => {
+
+  const btn = e.target.closest("[data-alarm-delete]");
+
+  if (!btn) return;
+
+  alarms = alarms.filter(
+    alarm => alarm.id !== btn.dataset.alarmDelete
+  );
+
+  save(DB.alarms, alarms);
+
+  renderAlarms();
+
+  toast("Alarma eliminada");
+
+};
+
+$("#addSubtask").onclick = () => addSubtaskRow();
+  
+
+  renderAlarms();
+
+  toast("Alarma creada");
+};
+    
+    $("#alarmList").onclick = e => {
+
+  const btn = e.target.closest("[data-alarm-delete]");
+
+  if (!btn) return;
+
+  alarms = alarms.filter(
+    alarm => alarm.id !== btn.dataset.alarmDelete
+  );
+
+  save(DB.alarms, alarms);
+
+  renderAlarms();
+
+  toast("Alarma eliminada");
+
+};
     $$(".filter-btn[data-filter]").forEach(b => b.onclick = () => {
       $$(".filter-btn[data-filter]").forEach(x => x.classList.remove("active"));
       b.classList.add("active");
@@ -2743,6 +2913,7 @@ textarea { min-height: 100px; resize: vertical; }
       }
     });
     setInterval(checkReminders, 30000);
+    setInterval(checkAlarms, 10000);
     setInterval(() => { if (pomoRunning) updatePomo(); }, 1000);
 
     initCalendar();
