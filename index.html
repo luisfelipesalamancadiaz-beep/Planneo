@@ -2140,20 +2140,6 @@ function renderAlarms() {
   }
 
   function playSound() {
-    function triggerAlarm(title) {
-
-  $("#alarmOverlay").style.display = "flex";
-
-  $("#alarmOverlayText").textContent =
-    title;
-
-  alarmInterval = setInterval(() => {
-
-    playSound();
-
-  }, 1200);
-
-}
     if (!config.sound) return;
     try {
       const ctx = new (window.AudioContext || window.webkitAudioContext)();
@@ -2161,10 +2147,85 @@ function renderAlarms() {
       const g = ctx.createGain();
       o.connect(g); g.connect(ctx.destination);
       o.frequency.value = 880;
-      g.gain.setValueAtTime(0.2, ctx.currentTime);
-      g.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + 0.4);
-      o.start(); o.stop(ctx.currentTime + 0.4);
+      g.gain.setValueAtTime(0.3, ctx.currentTime);
+      g.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + 0.5);
+      o.start(); o.stop(ctx.currentTime + 0.5);
     } catch {}
+  }
+
+  let alarmCtx = null;
+  let alarmGainNode = null;
+
+  function startAlarmSound() {
+    if (!config.sound) return;
+    stopAlarmSound();
+    try {
+      alarmCtx = new (window.AudioContext || window.webkitAudioContext)();
+      if (alarmCtx.state === "suspended") alarmCtx.resume();
+      alarmGainNode = alarmCtx.createGain();
+      alarmGainNode.gain.value = 0.5;
+      alarmGainNode.connect(alarmCtx.destination);
+
+      function playAlarmPattern() {
+        if (!alarmCtx || alarmCtx.state === "closed") return;
+        const now = alarmCtx.currentTime;
+        // Patrón de alarma: beeps altos y bajos alternados
+        const osc1 = alarmCtx.createOscillator();
+        const osc2 = alarmCtx.createOscillator();
+        osc1.type = "square";
+        osc2.type = "square";
+        osc1.frequency.setValueAtTime(880, now);
+        osc2.frequency.setValueAtTime(660, now);
+        osc1.connect(alarmGainNode);
+        osc2.connect(alarmGainNode);
+        osc1.start(now);
+        osc1.stop(now + 0.25);
+        osc2.start(now + 0.3);
+        osc2.stop(now + 0.55);
+      }
+
+      playAlarmPattern();
+      alarmInterval = setInterval(playAlarmPattern, 700);
+    } catch (e) {
+      console.warn("No se pudo iniciar el sonido de alarma", e);
+    }
+  }
+
+  function stopAlarmSound() {
+    if (alarmInterval) {
+      clearInterval(alarmInterval);
+      alarmInterval = null;
+    }
+    if (alarmCtx) {
+      try {
+        alarmCtx.close();
+      } catch {}
+      alarmCtx = null;
+      alarmGainNode = null;
+    }
+  }
+
+  function startFullScreenAlarm(title) {
+    const overlay = $("#alarmOverlay");
+    if (overlay) {
+      overlay.style.display = "flex";
+      const textEl = $("#alarmOverlayText");
+      if (textEl) textEl.textContent = title || "Alarma";
+      const titleEl = $("#alarmOverlayTitle");
+      if (titleEl) titleEl.textContent = "¡ALARMA!";
+    }
+    startAlarmSound();
+    // Vibración en móviles si está disponible
+    if (navigator.vibrate) {
+      navigator.vibrate([500, 200, 500, 200, 500]);
+    }
+    try { window.focus(); } catch {}
+  }
+
+  function stopFullScreenAlarm() {
+    const overlay = $("#alarmOverlay");
+    if (overlay) overlay.style.display = "none";
+    stopAlarmSound();
   }
 
   function syncCalendar() {
@@ -2437,7 +2498,7 @@ function checkAlarms() {
         "Es hora"
       );
 
-      playSound();
+      startFullScreenAlarm(alarm.title);
 
       localStorage.setItem(key, "1");
     }
@@ -2792,15 +2853,7 @@ function checkAlarms() {
     $("#pomoStart").onclick = startPomo;
     $("#pomoPause").onclick = pausePomo;
     $("#pomoReset").onclick = resetPomo;
-    $("#stopAlarm").onclick = () => {
-
-  $("#alarmOverlay").style.display = "none";
-
-  clearInterval(alarmInterval);
-
-  alarmInterval = null;
-
-};
+    $("#stopAlarm").onclick = stopFullScreenAlarm;
     $$('input[name="pomoType"]').forEach(r => r.onchange = () => {
       $("#customMinutes").style.display = r.value === "custom" && r.checked ? "inline-block" : "none";
       if (!pomoRunning) resetPomo();
@@ -3034,43 +3087,53 @@ window.addEventListener("load", async () => {
   display:none;
   position:fixed;
   inset:0;
-  background:#000000ee;
+  background:rgba(0,0,0,0.95);
   z-index:99999;
   align-items:center;
   justify-content:center;
+  flex-direction:column;
+  animation: alarmPulse 1s infinite alternate;
 ">
 
   <div style="
     text-align:center;
     color:white;
-    max-width:500px;
+    max-width:90vw;
     padding:30px;
   ">
 
-    <div style="font-size:90px;">⏰</div>
+    <div style="font-size:120px; margin-bottom:10px;">⏰</div>
 
     <h1 id="alarmOverlayTitle"
-        style="font-size:42px;margin:20px 0;">
-      ALARMA
+        style="font-size:48px; margin:10px 0 20px; font-weight:800; letter-spacing:2px;">
+      ¡ALARMA!
     </h1>
 
     <p id="alarmOverlayText"
-       style="font-size:22px;margin-bottom:30px;">
+       style="font-size:28px; margin-bottom:40px; line-height:1.4;">
     </p>
 
     <button
       id="stopAlarm"
       class="btn btn-danger"
       style="
-        max-width:250px;
+        max-width:280px;
         margin:auto;
-        font-size:20px;
+        font-size:22px;
+        padding:16px 32px;
+        border-radius:16px;
       ">
-      Detener
+      Detener alarma
     </button>
 
   </div>
 
 </div>
+<style>
+@keyframes alarmPulse {
+  from { background: rgba(0,0,0,0.95); }
+  to { background: rgba(180, 0, 0, 0.85); }
+}
+</style>
 </body>
 </html>
