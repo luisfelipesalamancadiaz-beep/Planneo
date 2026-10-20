@@ -744,34 +744,18 @@ textarea { min-height: 100px; resize: vertical; }
 @media (prefers-reduced-motion: reduce) {
   *, *::before, *::after { scroll-behavior: auto !important; animation-duration: .01ms !important; animation-iteration-count: 1 !important; transition-duration: .01ms !important; }
 }
-/* Calendario móvil mejorado */
-@media (max-width: 768px) {
+/* Calendario premium */
+#calendar {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 20px;
+  padding: 16px;
+  box-shadow: var(--shadow);
+}
 
-  .fc .fc-toolbar {
-    display: flex;
-    flex-direction: column;
-    gap: 10px;
-  }
-
-  .fc .fc-toolbar-title {
-    font-size: 18px !important;
-    text-align: center;
-  }
-
-  .fc .fc-button {
-    padding: 8px 10px !important;
-    font-size: 13px !important;
-  }
-
-  .fc-header-toolbar {
-    margin-bottom: 15px !important;
-  }
-
-  .fc-button-group {
-    display: flex;
-    justify-content: center;
-  }
-
+.fc-daygrid-day:hover {
+  background: var(--bg-soft);
+  transition: 0.2s;
 }
 </style>
 </head>
