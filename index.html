@@ -744,7 +744,35 @@ textarea { min-height: 100px; resize: vertical; }
 @media (prefers-reduced-motion: reduce) {
   *, *::before, *::after { scroll-behavior: auto !important; animation-duration: .01ms !important; animation-iteration-count: 1 !important; transition-duration: .01ms !important; }
 }
+/* Calendario móvil mejorado */
+@media (max-width: 768px) {
 
+  .fc .fc-toolbar {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+  }
+
+  .fc .fc-toolbar-title {
+    font-size: 18px !important;
+    text-align: center;
+  }
+
+  .fc .fc-button {
+    padding: 8px 10px !important;
+    font-size: 13px !important;
+  }
+
+  .fc-header-toolbar {
+    margin-bottom: 15px !important;
+  }
+
+  .fc-button-group {
+    display: flex;
+    justify-content: center;
+  }
+
+}
 </style>
 </head>
 <body>
@@ -2067,12 +2095,24 @@ textarea { min-height: 100px; resize: vertical; }
       return;
     }
     calendar = new FullCalendar.Calendar(el, {
-      initialView: "dayGridMonth",
+      initialView: window.innerWidth < 768
+  ? "listWeek"
+  : "dayGridMonth",
       locale: "es",
       height: "auto",
       nowIndicator: true,
       firstDay: 1,
-      headerToolbar: { left: "prev,next today", center: "title", right: "dayGridMonth,timeGridWeek,listWeek" },
+      headerToolbar: window.innerWidth < 768
+  ? {
+      left: "prev,next",
+      center: "title",
+      right: "dayGridMonth"
+    }
+  : {
+      left: "prev,next today",
+      center: "title",
+      right: "dayGridMonth,timeGridWeek,listWeek"
+    },
       dateClick(info) {
         $("#taskDate").value = info.dateStr.slice(0, 10);
         if (!$("#taskTime").value) $("#taskTime").value = "12:00";
@@ -2265,7 +2305,7 @@ textarea { min-height: 100px; resize: vertical; }
       now >= when &&
       !localStorage.getItem(key + "_now")
     ) {
-      showNotification(
+      showNotification( 
         "🔔 Es la hora",
         t.title
       );
