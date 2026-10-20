@@ -1189,6 +1189,41 @@ textarea { min-height: 100px; resize: vertical; }
     <h1 class="page-title" id="greeting">Planneo</h1>
     <p class="page-sub" id="todayDate"></p>
     <div class="dashboard-grid" id="dashCards"></div>
+
+    <!-- Planneo Advisor en Inicio -->
+    <div class="card" id="advisorCard">
+      <h2>🤖 Planneo Advisor</h2>
+      <p style="margin-bottom:10px;color:var(--muted);">
+        Escribe lo que tienes pendiente o pide que organice tus tareas actuales.
+      </p>
+      <div style="display:flex;gap:6px;flex-wrap:wrap;margin-bottom:10px;">
+        <button type="button" class="filter-btn" data-advisor-example="Tengo examen de matemáticas el viernes">Examen</button>
+        <button type="button" class="filter-btn" data-advisor-example="Debo entregar un trabajo de historia el miércoles">Entrega</button>
+        <button type="button" class="filter-btn" data-advisor-example="Tengo una exposición la próxima semana">Exposición</button>
+        <button type="button" class="filter-btn" id="advisorAnalyzeTasks">Analizar mis tareas</button>
+      </div>
+      <textarea
+        id="advisorInput"
+        placeholder="Ej: Tengo examen de química el miércoles&#10;Debo entregar un trabajo de historia el viernes"
+        style="min-height:80px;"></textarea>
+      <div class="form-row" style="margin-top:12px;">
+        <div>
+          <label for="advisorIntensity">Tipo de plan</label>
+          <select id="advisorIntensity">
+            <option value="balanced">Equilibrado</option>
+            <option value="light">Ligero</option>
+            <option value="intensive">Intensivo</option>
+          </select>
+        </div>
+        <div style="display:flex;align-items:flex-end;gap:8px;">
+          <button class="btn btn-primary" id="advisorGenerate" style="flex:1;">
+            ✨ Generar plan
+          </button>
+        </div>
+      </div>
+      <div id="advisorResponse" style="margin-top:16px;"></div>
+    </div>
+
     <div class="card">
       <h2 id="formTitle">Nueva tarea</h2>
       <div class="form-grid">
@@ -1276,34 +1311,27 @@ textarea { min-height: 100px; resize: vertical; }
       </div>
     </div>
 
-
-  <div class="card" id="advisorCard">
-    <h2>🤖 Planneo Advisor</h2>
-    <p style="margin-bottom:12px;color:var(--muted);">
-      Escribe lo que tienes pendiente como se lo contarías a alguien. Advisor lo convierte en un plan real.
-    </p>
-    <textarea
-      id="advisorInput"
-      placeholder="Ej: Tengo examen de química el miércoles&#10;Debo entregar un trabajo de historia el viernes&#10;Tengo una exposición la próxima semana"
-      style="min-height:90px;"></textarea>
-    <div class="form-row" style="margin-top:12px;">
-      <div>
-        <label for="advisorIntensity">Tipo de plan</label>
-        <select id="advisorIntensity">
-          <option value="balanced">Equilibrado</option>
-          <option value="light">Ligero</option>
-          <option value="intensive">Intensivo</option>
-        </select>
-      </div>
-      <div style="display:flex;align-items:flex-end;">
-        <button class="btn btn-primary" id="advisorGenerate" style="width:100%;">
-          ✨ Generar plan
-        </button>
+    <!-- Añadir tarea rápida en Mi día -->
+    <div class="card">
+      <h2>➕ Añadir tarea rápida</h2>
+      <div class="form-grid">
+        <div>
+          <label for="quickTaskTitle">¿Qué tienes que hacer?</label>
+          <input id="quickTaskTitle" placeholder="Ej. Estudiar matemáticas, Entregar trabajo..." maxlength="120">
+        </div>
+        <div class="form-row">
+          <div>
+            <label for="quickTaskTime">Hora (opcional)</label>
+            <input type="time" id="quickTaskTime">
+          </div>
+          <div style="display:flex;align-items:flex-end;">
+            <button class="btn btn-primary" id="quickSaveTask" style="width:100%;">Guardar tarea</button>
+          </div>
+        </div>
       </div>
     </div>
-    <div id="advisorResponse" style="margin-top:16px;"></div>
-  </div>
-  <details class="card" id="pomoWrapper">
+
+    <details class="card" id="pomoWrapper">
   <summary style="
     cursor:pointer;
     font-weight:700;
@@ -2152,54 +2180,68 @@ function renderAlarms() {
     const text = ($("#advisorInput")?.value || "").trim();
     if (!text) return toast("Escribe qué tienes pendiente", "warn");
 
-    const parsed = parseAdvisorText(text);
+    const lines = text.split(/\n+/).map(l => l.trim()).filter(Boolean);
     const intensity = $("#advisorIntensity")?.value || "balanced";
-    const plan = generateStudyPlan(parsed, intensity);
-    lastAdvisorPlan = { parsed, intensity, plan };
+    const allPlans = [];
 
-    const typeLabel = {
-      examen: "Examen",
-      entrega: "Entrega / Trabajo",
-      proyecto: "Proyecto",
-      exposicion: "Exposición",
-      estudio: "Estudio"
-    }[parsed.type] || "Actividad";
-
-    const intensityLabel = {
-      light: "Ligero",
-      balanced: "Equilibrado",
-      intensive: "Intensivo"
-    }[intensity];
-
-    let html = `
-      <div class="card" style="background:var(--bg-soft);">
-        <div style="margin-bottom:10px;">
-          <strong>${typeLabel} · ${parsed.subject}</strong><br>
-          <span style="color:var(--muted);font-size:13px;">
-            Fecha detectada: ${parsed.targetDate} · ${parsed.daysLeft} día(s) · Plan ${intensityLabel}
-          </span>
-        </div>
-        <div style="margin:12px 0;">
-    `;
-
-    plan.forEach((s, idx) => {
-      html += `
-        <div class="habit" style="margin-bottom:8px;">
-          <div>
-            <strong>${idx + 1}. ${s.title}</strong>
-            <div style="font-size:12px;color:var(--muted);">${s.date} · ${s.duration} min</div>
-          </div>
-        </div>
-      `;
+    lines.forEach(line => {
+      const parsed = parseAdvisorText(line);
+      const plan = generateStudyPlan(parsed, intensity);
+      allPlans.push({ parsed, plan });
     });
 
+    lastAdvisorPlan = { intensity, allPlans };
+
+    let totalSessions = 0;
+    let totalMinutes = 0;
+    let html = `<div class="card" style="background:var(--bg-soft);">`;
+
+    allPlans.forEach((item, idx) => {
+      const { parsed, plan } = item;
+      const typeLabel = {
+        examen: "Examen",
+        entrega: "Entrega / Trabajo",
+        proyecto: "Proyecto",
+        exposicion: "Exposición",
+        estudio: "Estudio"
+      }[parsed.type] || "Actividad";
+
+      totalSessions += plan.length;
+      totalMinutes += plan.reduce((a, s) => a + (s.duration || 0), 0);
+
+      html += `
+        <div style="margin-bottom:14px;${idx > 0 ? 'padding-top:12px;border-top:1px solid var(--border);' : ''}">
+          <strong>${typeLabel} · ${parsed.subject}</strong><br>
+          <span style="color:var(--muted);font-size:13px;">
+            ${parsed.targetDate} · ${parsed.daysLeft} día(s)
+          </span>
+          <div style="margin-top:8px;">
+      `;
+
+      plan.forEach((s, i) => {
+        html += `
+          <div class="habit" style="margin-bottom:6px;">
+            <div>
+              <strong>${i + 1}. ${s.title}</strong>
+              <div style="font-size:12px;color:var(--muted);">${s.date} · ${s.duration} min</div>
+            </div>
+          </div>
+        `;
+      });
+
+      html += `</div></div>`;
+    });
+
+    const intensityLabel = { light: "Ligero", balanced: "Equilibrado", intensive: "Intensivo" }[intensity];
+
     html += `
-        </div>
-        <button class="btn btn-primary" id="advisorApply" style="width:100%;margin-top:8px;">
-          ✅ Aplicar plan a mis tareas
-        </button>
+      <div style="font-size:13px;color:var(--muted);margin:8px 0;">
+        Total: ${totalSessions} sesiones · ${totalMinutes} min · Plan ${intensityLabel}
       </div>
-    `;
+      <button class="btn btn-primary" id="advisorApply" style="width:100%;margin-top:6px;">
+        ✅ Aplicar todo el plan
+      </button>
+    </div>`;
 
     $("#advisorResponse").innerHTML = html;
 
@@ -2207,28 +2249,78 @@ function renderAlarms() {
     if (applyBtn) applyBtn.onclick = applyAdvisorPlan;
   }
 
+  function analyzeCurrentTasks() {
+    const pending = tasks.filter(t => !t.done);
+    if (!pending.length) {
+      $("#advisorResponse").innerHTML = `<div class="empty">No tienes tareas pendientes. ¡Buen trabajo!</div>`;
+      return;
+    }
+
+    const ranked = pending.map(t => {
+      let score = 0;
+      if (t.priority === "urgent") score += 100;
+      if (t.priority === "important") score += 50;
+      if (isOverdue(t)) score += 200;
+      const days = Math.ceil((new Date(t.date + "T12:00") - new Date()) / 86400000);
+      if (days <= 0) score += 80;
+      else if (days <= 1) score += 40;
+      else if (days <= 3) score += 20;
+      return { task: t, score, days };
+    }).sort((a, b) => b.score - a.score).slice(0, 5);
+
+    let html = `
+      <div class="card" style="background:var(--bg-soft);">
+        <strong>Prioridades recomendadas</strong>
+        <p style="color:var(--muted);font-size:13px;margin:6px 0 12px;">Basado en urgencia, prioridad y fechas.</p>
+    `;
+
+    ranked.forEach((item, i) => {
+      const t = item.task;
+      html += `
+        <div class="habit" style="margin-bottom:8px;">
+          <div>
+            <strong>${i + 1}. ${t.title}</strong>
+            <div style="font-size:12px;color:var(--muted);">${t.date} · ${t.priority}${item.days <= 0 ? " · Vencida" : ""}</div>
+          </div>
+        </div>
+      `;
+    });
+
+    html += `
+      <p style="font-size:13px;color:var(--muted);margin-top:8px;">
+        Consejo: empieza por la primera. Puedes usar el Pomodoro en Mi día.
+      </p>
+      </div>
+    `;
+
+    $("#advisorResponse").innerHTML = html;
+  }
+
   function applyAdvisorPlan() {
-    if (!lastAdvisorPlan || !lastAdvisorPlan.plan?.length) {
+    if (!lastAdvisorPlan || !lastAdvisorPlan.allPlans?.length) {
       return toast("Genera un plan primero", "warn");
     }
 
-    const plan = lastAdvisorPlan.plan;
-    plan.forEach(s => {
-      tasks.push(normalizeTask({
-        title: s.title,
-        date: s.date,
-        time: s.time || "16:00",
-        priority: s.priority || "important",
-        category: s.category || "estudio",
-        duration: s.duration || 30,
-        notes: "Creado por Planneo Advisor",
-        subtasks: []
-      }));
+    let count = 0;
+    lastAdvisorPlan.allPlans.forEach(item => {
+      item.plan.forEach(s => {
+        tasks.push(normalizeTask({
+          title: s.title,
+          date: s.date,
+          time: s.time || "16:00",
+          priority: s.priority || "important",
+          category: s.category || "estudio",
+          duration: s.duration || 30,
+          notes: "Creado por Planneo Advisor",
+          subtasks: []
+        }));
+        count++;
+      });
     });
 
     save(DB.tasks, tasks);
     refresh();
-    toast(`Se añadieron ${plan.length} tareas al calendario`, "ok");
+    toast(`Se añadieron ${count} tareas al calendario`, "ok");
     $("#advisorResponse").innerHTML = `
       <div class="empty" style="color:var(--success);">
         ✅ Plan aplicado. Revisa Mi día y el Calendario.
@@ -2302,6 +2394,28 @@ function renderAlarms() {
     }
     save(DB.tasks, tasks);
     clearForm();
+    refresh();
+  }
+
+  function quickSaveTask() {
+    const title = ($("#quickTaskTitle")?.value || "").trim();
+    if (!title) return toast("Escribe la tarea", "warn");
+    const time = $("#quickTaskTime")?.value || "12:00";
+    tasks.push(normalizeTask({
+      title,
+      date: today(),
+      time,
+      priority: "normal",
+      category: categories[0]?.id || "general",
+      repeat: "none",
+      duration: 0,
+      notes: "",
+      subtasks: []
+    }));
+    save(DB.tasks, tasks);
+    $("#quickTaskTitle").value = "";
+    $("#quickTaskTime").value = "";
+    toast("Tarea añadida a hoy");
     refresh();
   }
 
@@ -3145,6 +3259,7 @@ function checkAlarms() {
     };
 
     $("#saveTask").onclick = saveTask;
+    $("#quickSaveTask").onclick = quickSaveTask;
     $("#cancelEdit").onclick = clearForm;
 
     $("#addAlarm").onclick = () => {
@@ -3176,6 +3291,16 @@ function checkAlarms() {
 
     $("#addSubtask").onclick = () => addSubtaskRow();
     $("#advisorGenerate").onclick = generateAdvisorSuggestion;
+    $("#advisorAnalyzeTasks").onclick = analyzeCurrentTasks;
+    document.querySelectorAll("[data-advisor-example]").forEach(btn => {
+      btn.onclick = () => {
+        const input = $("#advisorInput");
+        if (input) {
+          input.value = btn.dataset.advisorExample;
+          input.focus();
+        }
+      };
+    });
     $$(".filter-btn[data-filter]").forEach(b => b.onclick = () => {
       $$(".filter-btn[data-filter]").forEach(x => x.classList.remove("active"));
       b.classList.add("active");
