@@ -1275,7 +1275,24 @@ textarea { min-height: 100px; resize: vertical; }
         <div style="margin-top:8px;font-size:13px;color:var(--muted);" id="studyProgress">Estudio: 0 / 60 min</div>
       </div>
     </div>
+<div class="card" id="advisorCard">
 
+  <h2>🤖 Planneo Advisor</h2>
+
+  <p id="advisorSummary">
+    Analizando tu semana...
+  </p>
+
+  <div id="advisorList"></div>
+
+  <button
+    class="btn btn-primary"
+    id="advisorOrganize"
+    style="margin-top:10px;">
+    ✨ Organizar mi día
+  </button>
+
+</div>
   <details class="card" id="pomoWrapper">
   <summary style="
     cursor:pointer;
@@ -1971,6 +1988,80 @@ function renderAlarms() {
   });
 
 }
+function renderAdvisor() {
+
+  const container = $("#advisorList");
+  const summary = $("#advisorSummary");
+
+  if (!container) return;
+
+  const pending =
+    tasks.filter(t => !t.done);
+
+  const ranked =
+    pending
+      .map(task => {
+
+        let score = 0;
+
+        if (task.priority === "urgent")
+          score += 100;
+
+        if (task.priority === "important")
+          score += 50;
+
+        if (isOverdue(task))
+          score += 200;
+
+        const daysLeft =
+          Math.ceil(
+            (
+              new Date(task.date) -
+              new Date(today())
+            ) / 86400000
+          );
+
+        if (daysLeft <= 1)
+          score += 40;
+
+        if (daysLeft <= 3)
+          score += 20;
+
+        return {
+          task,
+          score
+        };
+
+      })
+      .sort(
+        (a,b) => b.score - a.score
+      )
+      .slice(0,3);
+
+  summary.textContent =
+    `Tienes ${pending.length} tareas pendientes`;
+
+  container.innerHTML =
+    ranked.map((item,index) => `
+      <div class="habit">
+
+        <div>
+          <strong>#${index + 1}</strong>
+
+          <div>
+            ${item.task.title}
+          </div>
+
+        </div>
+
+        <span>
+          ${item.score}
+        </span>
+
+      </div>
+    `).join("");
+
+}
   function renderStats() {
     const total = tasks.length;
     const done = tasks.filter(t => t.done).length;
@@ -2185,13 +2276,17 @@ function renderAlarms() {
   }
 
   function refresh() {
-    renderDashboard();
-    renderTasks();
-    renderDay();
-    renderStats();
-    renderAlarms();
-    syncCalendar();
-  }
+
+  renderDashboard();
+  renderTasks();
+  renderDay();
+  renderStats();
+  renderAlarms();
+  renderAdvisor();
+
+  syncCalendar();
+
+}
 
   // Pomodoro
   function updatePomo() {
@@ -2902,7 +2997,15 @@ function checkAlarms() {
     };
 
     $("#addSubtask").onclick = () => addSubtaskRow();
+$("#advisorOrganize").onclick = () => {
 
+  toast(
+    "🤖 Advisor analizó tus tareas"
+  );
+
+  renderAdvisor();
+
+};
     $$(".filter-btn[data-filter]").forEach(b => b.onclick = () => {
       $$(".filter-btn[data-filter]").forEach(x => x.classList.remove("active"));
       b.classList.add("active");
