@@ -2108,33 +2108,90 @@ textarea { min-height: 100px; resize: vertical; }
   }
 
   async function requestNotif() {
-    if (!("Notification" in window)) {
-      toast("Tu navegador no soporta notificaciones", "error");
-      return;
-    }
-    if (Notification.permission === "denied") {
-      toast("Las notificaciones están bloqueadas. Actívalas en el candado de la barra de direcciones.", "error");
-      return;
-    }
-    try {
-      const perm = await Notification.requestPermission();
-      updateNotifStatus();
-      if (perm === "granted") {
-        config.notif = true;
-        $("#notifToggle").checked = true;
-        save(DB.config, config);
-        toast("Notificaciones activadas");
-        // Probar inmediatamente
-        setTimeout(() => {
-          new Notification("Planneo", { body: "¡Listo! Ahora recibirás recordatorios." });
-        }, 300);
-      } else {
-        toast("Permiso no concedido", "warn");
-      }
-    } catch (e) {
-      toast("Error al solicitar permiso", "error");
-    }
+  if (!("Notification" in window)) {
+    toast("Tu navegador no soporta notificaciones", "error");
+    return;
   }
+
+  if (!("serviceWorker" in navigator)) {
+    toast("Este navegador no admite notificaciones en segundo plano", "error");
+    return;
+  }
+
+  if (Notification.permission === "denied") {
+    toast(
+      "Las notificaciones están bloqueadas. Actívalas en los permisos del navegador.",
+      "error"
+    );
+    return;
+  }
+
+  try {
+    const permiso = await Notification.requestPermission();
+
+    updateNotifStatus();
+
+    if (permiso !== "granted") {
+      toast("Necesitas permitir las notificaciones", "warn");
+      return;
+    }
+
+    // Comprobar que Firebase esté inicializado
+    if (!window.planneoMessaging) {
+      toast(
+        "Firebase todavía se está iniciando. Recarga Planneo e inténtalo de nuevo.",
+        "error"
+      );
+      return;
+    }
+
+    // Obtener el Service Worker de Planneo
+    const registro =
+      window.planneoServiceWorkerRegistration ||
+      await navigator.serviceWorker.ready;
+
+    // Registrar este navegador en Firebase Cloud Messaging
+    const token = await window.planneoMessaging.getToken({
+      vapidKey: "BBhF0_nu75dZJqxEXkesnnMwbUFftWcVKlX9x9BPsvjLTaJVtQR2hfgyepC7O1Ld4jlhjZ3bCOGExrwhFqbAeoU",
+      serviceWorkerRegistration: registro
+    });
+
+    if (!token) {
+      throw new Error("Firebase no devolvió un token de notificaciones.");
+    }
+
+    // Guardar el token en este dispositivo
+    localStorage.setItem("planneo_fcm_token", token);
+
+    // Activar las preferencias de notificación de Planneo
+    config.notif = true;
+
+    const toggle = $("#notifToggle");
+    if (toggle) toggle.checked = true;
+
+    save(DB.config, config);
+
+    updateNotifStatus();
+
+    // Mostrar una notificación de prueba
+    await showNotification(
+      "¡Planneo está conectado!",
+      "El navegador se ha registrado para recibir mensajes de Firebase."
+    );
+
+    toast("Dispositivo registrado en Firebase correctamente");
+
+    console.log("✅ Planneo: dispositivo registrado en Firebase");
+
+  } catch (error) {
+    console.error("❌ Error al registrar notificaciones:", error);
+
+    toast(
+      "No se pudo completar el registro. Revisa la conexión y los permisos.",
+      "error"
+    );
+  }
+}
 
   async function showNotification(title, body) {
     if (!("Notification" in window)) {
@@ -2177,26 +2234,47 @@ textarea { min-height: 100px; resize: vertical; }
   }
 
   function checkReminders() {
-    if (!config.notif || !("Notification" in window) || Notification.permission !== "granted") return;
-    const now = Date.now();
-    tasks.forEach(t => {
-      if (t.done) return;
-      const when = new Date(`${t.date}T${t.time}:00`).getTime();
-      if (isNaN(when)) return;
-      const before = when - (config.remindBefore || 0) * 60000;
-      const key = "remind_" + t.id;
-      if (config.remindBefore > 0 && now >= before && now < when && !sessionStorage.getItem(key)) {
-        showNotification("⏰ Próxima tarea", `${t.title} empieza en ${config.remindBefore} min`);
-        sessionStorage.setItem(key, "1");
-        playSound();
-      }
-      if (now >= when && now < when + 120000 && !sessionStorage.getItem(key + "_now")) {
-        showNotification("🔔 Es la hora", t.title);
-        sessionStorage.setItem(key + "_now", "1");
-        playSound();
-      }
-    });
-  }
+  if (!config.notif || !("Notification" in window) || Notification.permission !== "granted") return;
+
+  const now = Date.now();
+
+  tasks.forEach(t => {
+    if (t.done) return;
+
+    const when = new Date(`${t.date}T${t.time}:00`).getTime();
+    if (isNaN(when)) return;
+
+    const before = when - (config.remindBefore || 0) * 60000;
+    const key = "remind_" + t.id;
+
+    if (
+      config.remindBefore > 0 &&
+      now >= before &&
+      !localStorage.getItem(key)
+    ) {
+      showNotification(
+        "⏰ Próxima tarea",
+        `${t.title} empieza en ${config.remindBefore} min`
+      );
+
+      localStorage.setItem(key, "1");
+      playSound();
+    }
+
+    if (
+      now >= when &&
+      !localStorage.getItem(key + "_now")
+    ) {
+      showNotification(
+        "🔔 Es la hora",
+        t.title
+      );
+
+      localStorage.setItem(key + "_now", "1");
+      playSound();
+    }
+  });
+}
 
   function doSearch() {
     const q = $("#globalSearch").value.toLowerCase().trim();
@@ -2694,18 +2772,53 @@ textarea { min-height: 100px; resize: vertical; }
   else init();
 })();
 </script>
+<!-- Firebase para Planneo -->
+<script src="https://www.gstatic.com/firebasejs/10.13.2/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.13.2/firebase-messaging-compat.js"></script>
+
 <script>
-if ("serviceWorker" in navigator) {
-    window.addEventListener("load", async () => {
-        try {
-            const registro = await navigator.serviceWorker.register("./service-worker.js");
-            await navigator.serviceWorker.ready;
-            console.log("✅ Planneo: Service Worker listo", registro.scope);
-        } catch (error) {
-            console.error("❌ Error al registrar el Service Worker:", error);
+window.planneoServiceWorkerRegistration = null;
+window.planneoMessaging = null;
+
+window.addEventListener("load", async () => {
+    try {
+        // Configuración de Firebase
+        const firebaseConfig = {
+            apiKey: "AIzaSyDlHZChuc600vie5rnDqyBXk4gypQ4tgc",
+            authDomain: "planneo-a3bca.firebaseapp.com",
+            projectId: "planneo-a3bca",
+            storageBucket: "planneo-a3bca.firebasestorage.app",
+            messagingSenderId: "594631604240",
+            appId: "1:594631604240:web:2be7df45a75e284235b295",
+            measurementId: "G-T10WL2SLPE"
+        };
+
+        // Inicializar Firebase una sola vez
+        if (!firebase.apps.length) {
+            firebase.initializeApp(firebaseConfig);
         }
-    });
-}
+
+        // Registrar el trabajador existente de Planneo
+        if (!("serviceWorker" in navigator)) {
+            throw new Error("Este navegador no admite Service Workers.");
+        }
+
+        const registro = await navigator.serviceWorker.register(
+            "./service-worker.js"
+        );
+
+        await navigator.serviceWorker.ready;
+
+        window.planneoServiceWorkerRegistration = registro;
+        window.planneoMessaging = firebase.messaging();
+
+        console.log("✅ Planneo: Firebase inicializado");
+        console.log("✅ Planneo: Service Worker listo", registro.scope);
+
+    } catch (error) {
+        console.error("❌ Error al conectar Firebase:", error);
+    }
+});
 </script>
 </body>
 </html>
