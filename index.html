@@ -1275,22 +1275,45 @@ textarea { min-height: 100px; resize: vertical; }
         <div style="margin-top:8px;font-size:13px;color:var(--muted);" id="studyProgress">Estudio: 0 / 60 min</div>
       </div>
     </div>
-<div class="card" id="advisorCard">
 
-  <h2>🤖 Planneo Advisor</h2>
 
-  <p id="advisorSummary">
-    Analizando tu semana...
+  <div class="card" id="advisorCard">
+
+  <h2>🤖 Planneo Advisor Beta</h2>
+
+  <p style="margin-bottom:12px;color:var(--muted);">
+    Cuéntame qué tienes esta semana y te daré una recomendación.
   </p>
 
-  <div id="advisorList"></div>
+  <textarea
+    id="advisorInput"
+    placeholder="Ej: Tengo examen de química el viernes y una exposición el lunes">
+  </textarea>
 
-  <button
-    class="btn btn-primary"
-    id="advisorOrganize"
-    style="margin-top:10px;">
-    ✨ Organizar mi día
-  </button>
+  <div class="actions">
+
+    <button
+      class="btn btn-primary"
+      id="advisorGenerate">
+
+      ✨ Generar sugerencia
+
+    </button>
+
+    <button
+      class="btn btn-ghost"
+      id="advisorAnother">
+
+      🎲 Otra sugerencia
+
+    </button>
+
+  </div>
+
+  <div
+    id="advisorResponse"
+    style="margin-top:15px;">
+  </div>
 
 </div>
   <details class="card" id="pomoWrapper">
@@ -2060,6 +2083,76 @@ function renderAdvisor() {
 
       </div>
     `).join("");
+
+}
+function generateAdvisorSuggestion() {
+
+  const text =
+    $("#advisorInput")
+      .value
+      .toLowerCase();
+
+  let advice = "";
+
+  if (text.includes("examen")) {
+
+    advice =
+      "📚 Veo que tienes un examen. Mi consejo es estudiar un poco cada día hasta la fecha del examen.";
+
+  }
+
+  else if (text.includes("entrega")) {
+
+    advice =
+      "📝 Tienes una entrega pendiente. Divide el trabajo en partes pequeñas y empieza hoy mismo.";
+
+  }
+
+  else if (text.includes("exposición")) {
+
+    advice =
+      "🎤 Tienes una exposición próxima. Practica unos minutos cada día.";
+
+  }
+
+  else if (text.includes("proyecto")) {
+
+    advice =
+      "🚀 Los proyectos grandes funcionan mejor si los divides en tareas pequeñas.";
+
+  }
+
+  else {
+
+    const ideas = [
+
+      "✅ Empieza por la tarea más importante.",
+
+      "🍅 Haz una sesión Pomodoro de 25 minutos.",
+
+      "📅 Divide tu objetivo en pasos más pequeños.",
+
+      "🎯 Prioriza lo que vence primero.",
+
+      "⚡ Elimina distracciones durante 30 minutos."
+
+    ];
+
+    advice =
+      ideas[
+        Math.floor(
+          Math.random() *
+          ideas.length
+        )
+      ];
+
+  }
+
+  $("#advisorResponse").innerHTML = `
+    <div class="card">
+      ${advice}
+    </div>
+  `;
 
 }
   function renderStats() {
@@ -2997,6 +3090,11 @@ function checkAlarms() {
     };
 
     $("#addSubtask").onclick = () => addSubtaskRow();
+    $("#advisorGenerate").onclick =
+  generateAdvisorSuggestion;
+
+$("#advisorAnother").onclick =
+  generateAdvisorSuggestion;
 $("#advisorOrganize").onclick = () => {
 
   toast(
