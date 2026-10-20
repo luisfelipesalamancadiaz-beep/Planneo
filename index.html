@@ -1161,7 +1161,17 @@ textarea { min-height: 100px; resize: vertical; }
       </div>
     </div>
 
-    <div class="card pomo-card" id="pomoSection">
+  <details class="card" id="pomoWrapper">
+  <summary style="
+    cursor:pointer;
+    font-weight:700;
+    font-size:18px;
+    color:var(--primary);
+  ">
+    🍅 Temporizador Pomodoro
+  </summary>
+
+  <div class="pomo-card" id="pomoSection">
       <div class="pomo-mode" id="pomoMode">Sesión de estudio</div>
       <div class="pomo-ring" id="pomoRing">
         <div class="pomo-time" id="pomoTime">25:00</div>
@@ -1183,7 +1193,8 @@ textarea { min-height: 100px; resize: vertical; }
         <input type="number" id="customMinutes" placeholder="min" style="width:70px;margin-left:6px;display:none;" min="1" max="120">
       </div>
     </div>
-
+  </div>
+</details>
     <div id="habitsDaySection" class="card" style="display:none;">
       <h2>Hábitos de hoy</h2>
       <div id="habitsDayList"></div>
