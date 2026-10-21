@@ -1224,68 +1224,6 @@ textarea { min-height: 100px; resize: vertical; }
       <div id="advisorResponse" style="margin-top:16px;"></div>
     </div>
 
-    <div class="card">
-      <h2 id="formTitle">Nueva tarea</h2>
-      <div class="form-grid">
-        <div>
-          <label for="taskTitle">Nombre</label>
-          <input id="taskTitle" placeholder="Ej. Estudiar matemáticas" maxlength="120">
-        </div>
-        <div class="form-row">
-          <div>
-            <label for="taskDate">Fecha</label>
-            <input type="date" id="taskDate">
-          </div>
-          <div>
-            <label for="taskTime">Hora</label>
-            <input type="time" id="taskTime">
-          </div>
-        </div>
-        <div class="form-row">
-          <div>
-            <label for="taskPriority">Prioridad</label>
-            <select id="taskPriority">
-              <option value="normal">Normal</option>
-              <option value="low">Baja</option>
-              <option value="important">Importante</option>
-              <option value="urgent">Urgente</option>
-            </select>
-          </div>
-          <div>
-            <label for="taskCategory">Categoría / Materia</label>
-            <select id="taskCategory"></select>
-          </div>
-        </div>
-        <div class="form-row">
-          <div>
-            <label for="taskRepeat">Repetir</label>
-            <select id="taskRepeat">
-              <option value="none">No</option>
-              <option value="daily">Diario</option>
-              <option value="weekly">Semanal</option>
-              <option value="monthly">Mensual</option>
-            </select>
-          </div>
-          <div>
-            <label for="taskDuration">Duración (min)</label>
-            <input type="number" id="taskDuration" min="0" placeholder="Opcional">
-          </div>
-        </div>
-        <div>
-          <label>Subtareas</label>
-          <div id="subtaskList"></div>
-          <button type="button" class="btn btn-ghost" id="addSubtask" style="margin-top:6px;">+ Añadir subtarea</button>
-        </div>
-        <div>
-          <label for="taskNotes">Notas</label>
-          <input id="taskNotes" placeholder="Detalles opcionales" maxlength="300">
-        </div>
-        <div class="actions">
-          <button class="btn btn-primary" id="saveTask">Guardar</button>
-          <button class="btn btn-ghost" id="cancelEdit" style="display:none">Cancelar</button>
-        </div>
-      </div>
-    </div>
     <div class="filters">
       <button class="filter-btn active" data-filter="all">Todas</button>
       <button class="filter-btn" data-filter="pending">Pendientes</button>
@@ -2031,49 +1969,112 @@ function renderAlarms() {
   function parseAdvisorText(text) {
     const original = text.trim();
     const lower = original.toLowerCase()
-      .normalize("NFD").replace(/[\u0300-\u036f]/g, ""); // quitar acentos para matching
+      .normalize("NFD").replace(/[\u0300-\u036f]/g, "");
 
-    // Tipo de actividad
+    // Lista de verbos y conjugaciones relevantes (infinitivo + formas comunes)
+    const verbMap = {
+      estudiar: "estudio",
+      repasar: "estudio",
+      practicar: "estudio",
+      leer: "estudio",
+      aprender: "estudio",
+      memorizar: "estudio",
+      entregar: "entrega",
+      hacer: "entrega",
+      escribir: "entrega",
+      redactar: "entrega",
+      terminar: "entrega",
+      completar: "entrega",
+      presentar: "exposicion",
+      exponer: "exposicion",
+      preparar: "estudio",
+      organizar: "proyecto",
+      investigar: "proyecto",
+      revisar: "estudio",
+      corregir: "entrega",
+      practicar: "estudio",
+      ensayar: "exposicion",
+      "tener examen": "examen",
+      "tener prueba": "examen",
+      "tener entrega": "entrega",
+      "tener trabajo": "entrega",
+      "tener proyecto": "proyecto",
+      "tener exposicion": "exposicion",
+      "debo entregar": "entrega",
+      "tengo que entregar": "entrega",
+      "tengo que estudiar": "estudio",
+      "tengo que hacer": "entrega",
+      "tengo que presentar": "exposicion"
+    };
+
+    // Tipo de actividad por palabras clave + verbos
     let type = "estudio";
-    if (/\b(examen|prueba|parcial|quiz|evaluacion)\b/.test(lower)) type = "examen";
-    else if (/\b(entrega|trabajo|ensayo|informe)\b/.test(lower)) type = "entrega";
-    else if (/\b(proyecto)\b/.test(lower)) type = "proyecto";
-    else if (/\b(exposicion|presentacion|oral)\b/.test(lower)) type = "exposicion";
+    const typeRules = [
+      { type: "examen", patterns: ["examen", "prueba", "parcial", "quiz", "evaluacion", "test"] },
+      { type: "entrega", patterns: ["entrega", "trabajo", "ensayo", "informe", "tarea", "deber", "entregar", "hacer el trabajo"] },
+      { type: "proyecto", patterns: ["proyecto", "investigacion", "investigar"] },
+      { type: "exposicion", patterns: ["exposicion", "presentacion", "oral", "exponer", "presentar"] }
+    ];
+
+    for (const rule of typeRules) {
+      if (rule.patterns.some(p => lower.includes(p))) {
+        type = rule.type;
+        break;
+      }
+    }
+
+    // Si no se detectó por palabras, revisar verbos
+    if (type === "estudio") {
+      for (const [verb, mapped] of Object.entries(verbMap)) {
+        if (lower.includes(verb)) {
+          type = mapped;
+          break;
+        }
+      }
+    }
 
     // Materia / tema
     let subject = "";
-    const subjectMatch = lower.match(/(?:de|para)\s+([a-z0-9áéíóúñ\s]{3,30})(?:\s+(?:el|la|para|mañana|proximo|proxima)|$)/i);
+    const subjectMatch = lower.match(/(?:de|para|sobre)\s+([a-z0-9áéíóúñ\s]{3,40})(?:\s+(?:el|la|para|mañana|proximo|proxima|este|esta)|$)/i);
     if (subjectMatch) {
       subject = subjectMatch[1]
-        .replace(/\b(el|la|los|las|mi|un|una)\b/g, "")
+        .replace(/\b(el|la|los|las|mi|un|una|el|la)\b/g, "")
         .trim()
         .split(" ")
         .slice(0, 4)
         .join(" ");
     }
     if (!subject) {
-      const subjects = ["matematicas","matematica","fisica","quimica","historia","biologia","ingles","literatura","geografia","economia","programacion","informatica","lengua","filosofia"];
+      const subjects = ["matematicas","matematica","fisica","quimica","historia","biologia","ingles","literatura","geografia","economia","programacion","informatica","lengua","filosofia","arte","musica","educacion fisica"];
       for (const s of subjects) {
         if (lower.includes(s)) { subject = s; break; }
       }
     }
     subject = subject || "general";
 
-    // Fecha
+    // Fecha (mejorada)
     const todayDate = new Date();
     todayDate.setHours(0,0,0,0);
     let targetDate = null;
     const dayNames = {
-      "domingo": 0, "lunes": 1, "martes": 2, "miercoles": 3, "miércoles": 3,
-      "jueves": 4, "viernes": 5, "sabado": 6, "sábado": 6
+      "domingo": 0, "lunes": 1, "martes": 2, "miercoles": 3, "jueves": 4,
+      "viernes": 5, "sabado": 6, "sábado": 6
     };
 
-    if (/\b(manana|mañana)\b/.test(lower)) {
+    if (/\b(hoy)\b/.test(lower)) {
+      targetDate = new Date(todayDate);
+    } else if (/\b(manana|mañana)\b/.test(lower)) {
       targetDate = new Date(todayDate); targetDate.setDate(targetDate.getDate() + 1);
     } else if (/\b(pasado manana|pasado mañana)\b/.test(lower)) {
       targetDate = new Date(todayDate); targetDate.setDate(targetDate.getDate() + 2);
     } else if (/\b(proxima semana|próxima semana|la proxima)\b/.test(lower)) {
       targetDate = new Date(todayDate); targetDate.setDate(targetDate.getDate() + 7);
+    } else if (/\ben (\d+) dias?\b/.test(lower)) {
+      const m = lower.match(/\ben (\d+) dias?\b/);
+      if (m) {
+        targetDate = new Date(todayDate);
+        targetDate.setDate(targetDate.getDate() + parseInt(m[1], 10));
+      }
     } else {
       for (const [name, dayNum] of Object.entries(dayNames)) {
         if (lower.includes(name)) {
@@ -2087,7 +2088,7 @@ function renderAlarms() {
       }
     }
 
-    // Fecha numérica simple (ej: 25/10 o 25 de octubre)
+    // Fecha numérica
     if (!targetDate) {
       const numMatch = lower.match(/(\d{1,2})\s*(?:de\s+)?(enero|febrero|marzo|abril|mayo|junio|julio|agosto|septiembre|octubre|noviembre|diciembre|\d{1,2})/);
       if (numMatch) {
@@ -2104,10 +2105,10 @@ function renderAlarms() {
 
     if (!targetDate) {
       targetDate = new Date(todayDate);
-      targetDate.setDate(targetDate.getDate() + 3); // por defecto en 3 días
+      targetDate.setDate(targetDate.getDate() + (type === "examen" ? 2 : 3));
     }
 
-    const daysLeft = Math.max(1, Math.ceil((targetDate - todayDate) / 86400000));
+    const daysLeft = Math.max(0, Math.ceil((targetDate - todayDate) / 86400000));
 
     return {
       original,
@@ -2493,21 +2494,8 @@ function renderAlarms() {
   function editTask(id) {
     const t = tasks.find(x => x.id === id);
     if (!t) return;
-    editingTask = id;
-    $("#formTitle").textContent = "Editar tarea";
-    $("#taskTitle").value = t.title;
-    $("#taskDate").value = t.date;
-    $("#taskTime").value = t.time;
-    $("#taskPriority").value = t.priority;
-    $("#taskCategory").value = t.category;
-    $("#taskRepeat").value = t.repeat;
-    $("#taskDuration").value = t.duration || "";
-    $("#taskNotes").value = t.notes || "";
-    $("#subtaskList").innerHTML = "";
-    (t.subtasks || []).forEach(s => addSubtaskRow(s.title, s.done, s.id));
-    $("#cancelEdit").style.display = "inline-block";
-    showView("home");
-    $("#taskTitle").focus();
+    toast("Para editar, usa Mi día o borra y crea de nuevo la tarea.", "warn");
+    // El formulario completo se quitó de Inicio para simplificar
   }
 
   function saveNote() {
