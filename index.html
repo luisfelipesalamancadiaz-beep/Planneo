@@ -1203,18 +1203,21 @@ textarea { min-height: 100px; resize: vertical; }
     <div class="card" id="advisorCard">
       <h2>🤖 Planneo Advisor</h2>
       <p style="margin-bottom:10px;color:var(--muted);">
-        Escribe lo que tienes pendiente o pide que organice tus tareas actuales.
+        Escribe o dicta lo que tienes pendiente. El Advisor reconoce tareas, fechas, prioridades y genera planes de estudio.
       </p>
       <div style="display:flex;gap:6px;flex-wrap:wrap;margin-bottom:10px;">
         <button type="button" class="filter-btn" data-advisor-example="Tengo examen de matemáticas el viernes">Examen</button>
-        <button type="button" class="filter-btn" data-advisor-example="Debo entregar un trabajo de historia el miércoles">Entrega</button>
+        <button type="button" class="filter-btn" data-advisor-example="Debo entregar un trabajo de historia el miércoles urgente">Entrega</button>
         <button type="button" class="filter-btn" data-advisor-example="Tengo una exposición la próxima semana">Exposición</button>
+        <button type="button" class="filter-btn" data-advisor-example="Estudiar física 45 minutos hoy por la tarde">Sesión</button>
         <button type="button" class="filter-btn" id="advisorAnalyzeTasks">Analizar mis tareas</button>
+        <button type="button" class="filter-btn" id="advisorAnalyzeWeek">Carga de la semana</button>
+        <button type="button" class="filter-btn" id="advisorVoiceBtn">🎙️ Dictar</button>
       </div>
       <textarea
         id="advisorInput"
-        placeholder="Ej: Tengo examen de química el miércoles&#10;Debo entregar un trabajo de historia el viernes"
-        style="min-height:80px;"></textarea>
+        placeholder="Ej: Tengo examen de química el miércoles&#10;Debo entregar un trabajo de historia el viernes&#10;O di: 'Crear tarea estudiar biología mañana a las 16'"
+        style="min-height:90px;"></textarea>
       <div class="form-row" style="margin-top:12px;">
         <div>
           <label for="advisorIntensity">Tipo de plan</label>
@@ -1224,9 +1227,12 @@ textarea { min-height: 100px; resize: vertical; }
             <option value="intensive">Intensivo</option>
           </select>
         </div>
-        <div style="display:flex;align-items:flex-end;gap:8px;">
-          <button class="btn btn-primary" id="advisorGenerate" style="flex:1;">
+        <div style="display:flex;align-items:flex-end;gap:8px;flex-wrap:wrap;">
+          <button class="btn btn-primary" id="advisorGenerate" style="flex:1;min-width:140px;">
             ✨ Generar plan
+          </button>
+          <button class="btn btn-ghost" id="advisorCreateTask" style="flex:1;min-width:140px;">
+            ➕ Crear tarea
           </button>
         </div>
       </div>
@@ -2135,11 +2141,43 @@ function renderAlarms() {
   function generateStudyPlan(parsed, intensity) {
     const { type, subject, targetDate, daysLeft } = parsed;
     const sessions = [];
-    const baseMinutes = intensity === "intensive" ? 50 : intensity === "light" ? 25 : 35;
 
-    // Distribuye sesiones hacia atrás desde el día del evento
+    // Base según intensidad
+    let baseMinutes = intensity === "intensive" ? 50 : intensity === "light" ? 25 : 35;
+
+    // Ajustes según tipo de actividad
+    const typeConfig = {
+      examen: {
+        times: ["15:30", "17:00", "16:30", "18:00", "15:00", "19:00"],
+        durationMult: 1.25,          // más largo
+        lastSessionMult: 0.7
+      },
+      entrega: {
+        times: ["16:00", "14:30", "17:30", "15:30", "18:30"],
+        durationMult: 1.1,
+        lastSessionMult: 1.3         // la última sesión suele ser más larga
+      },
+      proyecto: {
+        times: ["16:00", "14:00", "17:00", "15:00", "18:00"],
+        durationMult: 1.15,
+        lastSessionMult: 1.4
+      },
+      exposicion: {
+        times: ["17:00", "16:00", "18:00", "15:30", "19:00"],
+        durationMult: 0.9,           // un poco más cortas, más práctica
+        lastSessionMult: 1.2
+      },
+      estudio: {
+        times: ["16:00", "15:30", "17:30", "14:30", "18:30", "16:30"],
+        durationMult: 1,
+        lastSessionMult: 0.85
+      }
+    };
+
+    const cfg = typeConfig[type] || typeConfig.estudio;
+    baseMinutes = Math.round(baseMinutes * cfg.durationMult);
+
     const availableDays = Math.min(daysLeft, intensity === "light" ? 3 : intensity === "intensive" ? 6 : 5);
-    const startOffset = Math.max(0, daysLeft - availableDays);
 
     for (let i = 0; i < availableDays; i++) {
       const d = new Date(targetDate + "T12:00:00");
@@ -2149,28 +2187,35 @@ function renderAlarms() {
 
       let title = "";
       let minutes = baseMinutes;
+      const isLast = i === availableDays - 1;
 
       if (type === "examen") {
         if (i === 0) title = `Repasar teoría de ${subject}`;
-        else if (i === availableDays - 1) { title = `Repaso final de ${subject}`; minutes = Math.round(baseMinutes * 0.8); }
+        else if (isLast) { title = `Repaso final de ${subject}`; minutes = Math.round(baseMinutes * cfg.lastSessionMult); }
         else title = `Practicar ejercicios de ${subject}`;
       } else if (type === "entrega" || type === "proyecto") {
         if (i === 0) title = `Investigar y planear ${subject}`;
-        else if (i === availableDays - 1) title = `Revisar y terminar ${subject}`;
+        else if (isLast) { title = `Revisar y terminar ${subject}`; minutes = Math.round(baseMinutes * cfg.lastSessionMult); }
         else title = `Avanzar en ${subject}`;
       } else if (type === "exposicion") {
         if (i === 0) title = `Preparar contenido de ${subject}`;
-        else if (i === availableDays - 1) title = `Practicar exposición de ${subject}`;
+        else if (isLast) { title = `Practicar exposición de ${subject}`; minutes = Math.round(baseMinutes * cfg.lastSessionMult); }
         else title = `Organizar y practicar ${subject}`;
       } else {
         title = `Estudiar ${subject}`;
+        if (isLast) minutes = Math.round(baseMinutes * cfg.lastSessionMult);
       }
+
+      // Variar un poco la duración según el día
+      if (!isLast && i % 2 === 1) minutes = Math.round(minutes * 0.85);
+
+      const time = cfg.times[i % cfg.times.length];
 
       sessions.push({
         title,
         date: dateStr,
-        time: "16:00",
-        duration: minutes,
+        time,
+        duration: Math.max(15, minutes),
         priority: daysLeft <= 2 ? "urgent" : "important",
         category: "estudio"
       });
@@ -2180,7 +2225,7 @@ function renderAlarms() {
       sessions.push({
         title: `Preparar ${subject}`,
         date: today(),
-        time: "16:00",
+        time: cfg.times[0],
         duration: baseMinutes,
         priority: "important",
         category: "estudio"
@@ -2237,7 +2282,7 @@ function renderAlarms() {
           <div class="habit" style="margin-bottom:6px;">
             <div>
               <strong>${i + 1}. ${s.title}</strong>
-              <div style="font-size:12px;color:var(--muted);">${s.date} · ${s.duration} min</div>
+              <div style="font-size:12px;color:var(--muted);">${s.date} · ${s.time} · ${s.duration} min</div>
             </div>
           </div>
         `;
@@ -2308,6 +2353,159 @@ function renderAlarms() {
     `;
 
     $("#advisorResponse").innerHTML = html;
+  }
+
+  function analyzeWeekLoad() {
+    const pending = tasks.filter(t => !t.done);
+    if (!pending.length) {
+      $("#advisorResponse").innerHTML = `<div class="empty">No hay tareas pendientes para analizar.</div>`;
+      return;
+    }
+
+    const todayDate = new Date();
+    todayDate.setHours(0,0,0,0);
+    const week = {};
+    for (let i = 0; i < 7; i++) {
+      const d = new Date(todayDate);
+      d.setDate(d.getDate() + i);
+      const key = d.toISOString().slice(0,10);
+      week[key] = { date: key, count: 0, minutes: 0, tasks: [] };
+    }
+
+    pending.forEach(t => {
+      if (week[t.date]) {
+        week[t.date].count++;
+        week[t.date].minutes += Number(t.duration) || 30;
+        week[t.date].tasks.push(t.title);
+      }
+    });
+
+    const days = Object.values(week);
+    const maxDay = days.reduce((a, b) => a.minutes > b.minutes ? a : b, days[0]);
+    const totalMin = days.reduce((a, d) => a + d.minutes, 0);
+
+    let html = `
+      <div class="card" style="background:var(--bg-soft);">
+        <strong>Carga de la semana</strong>
+        <p style="color:var(--muted);font-size:13px;margin:6px 0 12px;">
+          Total estimado: ${totalMin} min · Día más cargado: ${maxDay.date} (${maxDay.minutes} min)
+        </p>
+    `;
+
+    days.forEach(d => {
+      const dayName = new Date(d.date + "T12:00").toLocaleDateString("es", { weekday: "short", day: "numeric" });
+      const bar = Math.min(100, Math.round((d.minutes / Math.max(maxDay.minutes, 1)) * 100));
+      html += `
+        <div style="margin-bottom:10px;">
+          <div style="display:flex;justify-content:space-between;font-size:13px;">
+            <span>${dayName}</span><span>${d.count} tarea(s) · ${d.minutes} min</span>
+          </div>
+          <div class="progress-bar" style="margin-top:4px;"><div style="width:${bar}%;background:var(--primary);"></div></div>
+        </div>
+      `;
+    });
+
+    if (maxDay.minutes > 120) {
+      html += `<p style="font-size:13px;color:var(--warning);margin-top:8px;">⚠️ El día ${maxDay.date} está bastante cargado. Considera mover alguna tarea.</p>`;
+    } else {
+      html += `<p style="font-size:13px;color:var(--muted);margin-top:8px;">La distribución se ve manejable. ¡Sigue así!</p>`;
+    }
+    html += `</div>`;
+    $("#advisorResponse").innerHTML = html;
+  }
+
+  function createTaskFromAdvisor() {
+    const text = ($("#advisorInput")?.value || "").trim();
+    if (!text) return toast("Escribe o dicta la tarea primero", "warn");
+
+    const firstLine = text.split(/\n+/)[0].trim();
+    const parsed = parseAdvisorText(firstLine);
+
+    const priority = /\b(urgente|ya|ahora|hoy)\b/i.test(firstLine) ? "urgent" :
+                     /\b(importante|prioridad)\b/i.test(firstLine) ? "important" : "normal";
+
+    const durationMatch = firstLine.match(/(\d+)\s*(minutos?|min|horas?|h)/i);
+    let duration = 30;
+    if (durationMatch) {
+      const n = parseInt(durationMatch[1], 10);
+      duration = /hora|h\b/i.test(durationMatch[2]) ? n * 60 : n;
+    }
+
+    const timesByType = {
+      examen: ["15:30", "17:00", "16:30"],
+      entrega: ["16:00", "14:30", "17:30"],
+      proyecto: ["16:00", "15:00", "18:00"],
+      exposicion: ["17:00", "16:00", "18:00"],
+      estudio: ["16:00", "15:30", "17:30"]
+    };
+    const possibleTimes = timesByType[parsed.type] || timesByType.estudio;
+    const chosenTime = possibleTimes[Math.floor(Math.random() * possibleTimes.length)];
+
+    const newTask = normalizeTask({
+      title: parsed.original.slice(0, 120) || firstLine.slice(0, 120),
+      date: parsed.targetDate || today(),
+      time: chosenTime,
+      priority,
+      category: "estudio",
+      duration,
+      notes: "Creada por Planneo Advisor",
+      subtasks: []
+    });
+
+    tasks.push(newTask);
+    save(DB.tasks, tasks);
+    refresh();
+    toast("Tarea creada correctamente");
+    $("#advisorResponse").innerHTML = `
+      <div class="empty" style="color:var(--success);">
+        ✅ Tarea creada: <b>${newTask.title}</b><br>
+        <small>${newTask.date} · ${newTask.duration} min · ${newTask.priority}</small>
+      </div>
+    `;
+  }
+
+  let recognition = null;
+  function toggleVoiceInput() {
+    const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+    if (!SpeechRecognition) {
+      return toast("Tu navegador no soporta dictado por voz", "warn");
+    }
+
+    if (recognition && recognition.isListening) {
+      recognition.stop();
+      return;
+    }
+
+    recognition = new SpeechRecognition();
+    recognition.lang = "es-ES";
+    recognition.interimResults = false;
+    recognition.maxAlternatives = 1;
+    recognition.isListening = true;
+
+    const btn = document.getElementById("advisorVoiceBtn");
+    if (btn) btn.textContent = "⏹️ Detener";
+
+    recognition.onresult = (e) => {
+      const text = e.results[0][0].transcript;
+      const input = $("#advisorInput");
+      if (input) {
+        input.value = (input.value ? input.value + "\n" : "") + text;
+        input.focus();
+      }
+      toast("Texto dictado añadido");
+    };
+
+    recognition.onerror = () => {
+      toast("Error en el dictado", "error");
+    };
+
+    recognition.onend = () => {
+      recognition.isListening = false;
+      if (btn) btn.textContent = "🎙️ Dictar";
+    };
+
+    recognition.start();
+    toast("Escuchando... habla ahora");
   }
 
   function applyAdvisorPlan() {
@@ -3380,6 +3578,9 @@ function init() {
     if (addSub) addSub.onclick = () => addSubtaskRow();
     $("#advisorGenerate").onclick = generateAdvisorSuggestion;
     $("#advisorAnalyzeTasks").onclick = analyzeCurrentTasks;
+    $("#advisorAnalyzeWeek").onclick = analyzeWeekLoad;
+    $("#advisorCreateTask").onclick = createTaskFromAdvisor;
+    $("#advisorVoiceBtn").onclick = toggleVoiceInput;
     document.querySelectorAll("[data-advisor-example]").forEach(btn => {
       btn.onclick = () => {
         const input = $("#advisorInput");
