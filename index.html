@@ -1731,9 +1731,13 @@ textarea { min-height: 100px; resize: vertical; }
 
   function renderCategorySelect() {
     const sel = $("#taskCategory");
-    sel.innerHTML = categories.map(c => `<option value="${c.id}">${c.name}</option>`).join("");
+    if (sel) {
+      sel.innerHTML = categories.map(c => `<option value="${c.id}">${c.name}</option>`).join("");
+    }
     const list = $("#categoryList");
-    list.innerHTML = categories.map(c => `<div style="margin:4px 0;display:flex;align-items:center;"><span class="color-dot" style="background:${c.color}"></span>${c.name} <button data-del-cat="${c.id}" style="font-size:11px;margin-left:auto;background:none;border:none;color:var(--danger);cursor:pointer;">×</button></div>`).join("");
+    if (list) {
+      list.innerHTML = categories.map(c => `<div style="margin:4px 0;display:flex;align-items:center;"><span class="color-dot" style="background:${c.color}"></span>${c.name} <button data-del-cat="${c.id}" style="font-size:11px;margin-left:auto;background:none;border:none;color:var(--danger);cursor:pointer;">×</button></div>`).join("");
+    }
   }
 
   function renderDashboard() {
@@ -3049,7 +3053,8 @@ function checkAlarms() {
 
   function showView(name) {
     $$(".view").forEach(v => v.classList.remove("active"));
-    $("#view-" + name).classList.add("active");
+    const view = $("#view-" + name);
+    if (view) view.classList.add("active");
     $$(".nav-menu button[data-view]").forEach(b => b.classList.toggle("active", b.dataset.view === name));
     if (name === "calendar" && calendar) setTimeout(() => calendar.updateSize(), 50);
     if (name === "day") renderDay();
@@ -3260,9 +3265,12 @@ function checkAlarms() {
       renderCategorySelect();
     };
 
-    $("#saveTask").onclick = saveTask;
-    $("#quickSaveTask").onclick = quickSaveTask;
-    $("#cancelEdit").onclick = clearForm;
+    const saveBtn = $("#saveTask");
+    if (saveBtn) saveBtn.onclick = saveTask;
+    const quickBtn = $("#quickSaveTask");
+    if (quickBtn) quickBtn.onclick = quickSaveTask;
+    const cancelBtn = $("#cancelEdit");
+    if (cancelBtn) cancelBtn.onclick = clearForm;
 
     $("#addAlarm").onclick = () => {
       const time = $("#alarmTime").value;
@@ -3291,7 +3299,8 @@ function checkAlarms() {
       toast("Alarma eliminada");
     };
 
-    $("#addSubtask").onclick = () => addSubtaskRow();
+    const addSub = $("#addSubtask");
+    if (addSub) addSub.onclick = () => addSubtaskRow();
     $("#advisorGenerate").onclick = generateAdvisorSuggestion;
     $("#advisorAnalyzeTasks").onclick = analyzeCurrentTasks;
     document.querySelectorAll("[data-advisor-example]").forEach(btn => {
