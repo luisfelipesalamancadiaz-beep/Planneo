@@ -910,8 +910,16 @@ textarea { min-height: 100px; resize: vertical; }
   <section class="landing-hero">
     <div class="hero-pill"><span aria-hidden="true">✦</span> ORGANIZA · ESTUDIA · AVANZA</div>
     <h1>Tu día, tus metas,<br><span>todo en su lugar.</span></h1>
-    <p>Una agenda digital creada para estudiantes. Organiza tareas, planifica tu tiempo y construye una rutina que se adapte a ti, sin complicarte.</p>
+    <p>Una agenda digital creada para ti. Organiza tareas, planifica tu tiempo y construye una rutina que se adapte a ti, sin complicarte.</p>
     <button class="landing-cta" id="startConfig">Personalizar mi agenda <span aria-hidden="true">→</span></button>
+    <div style="margin-top:14px;">
+  <button
+    class="btn btn-ghost"
+    id="installAppBtn"
+    style="display:none;">
+    📲 Instalar Planneo
+  </button>
+</div>
     <div class="hero-trust"><span>✓ Sin crear una cuenta</span><span>✓ Personalizable</span><span>✓ Con funciones sin conexión</span></div>
     <div class="hero-preview" aria-label="Vista ilustrativa de las funciones de Planneo">
       <div class="preview-top"><span class="preview-dot"></span><span class="preview-dot"></span><span class="preview-dot"></span><span class="preview-label">MI DÍA</span></div>
@@ -3149,11 +3157,73 @@ function checkAlarms() {
     toast("Todo borrado");
     refresh(); renderNotes(); renderHabits(); renderCategorySelect();
   }
+let deferredPrompt = null;
+
+window.addEventListener("beforeinstallprompt", (e) => {
+  e.preventDefault();
+  deferredPrompt = e;
+
+  const btn = document.getElementById("installAppBtn");
+  if (btn) btn.style.display = "inline-flex";
+});
+window.addEventListener(
+  "appinstalled",
+  () => {
+
+    toast(
+      "Planneo instalada correctamente 🎉",
+      "ok"
+    );
+
+    const btn =
+      document.getElementById("installAppBtn");
+
+    if (btn)
+      btn.style.display = "none";
+
+  }
+);
 
   function init() {
 
     loadData();
     applyTheme();
+    const installBtn =
+  document.getElementById("installAppBtn");
+
+if (installBtn) {
+
+  installBtn.onclick = async () => {
+
+    if (!deferredPrompt) {
+
+      toast(
+        "La aplicación ya está instalada o este dispositivo no permite instalarla.",
+        "warn"
+      );
+
+      return;
+    }
+
+    deferredPrompt.prompt();
+
+    const result =
+      await deferredPrompt.userChoice;
+
+    if (result.outcome === "accepted") {
+
+      toast(
+        "Planneo instalada correctamente 🎉",
+        "ok"
+      );
+    }
+
+    deferredPrompt = null;
+
+    installBtn.style.display = "none";
+  };
+
+}
     const taskDateEl = $("#taskDate");
     if (taskDateEl) taskDateEl.value = today();
     $("#themeSelect").value = config.theme;
