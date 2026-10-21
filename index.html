@@ -2177,13 +2177,26 @@ function renderAlarms() {
     const cfg = typeConfig[type] || typeConfig.estudio;
     baseMinutes = Math.round(baseMinutes * cfg.durationMult);
 
-    const availableDays = Math.min(daysLeft, intensity === "light" ? 3 : intensity === "intensive" ? 6 : 5);
+    // Nunca programar sesiones el mismo día del evento
+    let availableDays = Math.min(
+      Math.max(0, daysLeft - 1),
+      intensity === "light" ? 3 : intensity === "intensive" ? 6 : 5
+    );
+
+    // Si el evento es hoy o mañana, al menos una sesión hoy
+    if (availableDays === 0 && daysLeft >= 0) {
+      availableDays = 1;
+    }
 
     for (let i = 0; i < availableDays; i++) {
       const d = new Date(targetDate + "T12:00:00");
-      d.setDate(d.getDate() - (availableDays - 1 - i));
+      // Retrocede desde el día anterior al evento
+      const offset = (availableDays - i);
+      d.setDate(d.getDate() - offset);
       const dateStr = d.toISOString().slice(0, 10);
-      if (dateStr < today()) continue;
+
+      // Si cae en el pasado, usamos hoy
+      const finalDate = dateStr < today() ? today() : dateStr;
 
       let title = "";
       let minutes = baseMinutes;
@@ -2213,7 +2226,7 @@ function renderAlarms() {
 
       sessions.push({
         title,
-        date: dateStr,
+        date: finalDate,
         time,
         duration: Math.max(15, minutes),
         priority: daysLeft <= 2 ? "urgent" : "important",
