@@ -2364,25 +2364,27 @@ function renderAlarms() {
   }
 
   function saveTask() {
-    const title = $("#taskTitle").value.trim();
+    const titleEl = $("#taskTitle");
+    if (!titleEl) return toast("El formulario avanzado no está disponible. Usa la tarea rápida en Mi día.", "warn");
+    const title = titleEl.value.trim();
     if (!title) return toast("Escribe el nombre", "warn");
-    const date = $("#taskDate").value;
-    const time = $("#taskTime").value;
+    const date = $("#taskDate")?.value;
+    const time = $("#taskTime")?.value;
     if (!date || !time) return toast("Fecha y hora son obligatorias", "warn");
 
     const subtasks = Array.from(document.querySelectorAll("#subtaskList .subtask")).map(el => ({
       id: el.dataset.id || id(),
-      title: el.querySelector("input[type=text]").value.trim(),
-      done: el.querySelector("input[type=checkbox]").checked
+      title: el.querySelector("input[type=text]")?.value.trim() || "",
+      done: el.querySelector("input[type=checkbox]")?.checked || false
     })).filter(s => s.title);
 
     const data = {
       title, date, time,
-      priority: $("#taskPriority").value,
-      category: $("#taskCategory").value,
-      repeat: $("#taskRepeat").value,
-      duration: Number($("#taskDuration").value) || 0,
-      notes: $("#taskNotes").value.trim(),
+      priority: $("#taskPriority")?.value || "normal",
+      category: $("#taskCategory")?.value || categories[0]?.id || "general",
+      repeat: $("#taskRepeat")?.value || "none",
+      duration: Number($("#taskDuration")?.value) || 0,
+      notes: $("#taskNotes")?.value.trim() || "",
       subtasks
     };
 
@@ -2422,17 +2424,28 @@ function renderAlarms() {
 
   function clearForm() {
     editingTask = null;
-    $("#formTitle").textContent = "Nueva tarea";
-    $("#taskTitle").value = "";
-    $("#taskNotes").value = "";
-    $("#taskPriority").value = "normal";
-    $("#taskCategory").value = categories[0]?.id || "general";
-    $("#taskRepeat").value = "none";
-    $("#taskDuration").value = "";
-    $("#taskDate").value = today();
-    $("#taskTime").value = "";
-    $("#subtaskList").innerHTML = "";
-    $("#cancelEdit").style.display = "none";
+    const formTitle = $("#formTitle");
+    if (formTitle) formTitle.textContent = "Nueva tarea";
+    const taskTitle = $("#taskTitle");
+    if (taskTitle) taskTitle.value = "";
+    const taskNotes = $("#taskNotes");
+    if (taskNotes) taskNotes.value = "";
+    const taskPriority = $("#taskPriority");
+    if (taskPriority) taskPriority.value = "normal";
+    const taskCategory = $("#taskCategory");
+    if (taskCategory) taskCategory.value = categories[0]?.id || "general";
+    const taskRepeat = $("#taskRepeat");
+    if (taskRepeat) taskRepeat.value = "none";
+    const taskDuration = $("#taskDuration");
+    if (taskDuration) taskDuration.value = "";
+    const taskDate = $("#taskDate");
+    if (taskDate) taskDate.value = today();
+    const taskTime = $("#taskTime");
+    if (taskTime) taskTime.value = "";
+    const subtaskList = $("#subtaskList");
+    if (subtaskList) subtaskList.innerHTML = "";
+    const cancelEdit = $("#cancelEdit");
+    if (cancelEdit) cancelEdit.style.display = "none";
   }
 
   function addSubtaskRow(title = "", done = false, sid = null) {
@@ -2653,29 +2666,25 @@ function renderAlarms() {
       alarmCtx = new (window.AudioContext || window.webkitAudioContext)();
       if (alarmCtx.state === "suspended") alarmCtx.resume();
       alarmGainNode = alarmCtx.createGain();
-      alarmGainNode.gain.value = 0.5;
+      alarmGainNode.gain.value = 0.6;
       alarmGainNode.connect(alarmCtx.destination);
 
       function playAlarmPattern() {
         if (!alarmCtx || alarmCtx.state === "closed") return;
         const now = alarmCtx.currentTime;
-        // Patrón de alarma: beeps altos y bajos alternados
-        const osc1 = alarmCtx.createOscillator();
-        const osc2 = alarmCtx.createOscillator();
-        osc1.type = "square";
-        osc2.type = "square";
-        osc1.frequency.setValueAtTime(880, now);
-        osc2.frequency.setValueAtTime(660, now);
-        osc1.connect(alarmGainNode);
-        osc2.connect(alarmGainNode);
-        osc1.start(now);
-        osc1.stop(now + 0.25);
-        osc2.start(now + 0.3);
-        osc2.stop(now + 0.55);
+        // Patrón de alarma clásica más fuerte y repetitiva
+        for (let i = 0; i < 3; i++) {
+          const osc = alarmCtx.createOscillator();
+          osc.type = "square";
+          osc.frequency.setValueAtTime(800 + (i * 150), now + i * 0.2);
+          osc.connect(alarmGainNode);
+          osc.start(now + i * 0.2);
+          osc.stop(now + i * 0.2 + 0.15);
+        }
       }
 
       playAlarmPattern();
-      alarmInterval = setInterval(playAlarmPattern, 700);
+      alarmInterval = setInterval(playAlarmPattern, 900);
     } catch (e) {
       console.warn("No se pudo iniciar el sonido de alarma", e);
     }
@@ -2770,10 +2779,14 @@ function renderAlarms() {
         }
       },
       dateClick(info) {
-        $("#taskDate").value = info.dateStr.slice(0, 10);
-        if (!$("#taskTime").value) $("#taskTime").value = "12:00";
-        showView("home");
-        $("#taskTitle").focus();
+        const dateEl = $("#taskDate");
+        if (dateEl) dateEl.value = info.dateStr.slice(0, 10);
+        const timeEl = $("#taskTime");
+        if (timeEl && !timeEl.value) timeEl.value = "12:00";
+        showView("day");
+        const quickTitle = $("#quickTaskTitle");
+        if (quickTitle) quickTitle.focus();
+        else toast("Selecciona Mi día para añadir la tarea", "ok");
       },
       eventClick(info) {
         const t = tasks.find(x => x.id === info.event.id);
@@ -3136,7 +3149,8 @@ function checkAlarms() {
 
     loadData();
     applyTheme();
-    $("#taskDate").value = today();
+    const taskDateEl = $("#taskDate");
+    if (taskDateEl) taskDateEl.value = today();
     $("#themeSelect").value = config.theme;
     $("#accentColor").value = config.accent;
     $("#langSelect").value = config.lang;
@@ -3447,8 +3461,9 @@ function checkAlarms() {
       }
       if (e.key === "n" && !/input|textarea|select/i.test(document.activeElement.tagName)) {
         e.preventDefault();
-        showView("home");
-        $("#taskTitle").focus();
+        showView("day");
+        const quick = $("#quickTaskTitle");
+        if (quick) quick.focus();
       }
     });
 
@@ -3598,12 +3613,12 @@ window.addEventListener("load", async () => {
   display:none;
   position:fixed;
   inset:0;
-  background:rgba(0,0,0,0.95);
+  background:rgba(0,0,0,0.97);
   z-index:99999;
   align-items:center;
   justify-content:center;
   flex-direction:column;
-  animation: alarmPulse 1s infinite alternate;
+  animation: alarmPulse 0.8s infinite alternate;
 ">
 
   <div style="
@@ -3613,26 +3628,27 @@ window.addEventListener("load", async () => {
     padding:30px;
   ">
 
-    <div style="font-size:120px; margin-bottom:10px;">⏰</div>
+    <div style="font-size:140px; margin-bottom:10px; animation: alarmShake 0.4s infinite;">⏰</div>
 
     <h1 id="alarmOverlayTitle"
-        style="font-size:48px; margin:10px 0 20px; font-weight:800; letter-spacing:2px;">
+        style="font-size:52px; margin:10px 0 16px; font-weight:800; letter-spacing:3px; text-shadow: 0 0 20px #ff4444;">
       ¡ALARMA!
     </h1>
 
     <p id="alarmOverlayText"
-       style="font-size:28px; margin-bottom:40px; line-height:1.4;">
+       style="font-size:30px; margin-bottom:36px; line-height:1.4;">
     </p>
 
     <button
       id="stopAlarm"
       class="btn btn-danger"
       style="
-        max-width:280px;
+        max-width:300px;
         margin:auto;
-        font-size:22px;
-        padding:16px 32px;
-        border-radius:16px;
+        font-size:24px;
+        padding:18px 36px;
+        border-radius:18px;
+        box-shadow: 0 0 30px rgba(239,68,68,0.6);
       ">
       Detener alarma
     </button>
@@ -3642,8 +3658,12 @@ window.addEventListener("load", async () => {
 </div>
 <style>
 @keyframes alarmPulse {
-  from { background: rgba(0,0,0,0.95); }
-  to { background: rgba(180, 0, 0, 0.85); }
+  from { background: rgba(0,0,0,0.97); }
+  to { background: rgba(160, 0, 0, 0.9); }
+}
+@keyframes alarmShake {
+  0%, 100% { transform: rotate(-8deg); }
+  50% { transform: rotate(8deg); }
 }
 </style>
 </body>
