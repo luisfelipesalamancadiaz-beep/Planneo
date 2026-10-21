@@ -1102,6 +1102,7 @@ textarea { min-height: 100px; resize: vertical; }
   <div class="settings-panel" id="settingsPanel">
     <h3>Ajustes y personalización</h3>
     <button class="btn btn-primary settings-customize" id="customizeBtn">✨ Personalizar mi agenda</button>
+    <button class="btn btn-ghost" id="installAppBtnSettings" style="width:100%; margin:8px 0 12px;">📲 Instalar Planneo</button>
     
     <div class="setting-row">
       <span>Tema</span>
@@ -3159,71 +3160,77 @@ function checkAlarms() {
   }
 let deferredPrompt = null;
 
+function showInstallButtons() {
+  const btnLanding = document.getElementById("installAppBtn");
+  const btnSettings = document.getElementById("installAppBtnSettings");
+  if (btnLanding) btnLanding.style.display = "inline-flex";
+  if (btnSettings) btnSettings.style.display = "block";
+}
+
+function hideInstallButtons() {
+  const btnLanding = document.getElementById("installAppBtn");
+  const btnSettings = document.getElementById("installAppBtnSettings");
+  if (btnLanding) btnLanding.style.display = "none";
+  if (btnSettings) btnSettings.style.display = "none";
+}
+
 window.addEventListener("beforeinstallprompt", (e) => {
   e.preventDefault();
   deferredPrompt = e;
-
-  const btn = document.getElementById("installAppBtn");
-  if (btn) btn.style.display = "inline-flex";
+  showInstallButtons();
 });
-window.addEventListener(
-  "appinstalled",
-  () => {
 
-    toast(
-      "Planneo instalada correctamente 🎉",
-      "ok"
-    );
+window.addEventListener("appinstalled", () => {
+  toast("Planneo instalada correctamente 🎉", "ok");
+  hideInstallButtons();
+  deferredPrompt = null;
+});
 
-    const btn =
-      document.getElementById("installAppBtn");
-
-    if (btn)
-      btn.style.display = "none";
-
+async function handleInstallClick() {
+  const isStandalone = window.matchMedia("(display-mode: standalone)").matches || window.navigator.standalone === true;
+  if (isStandalone) {
+    toast("Planneo ya está instalada en este dispositivo", "ok");
+    hideInstallButtons();
+    return;
   }
-);
 
-  function init() {
+  if (deferredPrompt) {
+    deferredPrompt.prompt();
+    const result = await deferredPrompt.userChoice;
+    if (result.outcome === "accepted") {
+      toast("Planneo instalada correctamente 🎉", "ok");
+    }
+    deferredPrompt = null;
+    hideInstallButtons();
+    return;
+  }
+
+  // Fallback instructions
+  const isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent) && !window.MSStream;
+  if (isIOS) {
+    toast("En iPhone/iPad: toca el botón Compartir y elige «Añadir a pantalla de inicio»", "ok", 6000);
+  } else {
+    toast("Busca el icono de instalar (⊕ o ⬇) en la barra de direcciones, o usa el menú del navegador → Instalar Planneo / Añadir a pantalla de inicio", "ok", 7000);
+  }
+}
+
+function init() {
 
     loadData();
     applyTheme();
-    const installBtn =
-  document.getElementById("installAppBtn");
 
-if (installBtn) {
+    // Install buttons (landing + settings)
+    const installBtn = document.getElementById("installAppBtn");
+    const installBtnSettings = document.getElementById("installAppBtnSettings");
+    if (installBtn) installBtn.onclick = handleInstallClick;
+    if (installBtnSettings) installBtnSettings.onclick = handleInstallClick;
 
-  installBtn.onclick = async () => {
-
-    if (!deferredPrompt) {
-
-      toast(
-        "La aplicación ya está instalada o este dispositivo no permite instalarla.",
-        "warn"
-      );
-
-      return;
+    // Hide if already installed
+    const isStandalone = window.matchMedia("(display-mode: standalone)").matches || window.navigator.standalone === true;
+    if (isStandalone) {
+      hideInstallButtons();
     }
 
-    deferredPrompt.prompt();
-
-    const result =
-      await deferredPrompt.userChoice;
-
-    if (result.outcome === "accepted") {
-
-      toast(
-        "Planneo instalada correctamente 🎉",
-        "ok"
-      );
-    }
-
-    deferredPrompt = null;
-
-    installBtn.style.display = "none";
-  };
-
-}
     const taskDateEl = $("#taskDate");
     if (taskDateEl) taskDateEl.value = today();
     $("#themeSelect").value = config.theme;
