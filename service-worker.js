@@ -1,13 +1,8 @@
 // ==========================================
 // PLANNEO - SERVICE WORKER + FIREBASE
 // ==========================================
-
-importScripts(
-  "https://www.gstatic.com/firebasejs/10.13.2/firebase-app-compat.js"
-);
-importScripts(
-  "https://www.gstatic.com/firebasejs/10.13.2/firebase-messaging-compat.js"
-);
+importScripts("https://www.gstatic.com/firebasejs/10.13.2/firebase-app-compat.js");
+importScripts("https://www.gstatic.com/firebasejs/10.13.2/firebase-messaging-compat.js");
 
 // Firebase
 firebase.initializeApp({
@@ -25,9 +20,7 @@ const messaging = firebase.messaging();
 // ==========================================
 // CACHE
 // ==========================================
-
-const CACHE_NAME = "planneo-v25";
-
+const CACHE_NAME = "planneo-v26";
 const ARCHIVOS = [
   "./",
   "./index.html",
@@ -39,7 +32,6 @@ const ARCHIVOS = [
 // ==========================================
 // INSTALACIÓN
 // ==========================================
-
 self.addEventListener("install", event => {
   event.waitUntil(
     caches.open(CACHE_NAME)
@@ -51,7 +43,6 @@ self.addEventListener("install", event => {
 // ==========================================
 // ACTIVACIÓN
 // ==========================================
-
 self.addEventListener("activate", event => {
   event.waitUntil(
     caches.keys().then(keys =>
@@ -60,4 +51,42 @@ self.addEventListener("activate", event => {
           .filter(key => key !== CACHE_NAME)
           .map(key => caches.delete(key))
       )
-    ).then(() => self
+    ).then(() => self.clients.claim())
+  );
+});
+
+// ==========================================
+// FETCH (necesario para que sea PWA instalable)
+// ==========================================
+self.addEventListener("fetch", event => {
+  if (event.request.method !== "GET") return;
+
+  event.respondWith(
+    caches.match(event.request).then(cached => {
+      return cached || fetch(event.request).then(response => {
+        // Opcional: guardar en caché respuestas válidas
+        if (response && response.status === 200 && response.type === "basic") {
+          const clone = response.clone();
+          caches.open(CACHE_NAME).then(cache => cache.put(event.request, clone));
+        }
+        return response;
+      }).catch(() => {
+        // Fallback offline simple
+        return caches.match("./index.html");
+      });
+    })
+  );
+});
+
+// ==========================================
+// FIREBASE MESSAGING (notificaciones en segundo plano)
+// ==========================================
+messaging.onBackgroundMessage(payload => {
+  const title = payload.notification?.title || "Planneo";
+  const options = {
+    body: payload.notification?.body || "Nueva notificación",
+    icon: "./icono-192.png",
+    badge: "./icono-192.png"
+  };
+  self.registration.showNotification(title, options);
+});
