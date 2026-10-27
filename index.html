@@ -1567,7 +1567,14 @@ textarea { min-height: 100px; resize: vertical; }
   function id() { return Date.now().toString(36) + Math.random().toString(36).slice(2, 6); }
   function today() { const d = new Date(); return d.toISOString().slice(0, 10); }
   function load(k, def) { try { return JSON.parse(localStorage.getItem(k)) ?? def; } catch { return def; } }
-  function save(k, v) { try { localStorage.setItem(k, JSON.stringify(v)); } catch { toast("No se pudo guardar (espacio lleno)", "error"); } }
+  function save(k, v) {
+  try {
+    localStorage.setItem(k, JSON.stringify(v));
+    if (window.planneoSaveToCloud) window.planneoSaveToCloud();
+  } catch {
+    toast("No se pudo guardar (espacio lleno)", "error");
+  }
+}
 
   function toast(text, type = "ok", duration = 3500, undo = null) {
     const el = document.createElement("div");
@@ -3685,6 +3692,7 @@ if (installBtn) {
 <script src="https://www.gstatic.com/firebasejs/10.13.2/firebase-app-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/10.13.2/firebase-auth-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/10.13.2/firebase-messaging-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.13.2/firebase-firestore-compat.js"></script>
 
 
 <script>
@@ -3946,7 +3954,7 @@ window.addEventListener("load", async () => {
 }
 </style>
 <!-- ===== ACCESO A PLANNEO ===== -->
-<div id="authGate" class="auth-gate">
+<div id="authGate" class="auth-gate" hidden>
     <section class="auth-card">
         <div class="auth-brand">PLANNEO</div>
 
@@ -4140,6 +4148,196 @@ window.addEventListener("load", async () => {
   }
   if (window.firebase) connectAuth();
   else window.addEventListener('load', connectAuth, { once: true });
+})();
+</script>
+
+
+<script>
+/* ===== Planneo: Sincronización Firestore + Logout + Migración segura ===== */
+(() => {
+  const DB_KEYS = {
+    tasks: "planneo_v8_tasks",
+    notes: "planneo_v8_notes",
+    habits: "planneo_v8_habits",
+    sessions: "planneo_v8_sessions",
+    trash: "planneo_v8_trash",
+    categories: "planneo_v8_categories",
+    streak: "planneo_v8_streak",
+    done: "planneo_v8_done",
+    pomo: "planneo_v8_pomo",
+    config: "planneo_v8_config",
+    alarms: "planneo_v8_alarms"
+  };
+
+  let currentUserId = null;
+  let saving = false;
+
+  function getDB() {
+    if (!window.firebase || !firebase.apps.length) return null;
+    return firebase.firestore();
+  }
+
+  function collectLocal() {
+    const get = (k, def) => {
+      try { return JSON.parse(localStorage.getItem(k)) ?? def; } catch { return def; }
+    };
+    return {
+      tasks: get(DB_KEYS.tasks, []),
+      notes: get(DB_KEYS.notes, []),
+      habits: get(DB_KEYS.habits, []),
+      sessions: get(DB_KEYS.sessions, []),
+      trash: get(DB_KEYS.trash, []),
+      categories: get(DB_KEYS.categories, []),
+      streak: get(DB_KEYS.streak, { days: 0, last: null }),
+      doneTotal: get(DB_KEYS.done, 0),
+      pomoSessions: get(DB_KEYS.pomo, 0),
+      config: get(DB_KEYS.config, {}),
+      alarms: get(DB_KEYS.alarms, [])
+    };
+  }
+
+  function applyToLocal(data) {
+    if (!data) return;
+    const set = (k, v) => localStorage.setItem(k, JSON.stringify(v ?? (Array.isArray(v) ? [] : {})));
+    set(DB_KEYS.tasks, data.tasks || []);
+    set(DB_KEYS.notes, data.notes || []);
+    set(DB_KEYS.habits, data.habits || []);
+    set(DB_KEYS.sessions, data.sessions || []);
+    set(DB_KEYS.trash, data.trash || []);
+    set(DB_KEYS.categories, data.categories || []);
+    set(DB_KEYS.streak, data.streak || { days: 0, last: null });
+    set(DB_KEYS.done, data.doneTotal || 0);
+    set(DB_KEYS.pomo, data.pomoSessions || 0);
+    set(DB_KEYS.config, data.config || {});
+    set(DB_KEYS.alarms, data.alarms || []);
+  }
+
+  async function loadFromCloud(uid) {
+    const db = getDB();
+    if (!db) return null;
+    try {
+      const snap = await db.collection("users").doc(uid).get();
+      return snap.exists ? snap.data() : null;
+    } catch (e) {
+      console.error("Error cargando Firestore:", e);
+      return null;
+    }
+  }
+
+  async function saveToCloud(uid, data) {
+    const db = getDB();
+    if (!db || !uid) return;
+    try {
+      await db.collection("users").doc(uid).set({
+        ...data,
+        updatedAt: firebase.firestore.FieldValue.serverTimestamp()
+      }, { merge: true });
+    } catch (e) {
+      console.error("Error guardando Firestore:", e);
+    }
+  }
+
+  window.planneoSaveToCloud = async function () {
+    if (!currentUserId || saving) return;
+    saving = true;
+    try {
+      await saveToCloud(currentUserId, collectLocal());
+    } finally {
+      saving = false;
+    }
+  };
+
+  function addAccountUI(email) {
+    let box = document.getElementById("accountPill");
+    if (!box) {
+      box = document.createElement("div");
+      box.id = "accountPill";
+      box.className = "account-pill";
+      box.style.cssText = "margin:10px 0 14px;padding:10px;background:var(--bg-soft);border-radius:12px;font-size:13px;display:flex;align-items:center;justify-content:space-between;gap:8px;flex-wrap:wrap;";
+      const panel = document.getElementById("settingsPanel");
+      if (panel) panel.insertBefore(box, panel.firstChild);
+    }
+    box.innerHTML = `
+      <span class="account-email" style="color:var(--muted);font-size:12px;word-break:break-all;">${email || "Cuenta activa"}</span>
+      <button id="logoutBtn" class="auth-logout" style="padding:7px 12px;border:1px solid var(--border);border-radius:8px;background:transparent;color:var(--text);cursor:pointer;font-weight:600;">Cerrar sesión</button>
+    `;
+    const btn = document.getElementById("logoutBtn");
+    if (btn) btn.onclick = async () => {
+      if (!confirm("¿Cerrar sesión?\nTus datos se quedan guardados en la nube.")) return;
+      try {
+        await firebase.auth().signOut();
+        location.reload();
+      } catch (e) {
+        if (typeof toast === "function") toast("Error al cerrar sesión", "error");
+      }
+    };
+  }
+
+  async function onUserChange(user) {
+    const gate = document.getElementById("authGate");
+    if (gate) gate.hidden = !!user;
+    document.body.classList.toggle("planneo-authenticated", !!user);
+
+    if (!user) {
+      currentUserId = null;
+      return;
+    }
+
+    currentUserId = user.uid;
+    const cloud = await loadFromCloud(user.uid);
+    const local = collectLocal();
+    const hasLocal = (local.tasks && local.tasks.length) || (local.notes && local.notes.length) || (local.habits && local.habits.length);
+    const hasCloud = cloud && ((cloud.tasks && cloud.tasks.length) || (cloud.notes && cloud.notes.length) || (cloud.habits && cloud.habits.length));
+
+    if (hasLocal && !hasCloud) {
+      const ok = confirm("Encontré datos locales en este dispositivo.\n\n¿Quieres importarlos a tu cuenta de Planneo?\n\n(Si dices No, se usarán solo los datos de la nube o empezarás de cero.)");
+      if (ok) {
+        await saveToCloud(user.uid, local);
+        if (typeof toast === "function") toast("Datos locales importados a tu cuenta", "ok");
+      } else if (cloud) {
+        applyToLocal(cloud);
+      }
+    } else if (hasCloud) {
+      applyToLocal(cloud);
+    } else if (hasLocal) {
+      await saveToCloud(user.uid, local);
+    }
+
+    // Recargar datos en la app
+    try {
+      if (typeof loadData === "function") loadData();
+      if (typeof refresh === "function") refresh();
+      if (typeof renderNotes === "function") renderNotes();
+      if (typeof renderHabits === "function") renderHabits();
+      if (typeof renderCategorySelect === "function") renderCategorySelect();
+      if (typeof applyTheme === "function") applyTheme();
+    } catch (e) { console.warn("Recarga de UI:", e); }
+
+    addAccountUI(user.email);
+  }
+
+  function start() {
+    if (!window.firebase) return;
+    try {
+      if (!firebase.apps.length) {
+        firebase.initializeApp({
+          apiKey: "AIzaSyDlHZChuc600vie5rnDqyBXk4gypQ4tgc",
+          authDomain: "planneo-a3bca.firebaseapp.com",
+          projectId: "planneo-a3bca",
+          storageBucket: "planneo-a3bca.firebasestorage.app",
+          messagingSenderId: "594631604240",
+          appId: "1:594631604240:web:2be7df45a75e284235b295",
+          measurementId: "G-T10WL2SLPE"
+        });
+      }
+      firebase.auth().onAuthStateChanged(onUserChange);
+    } catch (e) {
+      console.error("Error iniciando sincronización:", e);
+    }
+  }
+
+  if (window.firebase) start();
+  else window.addEventListener("load", start, { once: true });
 })();
 </script>
 
