@@ -892,6 +892,48 @@ textarea { min-height: 100px; resize: vertical; }
     font-size: 14px;
   }
 }
+
+/* Planneo Advisor: compacto, elegante y responsive */
+.advisor-card { position:relative; overflow:hidden; padding:clamp(16px, 2.5vw, 26px); }
+.advisor-card::before { content:""; position:absolute; inset:0 0 auto; height:3px; background:linear-gradient(90deg,var(--primary),#a78bfa,#38bdf8); }
+.advisor-heading { display:flex; align-items:center; gap:14px; margin-bottom:20px; }
+.advisor-mark { width:48px; height:48px; flex:0 0 48px; display:grid; place-items:center; border-radius:15px; color:#fff; font-size:25px; background:linear-gradient(145deg,var(--primary),#8b5cf6); box-shadow:0 7px 18px rgba(99,102,241,.24); }
+.advisor-heading-copy { min-width:0; }
+.advisor-eyebrow { margin-bottom:3px; color:var(--primary); font-size:10px; font-weight:800; letter-spacing:1.5px; }
+.advisor-heading h2 { margin:0 0 3px; font-size:clamp(19px,2.5vw,23px); letter-spacing:-.6px; }
+.advisor-heading h2 span { color:var(--primary); }
+.advisor-heading p { color:var(--muted); font-size:13px; line-height:1.5; }
+.advisor-examples { display:flex; align-items:center; flex-wrap:wrap; gap:7px; margin-bottom:17px; }
+.advisor-examples-label { margin-right:2px; color:var(--muted); font-size:12px; font-weight:700; }
+.advisor-chip { min-height:34px; padding:7px 11px; border:1px solid var(--border); border-radius:999px; background:var(--bg-soft); color:var(--text); font:600 12px var(--font); cursor:pointer; transition:border-color .15s,background .15s,transform .15s; }
+.advisor-chip:hover { border-color:var(--primary); background:var(--primary-light); transform:translateY(-1px); }
+.advisor-chip-quiet { color:var(--primary); background:transparent; border-color:rgba(99,102,241,.3); }
+.advisor-input-label { margin-bottom:7px; color:var(--text); font-size:13px; }
+.advisor-textarea { display:block; min-height:76px; resize:vertical; border-radius:13px; line-height:1.5; }
+.advisor-textarea::placeholder { color:var(--muted-2); }
+.advisor-controls { display:grid; grid-template-columns:minmax(150px,.8fr) minmax(180px,1.2fr); align-items:end; gap:12px; margin-top:12px; }
+.advisor-plan-type label { margin-bottom:6px; }
+.advisor-plan-type select { min-height:44px; }
+.advisor-generate { min-height:44px; border-radius:12px; box-shadow:0 5px 14px rgba(99,102,241,.2); }
+.advisor-response { margin-top:16px; }
+.advisor-response:empty { display:none; }
+@media(max-width:600px) {
+  .advisor-card { padding:17px 14px; }
+  .advisor-heading { gap:11px; margin-bottom:16px; }
+  .advisor-mark { width:42px; height:42px; flex-basis:42px; border-radius:13px; font-size:22px; }
+  .advisor-heading p { font-size:12px; }
+  .advisor-examples { gap:6px; margin-bottom:15px; }
+  .advisor-examples-label { width:100%; margin-bottom:1px; }
+  .advisor-chip { min-height:36px; padding:7px 10px; font-size:11px; }
+  .advisor-controls { grid-template-columns:1fr; gap:9px; }
+  .advisor-generate { width:100%; }
+  .advisor-textarea { min-height:72px; }
+}
+@media(min-width:900px) {
+  .advisor-card { padding:25px 28px; }
+  .advisor-textarea { min-height:82px; }
+}
+
 </style>
 </head>
 <body>
@@ -1102,7 +1144,6 @@ textarea { min-height: 100px; resize: vertical; }
   <div class="settings-panel" id="settingsPanel">
     <h3>Ajustes y personalización</h3>
     <button class="btn btn-primary settings-customize" id="customizeBtn">✨ Personalizar mi agenda</button>
-    <button class="btn btn-ghost" id="installAppBtnSettings" style="width:100%; margin:8px 0 12px;">📲 Instalar Planneo</button>
     
     <div class="setting-row">
       <span>Tema</span>
@@ -1199,44 +1240,37 @@ textarea { min-height: 100px; resize: vertical; }
     <p class="page-sub" id="todayDate"></p>
     <div class="dashboard-grid" id="dashCards"></div>
 
-    <!-- Planneo Advisor en Inicio -->
-    <div class="card" id="advisorCard">
-      <h2>🤖 Planneo Advisor</h2>
-      <p style="margin-bottom:10px;color:var(--muted);">
-        Escribe o dicta lo que tienes pendiente. El Advisor reconoce tareas, fechas, prioridades y genera planes de estudio.
-      </p>
-      <div style="display:flex;gap:6px;flex-wrap:wrap;margin-bottom:10px;">
-        <button type="button" class="filter-btn" data-advisor-example="Tengo examen de matemáticas el viernes">Examen</button>
-        <button type="button" class="filter-btn" data-advisor-example="Debo entregar un trabajo de historia el miércoles urgente">Entrega</button>
-        <button type="button" class="filter-btn" data-advisor-example="Tengo una exposición la próxima semana">Exposición</button>
-        <button type="button" class="filter-btn" data-advisor-example="Estudiar física 45 minutos hoy por la tarde">Sesión</button>
-        <button type="button" class="filter-btn" id="advisorAnalyzeTasks">Analizar mis tareas</button>
-        <button type="button" class="filter-btn" id="advisorAnalyzeWeek">Carga de la semana</button>
-        <button type="button" class="filter-btn" id="advisorVoiceBtn">🎙️ Dictar</button>
+    <!-- Planneo Advisor: entrada breve y adaptable -->
+    <div class="card advisor-card" id="advisorCard">
+      <div class="advisor-heading">
+        <div class="advisor-mark" aria-hidden="true">✦</div>
+        <div class="advisor-heading-copy">
+          <div class="advisor-eyebrow">ASISTENTE INTELIGENTE</div>
+          <h2>Planneo <span>Advisor</span></h2>
+          <p>Cuéntame qué tienes pendiente y preparo un plan.</p>
+        </div>
       </div>
-      <textarea
-        id="advisorInput"
-        placeholder="Ej: Tengo examen de química el miércoles&#10;Debo entregar un trabajo de historia el viernes&#10;O di: 'Crear tarea estudiar biología mañana a las 16'"
-        style="min-height:90px;"></textarea>
-      <div class="form-row" style="margin-top:12px;">
-        <div>
-          <label for="advisorIntensity">Tipo de plan</label>
+      <div class="advisor-examples" aria-label="Ejemplos rápidos">
+        <span class="advisor-examples-label">Prueba con</span>
+        <button type="button" class="advisor-chip" data-advisor-example="Tengo examen de matemáticas el viernes">📚 Examen</button>
+        <button type="button" class="advisor-chip" data-advisor-example="Debo entregar un trabajo de historia el miércoles">📝 Entrega</button>
+        <button type="button" class="advisor-chip" data-advisor-example="Tengo una exposición la próxima semana">🎤 Exposición</button>
+        <button type="button" class="advisor-chip advisor-chip-quiet" id="advisorAnalyzeTasks">↗ Analizar tareas</button>
+      </div>
+      <label class="advisor-input-label" for="advisorInput">¿Qué necesitas organizar?</label>
+      <textarea id="advisorInput" class="advisor-textarea" placeholder="Ej.: examen de química el miércoles"></textarea>
+      <div class="advisor-controls">
+        <div class="advisor-plan-type">
+          <label for="advisorIntensity">Intensidad</label>
           <select id="advisorIntensity">
             <option value="balanced">Equilibrado</option>
             <option value="light">Ligero</option>
             <option value="intensive">Intensivo</option>
           </select>
         </div>
-        <div style="display:flex;align-items:flex-end;gap:8px;flex-wrap:wrap;">
-          <button class="btn btn-primary" id="advisorGenerate" style="flex:1;min-width:140px;">
-            ✨ Generar plan
-          </button>
-          <button class="btn btn-ghost" id="advisorCreateTask" style="flex:1;min-width:140px;">
-            ➕ Crear tarea
-          </button>
-        </div>
+        <button class="btn btn-primary advisor-generate" id="advisorGenerate">✦ Crear plan</button>
       </div>
-      <div id="advisorResponse" style="margin-top:16px;"></div>
+      <div id="advisorResponse" class="advisor-response"></div>
     </div>
 
     <div class="filters">
@@ -2141,94 +2175,42 @@ function renderAlarms() {
   function generateStudyPlan(parsed, intensity) {
     const { type, subject, targetDate, daysLeft } = parsed;
     const sessions = [];
+    const baseMinutes = intensity === "intensive" ? 50 : intensity === "light" ? 25 : 35;
 
-    // Base según intensidad
-    let baseMinutes = intensity === "intensive" ? 50 : intensity === "light" ? 25 : 35;
-
-    // Ajustes según tipo de actividad
-    const typeConfig = {
-      examen: {
-        times: ["15:30", "17:00", "16:30", "18:00", "15:00", "19:00"],
-        durationMult: 1.25,          // más largo
-        lastSessionMult: 0.7
-      },
-      entrega: {
-        times: ["16:00", "14:30", "17:30", "15:30", "18:30"],
-        durationMult: 1.1,
-        lastSessionMult: 1.3         // la última sesión suele ser más larga
-      },
-      proyecto: {
-        times: ["16:00", "14:00", "17:00", "15:00", "18:00"],
-        durationMult: 1.15,
-        lastSessionMult: 1.4
-      },
-      exposicion: {
-        times: ["17:00", "16:00", "18:00", "15:30", "19:00"],
-        durationMult: 0.9,           // un poco más cortas, más práctica
-        lastSessionMult: 1.2
-      },
-      estudio: {
-        times: ["16:00", "15:30", "17:30", "14:30", "18:30", "16:30"],
-        durationMult: 1,
-        lastSessionMult: 0.85
-      }
-    };
-
-    const cfg = typeConfig[type] || typeConfig.estudio;
-    baseMinutes = Math.round(baseMinutes * cfg.durationMult);
-
-    // Nunca programar sesiones el mismo día del evento
-    let availableDays = Math.min(
-      Math.max(0, daysLeft - 1),
-      intensity === "light" ? 3 : intensity === "intensive" ? 6 : 5
-    );
-
-    // Si el evento es hoy o mañana, al menos una sesión hoy
-    if (availableDays === 0 && daysLeft >= 0) {
-      availableDays = 1;
-    }
+    // Distribuye sesiones hacia atrás desde el día del evento
+    const availableDays = Math.min(daysLeft, intensity === "light" ? 3 : intensity === "intensive" ? 6 : 5);
+    const startOffset = Math.max(0, daysLeft - availableDays);
 
     for (let i = 0; i < availableDays; i++) {
       const d = new Date(targetDate + "T12:00:00");
-      // Retrocede desde el día anterior al evento
-      const offset = (availableDays - i);
-      d.setDate(d.getDate() - offset);
+      d.setDate(d.getDate() - (availableDays - 1 - i));
       const dateStr = d.toISOString().slice(0, 10);
-
-      // Si cae en el pasado, usamos hoy
-      const finalDate = dateStr < today() ? today() : dateStr;
+      if (dateStr < today()) continue;
 
       let title = "";
       let minutes = baseMinutes;
-      const isLast = i === availableDays - 1;
 
       if (type === "examen") {
         if (i === 0) title = `Repasar teoría de ${subject}`;
-        else if (isLast) { title = `Repaso final de ${subject}`; minutes = Math.round(baseMinutes * cfg.lastSessionMult); }
+        else if (i === availableDays - 1) { title = `Repaso final de ${subject}`; minutes = Math.round(baseMinutes * 0.8); }
         else title = `Practicar ejercicios de ${subject}`;
       } else if (type === "entrega" || type === "proyecto") {
         if (i === 0) title = `Investigar y planear ${subject}`;
-        else if (isLast) { title = `Revisar y terminar ${subject}`; minutes = Math.round(baseMinutes * cfg.lastSessionMult); }
+        else if (i === availableDays - 1) title = `Revisar y terminar ${subject}`;
         else title = `Avanzar en ${subject}`;
       } else if (type === "exposicion") {
         if (i === 0) title = `Preparar contenido de ${subject}`;
-        else if (isLast) { title = `Practicar exposición de ${subject}`; minutes = Math.round(baseMinutes * cfg.lastSessionMult); }
+        else if (i === availableDays - 1) title = `Practicar exposición de ${subject}`;
         else title = `Organizar y practicar ${subject}`;
       } else {
         title = `Estudiar ${subject}`;
-        if (isLast) minutes = Math.round(baseMinutes * cfg.lastSessionMult);
       }
-
-      // Variar un poco la duración según el día
-      if (!isLast && i % 2 === 1) minutes = Math.round(minutes * 0.85);
-
-      const time = cfg.times[i % cfg.times.length];
 
       sessions.push({
         title,
-        date: finalDate,
-        time,
-        duration: Math.max(15, minutes),
+        date: dateStr,
+        time: "16:00",
+        duration: minutes,
         priority: daysLeft <= 2 ? "urgent" : "important",
         category: "estudio"
       });
@@ -2238,7 +2220,7 @@ function renderAlarms() {
       sessions.push({
         title: `Preparar ${subject}`,
         date: today(),
-        time: cfg.times[0],
+        time: "16:00",
         duration: baseMinutes,
         priority: "important",
         category: "estudio"
@@ -2295,7 +2277,7 @@ function renderAlarms() {
           <div class="habit" style="margin-bottom:6px;">
             <div>
               <strong>${i + 1}. ${s.title}</strong>
-              <div style="font-size:12px;color:var(--muted);">${s.date} · ${s.time} · ${s.duration} min</div>
+              <div style="font-size:12px;color:var(--muted);">${s.date} · ${s.duration} min</div>
             </div>
           </div>
         `;
@@ -2366,159 +2348,6 @@ function renderAlarms() {
     `;
 
     $("#advisorResponse").innerHTML = html;
-  }
-
-  function analyzeWeekLoad() {
-    const pending = tasks.filter(t => !t.done);
-    if (!pending.length) {
-      $("#advisorResponse").innerHTML = `<div class="empty">No hay tareas pendientes para analizar.</div>`;
-      return;
-    }
-
-    const todayDate = new Date();
-    todayDate.setHours(0,0,0,0);
-    const week = {};
-    for (let i = 0; i < 7; i++) {
-      const d = new Date(todayDate);
-      d.setDate(d.getDate() + i);
-      const key = d.toISOString().slice(0,10);
-      week[key] = { date: key, count: 0, minutes: 0, tasks: [] };
-    }
-
-    pending.forEach(t => {
-      if (week[t.date]) {
-        week[t.date].count++;
-        week[t.date].minutes += Number(t.duration) || 30;
-        week[t.date].tasks.push(t.title);
-      }
-    });
-
-    const days = Object.values(week);
-    const maxDay = days.reduce((a, b) => a.minutes > b.minutes ? a : b, days[0]);
-    const totalMin = days.reduce((a, d) => a + d.minutes, 0);
-
-    let html = `
-      <div class="card" style="background:var(--bg-soft);">
-        <strong>Carga de la semana</strong>
-        <p style="color:var(--muted);font-size:13px;margin:6px 0 12px;">
-          Total estimado: ${totalMin} min · Día más cargado: ${maxDay.date} (${maxDay.minutes} min)
-        </p>
-    `;
-
-    days.forEach(d => {
-      const dayName = new Date(d.date + "T12:00").toLocaleDateString("es", { weekday: "short", day: "numeric" });
-      const bar = Math.min(100, Math.round((d.minutes / Math.max(maxDay.minutes, 1)) * 100));
-      html += `
-        <div style="margin-bottom:10px;">
-          <div style="display:flex;justify-content:space-between;font-size:13px;">
-            <span>${dayName}</span><span>${d.count} tarea(s) · ${d.minutes} min</span>
-          </div>
-          <div class="progress-bar" style="margin-top:4px;"><div style="width:${bar}%;background:var(--primary);"></div></div>
-        </div>
-      `;
-    });
-
-    if (maxDay.minutes > 120) {
-      html += `<p style="font-size:13px;color:var(--warning);margin-top:8px;">⚠️ El día ${maxDay.date} está bastante cargado. Considera mover alguna tarea.</p>`;
-    } else {
-      html += `<p style="font-size:13px;color:var(--muted);margin-top:8px;">La distribución se ve manejable. ¡Sigue así!</p>`;
-    }
-    html += `</div>`;
-    $("#advisorResponse").innerHTML = html;
-  }
-
-  function createTaskFromAdvisor() {
-    const text = ($("#advisorInput")?.value || "").trim();
-    if (!text) return toast("Escribe o dicta la tarea primero", "warn");
-
-    const firstLine = text.split(/\n+/)[0].trim();
-    const parsed = parseAdvisorText(firstLine);
-
-    const priority = /\b(urgente|ya|ahora|hoy)\b/i.test(firstLine) ? "urgent" :
-                     /\b(importante|prioridad)\b/i.test(firstLine) ? "important" : "normal";
-
-    const durationMatch = firstLine.match(/(\d+)\s*(minutos?|min|horas?|h)/i);
-    let duration = 30;
-    if (durationMatch) {
-      const n = parseInt(durationMatch[1], 10);
-      duration = /hora|h\b/i.test(durationMatch[2]) ? n * 60 : n;
-    }
-
-    const timesByType = {
-      examen: ["15:30", "17:00", "16:30"],
-      entrega: ["16:00", "14:30", "17:30"],
-      proyecto: ["16:00", "15:00", "18:00"],
-      exposicion: ["17:00", "16:00", "18:00"],
-      estudio: ["16:00", "15:30", "17:30"]
-    };
-    const possibleTimes = timesByType[parsed.type] || timesByType.estudio;
-    const chosenTime = possibleTimes[Math.floor(Math.random() * possibleTimes.length)];
-
-    const newTask = normalizeTask({
-      title: parsed.original.slice(0, 120) || firstLine.slice(0, 120),
-      date: parsed.targetDate || today(),
-      time: chosenTime,
-      priority,
-      category: "estudio",
-      duration,
-      notes: "Creada por Planneo Advisor",
-      subtasks: []
-    });
-
-    tasks.push(newTask);
-    save(DB.tasks, tasks);
-    refresh();
-    toast("Tarea creada correctamente");
-    $("#advisorResponse").innerHTML = `
-      <div class="empty" style="color:var(--success);">
-        ✅ Tarea creada: <b>${newTask.title}</b><br>
-        <small>${newTask.date} · ${newTask.duration} min · ${newTask.priority}</small>
-      </div>
-    `;
-  }
-
-  let recognition = null;
-  function toggleVoiceInput() {
-    const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
-    if (!SpeechRecognition) {
-      return toast("Tu navegador no soporta dictado por voz", "warn");
-    }
-
-    if (recognition && recognition.isListening) {
-      recognition.stop();
-      return;
-    }
-
-    recognition = new SpeechRecognition();
-    recognition.lang = "es-ES";
-    recognition.interimResults = false;
-    recognition.maxAlternatives = 1;
-    recognition.isListening = true;
-
-    const btn = document.getElementById("advisorVoiceBtn");
-    if (btn) btn.textContent = "⏹️ Detener";
-
-    recognition.onresult = (e) => {
-      const text = e.results[0][0].transcript;
-      const input = $("#advisorInput");
-      if (input) {
-        input.value = (input.value ? input.value + "\n" : "") + text;
-        input.focus();
-      }
-      toast("Texto dictado añadido");
-    };
-
-    recognition.onerror = () => {
-      toast("Error en el dictado", "error");
-    };
-
-    recognition.onend = () => {
-      recognition.isListening = false;
-      if (btn) btn.textContent = "🎙️ Dictar";
-    };
-
-    recognition.start();
-    toast("Escuchando... habla ahora");
   }
 
   function applyAdvisorPlan() {
@@ -3371,77 +3200,71 @@ function checkAlarms() {
   }
 let deferredPrompt = null;
 
-function showInstallButtons() {
-  const btnLanding = document.getElementById("installAppBtn");
-  const btnSettings = document.getElementById("installAppBtnSettings");
-  if (btnLanding) btnLanding.style.display = "inline-flex";
-  if (btnSettings) btnSettings.style.display = "block";
-}
-
-function hideInstallButtons() {
-  const btnLanding = document.getElementById("installAppBtn");
-  const btnSettings = document.getElementById("installAppBtnSettings");
-  if (btnLanding) btnLanding.style.display = "none";
-  if (btnSettings) btnSettings.style.display = "none";
-}
-
 window.addEventListener("beforeinstallprompt", (e) => {
   e.preventDefault();
   deferredPrompt = e;
-  showInstallButtons();
+
+  const btn = document.getElementById("installAppBtn");
+  if (btn) btn.style.display = "inline-flex";
 });
+window.addEventListener(
+  "appinstalled",
+  () => {
 
-window.addEventListener("appinstalled", () => {
-  toast("Planneo instalada correctamente 🎉", "ok");
-  hideInstallButtons();
-  deferredPrompt = null;
-});
+    toast(
+      "Planneo instalada correctamente 🎉",
+      "ok"
+    );
 
-async function handleInstallClick() {
-  const isStandalone = window.matchMedia("(display-mode: standalone)").matches || window.navigator.standalone === true;
-  if (isStandalone) {
-    toast("Planneo ya está instalada en este dispositivo", "ok");
-    hideInstallButtons();
-    return;
+    const btn =
+      document.getElementById("installAppBtn");
+
+    if (btn)
+      btn.style.display = "none";
+
   }
+);
 
-  if (deferredPrompt) {
-    deferredPrompt.prompt();
-    const result = await deferredPrompt.userChoice;
-    if (result.outcome === "accepted") {
-      toast("Planneo instalada correctamente 🎉", "ok");
-    }
-    deferredPrompt = null;
-    hideInstallButtons();
-    return;
-  }
-
-  // Fallback instructions
-  const isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent) && !window.MSStream;
-  if (isIOS) {
-    toast("En iPhone/iPad: toca el botón Compartir y elige «Añadir a pantalla de inicio»", "ok", 6000);
-  } else {
-    toast("Busca el icono de instalar (⊕ o ⬇) en la barra de direcciones, o usa el menú del navegador → Instalar Planneo / Añadir a pantalla de inicio", "ok", 7000);
-  }
-}
-
-function init() {
+  function init() {
 
     loadData();
     applyTheme();
+    const installBtn =
+  document.getElementById("installAppBtn");
 
-    // Install buttons (landing + settings)
-    const installBtn = document.getElementById("installAppBtn");
-    const installBtnSettings = document.getElementById("installAppBtnSettings");
-    if (installBtn) installBtn.onclick = handleInstallClick;
-    if (installBtnSettings) installBtnSettings.onclick = handleInstallClick;
+if (installBtn) {
 
-    // Hide if already installed
-    const isStandalone = window.matchMedia("(display-mode: standalone)").matches || window.navigator.standalone === true;
-    if (isStandalone) {
-      hideInstallButtons();
+  installBtn.onclick = async () => {
+
+    if (!deferredPrompt) {
+
+      toast(
+        "La aplicación ya está instalada o este dispositivo no permite instalarla.",
+        "warn"
+      );
+
+      return;
     }
 
+    deferredPrompt.prompt();
+
+    const result =
+      await deferredPrompt.userChoice;
+
+    if (result.outcome === "accepted") {
+
+      toast(
+        "Planneo instalada correctamente 🎉",
+        "ok"
+      );
+    }
+
+    deferredPrompt = null;
+
+    installBtn.style.display = "none";
+  };
+
+}
     const taskDateEl = $("#taskDate");
     if (taskDateEl) taskDateEl.value = today();
     $("#themeSelect").value = config.theme;
@@ -3591,9 +3414,6 @@ function init() {
     if (addSub) addSub.onclick = () => addSubtaskRow();
     $("#advisorGenerate").onclick = generateAdvisorSuggestion;
     $("#advisorAnalyzeTasks").onclick = analyzeCurrentTasks;
-    $("#advisorAnalyzeWeek").onclick = analyzeWeekLoad;
-    $("#advisorCreateTask").onclick = createTaskFromAdvisor;
-    $("#advisorVoiceBtn").onclick = toggleVoiceInput;
     document.querySelectorAll("[data-advisor-example]").forEach(btn => {
       btn.onclick = () => {
         const input = $("#advisorInput");
@@ -3863,7 +3683,9 @@ function init() {
 </script>
 <!-- Firebase para Planneo -->
 <script src="https://www.gstatic.com/firebasejs/10.13.2/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.13.2/firebase-auth-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/10.13.2/firebase-messaging-compat.js"></script>
+
 
 <script>
 window.planneoServiceWorkerRegistration = null;
@@ -3965,6 +3787,361 @@ window.addEventListener("load", async () => {
   0%, 100% { transform: rotate(-8deg); }
   50% { transform: rotate(8deg); }
 }
+/* ===== ACCESO Y CUENTAS DE PLANNEO ===== */
+
+.auth-gate {
+    position: fixed;
+    inset: 0;
+    z-index: 99999;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 20px;
+    background: #080d18;
+    color: #eaf7ff;
+    font-family: inherit;
+}
+
+.auth-gate[hidden] {
+    display: none !important;
+}
+
+.auth-card {
+    width: 100%;
+    max-width: 410px;
+    padding: 30px;
+    border: 1px solid rgba(54, 228, 255, 0.2);
+    border-radius: 22px;
+    background: #101a2b;
+    box-shadow: 0 20px 70px rgba(0, 0, 0, 0.35);
+}
+
+.auth-brand {
+    margin-bottom: 8px;
+    color: #36e4ff;
+    font-size: 13px;
+    font-weight: 800;
+    letter-spacing: 3px;
+    text-align: center;
+}
+
+.auth-card h2 {
+    margin: 10px 0;
+    text-align: center;
+    font-size: 27px;
+}
+
+.auth-description {
+    margin-bottom: 24px;
+    color: #8ba4bd;
+    font-size: 14px;
+    line-height: 1.5;
+    text-align: center;
+}
+
+.auth-tabs {
+    display: flex;
+    gap: 8px;
+    margin-bottom: 20px;
+}
+
+.auth-tabs button {
+    flex: 1;
+    padding: 11px;
+    border: 1px solid #26384e;
+    border-radius: 10px;
+    background: transparent;
+    color: #8ba4bd;
+    cursor: pointer;
+}
+
+.auth-tabs button.active {
+    border-color: #36e4ff;
+    background: rgba(54, 228, 255, 0.1);
+    color: #36e4ff;
+}
+
+.auth-card label {
+    display: block;
+    margin: 14px 0 7px;
+    color: #eaf7ff;
+    font-size: 13px;
+    font-weight: 600;
+}
+
+.auth-card input {
+    box-sizing: border-box;
+    width: 100%;
+    padding: 13px;
+    border: 1px solid #26384e;
+    border-radius: 10px;
+    outline: none;
+    background: #080d18;
+    color: #eaf7ff;
+    font: inherit;
+}
+
+.auth-card input:focus {
+    border-color: #36e4ff;
+    box-shadow: 0 0 0 3px rgba(54, 228, 255, 0.1);
+}
+
+.auth-submit {
+    width: 100%;
+    margin-top: 22px;
+    padding: 14px;
+    border: none;
+    border-radius: 10px;
+    background: #36e4ff;
+    color: #080d18;
+    font-size: 15px;
+    font-weight: 800;
+    cursor: pointer;
+}
+
+.auth-submit:disabled {
+    opacity: 0.6;
+    cursor: wait;
+}
+
+.auth-reset {
+    display: block;
+    margin: 16px auto 0;
+    padding: 5px;
+    border: none;
+    background: transparent;
+    color: #8ba4bd;
+    cursor: pointer;
+}
+
+.auth-message {
+    margin-top: 14px;
+    color: #8ba4bd;
+    font-size: 13px;
+    line-height: 1.5;
+    text-align: center;
+    overflow-wrap: anywhere;
+}
+
+.account-pill {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    flex-wrap: wrap;
+}
+
+.account-email {
+    color: #8ba4bd;
+    font-size: 12px;
+    overflow-wrap: anywhere;
+}
+
+.auth-logout {
+    padding: 7px 11px;
+    border: 1px solid #26384e;
+    border-radius: 8px;
+    background: transparent;
+    color: #eaf7ff;
+    cursor: pointer;
+}
 </style>
+<!-- ===== ACCESO A PLANNEO ===== -->
+<div id="authGate" class="auth-gate">
+    <section class="auth-card">
+        <div class="auth-brand">PLANNEO</div>
+
+        <h2 id="authTitle">Bienvenido de nuevo</h2>
+
+        <p class="auth-description">
+            Tu espacio personal para organizar tus tareas,
+            estudiar y avanzar cada día.
+        </p>
+
+        <div class="auth-tabs">
+            <button
+                type="button"
+                id="authTabLogin"
+                class="active"
+            >
+                Iniciar sesión
+            </button>
+
+            <button
+                type="button"
+                id="authTabRegister"
+            >
+                Crear cuenta
+            </button>
+        </div>
+
+        <form id="authForm">
+            <label for="authEmail">Correo electrónico</label>
+
+            <input
+                id="authEmail"
+                type="email"
+                autocomplete="email"
+                placeholder="tucorreo@ejemplo.com"
+                required
+            >
+
+            <label for="authPassword">Contraseña</label>
+
+            <input
+                id="authPassword"
+                type="password"
+                autocomplete="current-password"
+                placeholder="Mínimo 6 caracteres"
+                minlength="6"
+                required
+            >
+
+            <button
+                id="authSubmit"
+                class="auth-submit"
+                type="submit"
+            >
+                Iniciar sesión
+            </button>
+        </form>
+
+        <button
+            id="authReset"
+            class="auth-reset"
+            type="button"
+        >
+            ¿Olvidaste tu contraseña?
+        </button>
+
+        <div
+            id="authMessage"
+            class="auth-message"
+            role="status"
+            aria-live="polite"
+        ></div>
+    </section>
+</div>
+<!-- ===== FIN DEL ACCESO ===== -->
+
+<script>
+/* Planneo: autenticación de cuentas. La sincronización en la nube se añadirá después de verificar el acceso. */
+(() => {
+  const firebaseConfig = {
+    apiKey: "AIzaSyDlHZChuc600vie5rnDqyBXk4gypQ4tgc",
+    authDomain: "planneo-a3bca.firebaseapp.com",
+    projectId: "planneo-a3bca",
+    storageBucket: "planneo-a3bca.firebasestorage.app",
+    messagingSenderId: "594631604240",
+    appId: "1:594631604240:web:2be7df45a75e284235b295",
+    measurementId: "G-T10WL2SLPE"
+  };
+  const gate = document.getElementById('authGate');
+  const form = document.getElementById('authForm');
+  const emailInput = document.getElementById('authEmail');
+  const passwordInput = document.getElementById('authPassword');
+  const loginTab = document.getElementById('authTabLogin');
+  const registerTab = document.getElementById('authTabRegister');
+  const submit = document.getElementById('authSubmit');
+  const reset = document.getElementById('authReset');
+  const title = document.getElementById('authTitle');
+  const message = document.getElementById('authMessage');
+  if (!gate || !form) return;
+
+  let mode = 'login';
+  const say = (text, isError = false) => {
+    message.textContent = text;
+    message.style.color = isError ? '#ff8b8b' : '#5cffb1';
+  };
+  const setMode = (next) => {
+    mode = next;
+    const registering = mode === 'register';
+    loginTab.classList.toggle('active', !registering);
+    registerTab.classList.toggle('active', registering);
+    title.textContent = registering ? 'Crea tu cuenta' : 'Bienvenido de nuevo';
+    submit.textContent = registering ? 'Crear cuenta' : 'Iniciar sesión';
+    passwordInput.autocomplete = registering ? 'new-password' : 'current-password';
+    reset.hidden = registering;
+    say('');
+  };
+  loginTab.addEventListener('click', () => setMode('login'));
+  registerTab.addEventListener('click', () => setMode('register'));
+
+  const friendlyError = (error) => {
+    const codes = {
+      'auth/email-already-in-use': 'Ese correo ya tiene una cuenta. Prueba iniciar sesión.',
+      'auth/invalid-email': 'Escribe un correo electrónico válido.',
+      'auth/weak-password': 'La contraseña debe tener al menos 6 caracteres.',
+      'auth/user-not-found': 'No existe una cuenta con ese correo.',
+      'auth/wrong-password': 'La contraseña no es correcta.',
+      'auth/invalid-credential': 'El correo o la contraseña no son correctos.',
+      'auth/too-many-requests': 'Hubo demasiados intentos. Espera un momento y vuelve a intentarlo.',
+      'auth/network-request-failed': 'No se pudo conectar. Revisa tu conexión a internet.'
+    };
+    return codes[error.code] || 'No se pudo completar la operación. Revisa la configuración de Firebase e inténtalo de nuevo.';
+  };
+
+  form.addEventListener('submit', async (event) => {
+    event.preventDefault();
+    const email = emailInput.value.trim();
+    const password = passwordInput.value;
+    submit.disabled = true;
+    submit.textContent = 'Un momento…';
+    say('Conectando con Firebase…');
+    try {
+      if (!window.firebase) throw new Error('Firebase no se ha cargado. Comprueba tu conexión y recarga la página.');
+      if (!firebase.apps.length) firebase.initializeApp(firebaseConfig);
+      const auth = firebase.auth();
+      if (mode === 'register') {
+        await auth.createUserWithEmailAndPassword(email, password);
+      } else {
+        await auth.signInWithEmailAndPassword(email, password);
+      }
+    } catch (error) {
+      say(error.code ? friendlyError(error) : error.message, true);
+    } finally {
+      submit.disabled = false;
+      submit.textContent = mode === 'register' ? 'Crear cuenta' : 'Iniciar sesión';
+    }
+  });
+
+  reset.addEventListener('click', async () => {
+    const email = emailInput.value.trim();
+    if (!email) {
+      say('Escribe tu correo y luego pulsa «¿Olvidaste tu contraseña?».', true);
+      emailInput.focus();
+      return;
+    }
+    try {
+      if (!window.firebase) throw new Error('Firebase no se ha cargado.');
+      if (!firebase.apps.length) firebase.initializeApp(firebaseConfig);
+      await firebase.auth().sendPasswordResetEmail(email);
+      say('Te enviamos un correo para restablecer la contraseña. Revisa también el spam.');
+    } catch (error) { say(error.code ? friendlyError(error) : error.message, true); }
+  });
+
+  function connectAuth() {
+    if (!window.firebase) {
+      say('No se pudo cargar Firebase. Comprueba tu conexión y recarga.', true);
+      return;
+    }
+    try {
+      if (!firebase.apps.length) firebase.initializeApp(firebaseConfig);
+      firebase.auth().onAuthStateChanged(user => {
+        gate.hidden = !!user;
+        document.body.classList.toggle('planneo-authenticated', !!user);
+        if (user) {
+          console.log('Planneo: sesión iniciada para', user.email);
+        }
+      });
+    } catch (error) {
+      say('No se pudo iniciar el acceso. Comprueba la configuración de Firebase.', true);
+      console.error('Error de autenticación Planneo:', error);
+    }
+  }
+  if (window.firebase) connectAuth();
+  else window.addEventListener('load', connectAuth, { once: true });
+})();
+</script>
+
 </body>
 </html>
