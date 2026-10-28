@@ -1,10 +1,7 @@
-// ==========================================
-// PLANNEO - SERVICE WORKER + FIREBASE
-// ==========================================
+/* PLANNEO - Service Worker v25: actualización automática + Firebase Messaging */
 importScripts("https://www.gstatic.com/firebasejs/10.13.2/firebase-app-compat.js");
 importScripts("https://www.gstatic.com/firebasejs/10.13.2/firebase-messaging-compat.js");
 
-// Firebase
 firebase.initializeApp({
   apiKey: "AIzaSyDlHZChuc600vie5rnDqyBXk4gypQ4tgc",
   authDomain: "planneo-a3bca.firebaseapp.com",
@@ -16,22 +13,10 @@ firebase.initializeApp({
 });
 
 const messaging = firebase.messaging();
+const CACHE_NAME = "planneo-presentacion-v25";
+const APP_URL = "https://luisfelipesalamancadiaz-beep.github.io/Planneo/";
+const ARCHIVOS = ["./", "./index.html", "./manifest.json", "./icono-192.png", "./icono-512.png"];
 
-// ==========================================
-// CACHE
-// ==========================================
-const CACHE_NAME = "planneo-v26";
-const ARCHIVOS = [
-  "./",
-  "./index.html",
-  "./manifest.json",
-  "./icono-192.png",
-  "./icono-512.png"
-];
-
-// ==========================================
-// INSTALACIÓN
-// ==========================================
 self.addEventListener("install", event => {
   event.waitUntil(
     caches.open(CACHE_NAME)
@@ -40,53 +25,72 @@ self.addEventListener("install", event => {
   );
 });
 
-// ==========================================
-// ACTIVACIÓN
-// ==========================================
 self.addEventListener("activate", event => {
   event.waitUntil(
-    caches.keys().then(keys =>
-      Promise.all(
-        keys
-          .filter(key => key !== CACHE_NAME)
-          .map(key => caches.delete(key))
-      )
-    ).then(() => self.clients.claim())
+    caches.keys()
+      .then(keys => Promise.all(keys.filter(key => key.startsWith("planneo-") && key !== CACHE_NAME).map(key => caches.delete(key))))
+      .then(() => self.clients.claim())
   );
 });
 
-// ==========================================
-// FETCH (necesario para que sea PWA instalable)
-// ==========================================
+// Network-first: al publicar una versión nueva se usa primero GitHub Pages; caché solo si no hay conexión.
 self.addEventListener("fetch", event => {
   if (event.request.method !== "GET") return;
+  const url = new URL(event.request.url);
+  if (url.origin !== self.location.origin) return;
+  if (event.request.cache === "only-if-cached" && event.request.mode !== "same-origin") return;
 
-  event.respondWith(
-    caches.match(event.request).then(cached => {
-      return cached || fetch(event.request).then(response => {
-        // Opcional: guardar en caché respuestas válidas
-        if (response && response.status === 200 && response.type === "basic") {
-          const clone = response.clone();
-          caches.open(CACHE_NAME).then(cache => cache.put(event.request, clone));
-        }
-        return response;
-      }).catch(() => {
-        // Fallback offline simple
-        return caches.match("./index.html");
-      });
-    })
-  );
+  event.respondWith((async () => {
+    try {
+      const response = await fetch(event.request, { cache: "no-store" });
+      if (response && response.ok) {
+        const copy = response.clone();
+        caches.open(CACHE_NAME).then(cache => cache.put(event.request, copy)).catch(() => {});
+      }
+      return response;
+    } catch (error) {
+      const cached = await caches.match(event.request);
+      if (cached) return cached;
+      if (event.request.mode === "navigate") {
+        const fallback = await caches.match("./index.html");
+        if (fallback) return fallback;
+      }
+      return Response.error();
+    }
+  })());
 });
 
-// ==========================================
-// FIREBASE MESSAGING (notificaciones en segundo plano)
-// ==========================================
 messaging.onBackgroundMessage(payload => {
-  const title = payload.notification?.title || "Planneo";
-  const options = {
-    body: payload.notification?.body || "Nueva notificación",
+  const notification = payload.notification || {}, data = payload.data || {};
+  return self.registration.showNotification(notification.title || data.title || "Planneo", {
+    body: notification.body || data.body || "Tienes un nuevo recordatorio.",
     icon: "./icono-192.png",
-    badge: "./icono-192.png"
-  };
-  self.registration.showNotification(title, options);
+    badge: "./icono-192.png",
+    tag: data.tag || "planneo-recordatorio",
+    data: { url: data.url || APP_URL }
+  });
+});
+
+self.addEventListener("message", event => {
+  if (!event.data || event.data.type !== "SHOW_NOTIFICATION") return;
+  const { title, body, tag } = event.data;
+  event.waitUntil(self.registration.showNotification(title || "Planneo", {
+    body: body || "", icon: "./icono-192.png", badge: "./icono-192.png",
+    tag: tag || "planneo-notification", renotify: true, data: { url: APP_URL }
+  }));
+});
+
+self.addEventListener("notificationclick", event => {
+  event.notification.close();
+  const targetUrl = event.notification.data?.url || APP_URL;
+  event.waitUntil(self.clients.matchAll({ type: "window", includeUncontrolled: true }).then(async clients => {
+    for (const client of clients) {
+      if ("focus" in client) {
+        await client.focus();
+        if ("navigate" in client) await client.navigate(targetUrl);
+        return;
+      }
+    }
+    await self.clients.openWindow(targetUrl);
+  }));
 });
