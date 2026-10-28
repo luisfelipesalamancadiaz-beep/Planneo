@@ -3723,11 +3723,25 @@ window.addEventListener("load", async () => {
         }
 
         const registro = await navigator.serviceWorker.register(
-            "./service-worker.js"
+            "./service-worker.js",
+            { updateViaCache: "none" }
         );
 
-        await navigator.serviceWorker.ready;
+        // Buscar actualizaciones al abrir Planneo y cuando vuelve a primer plano.
+        try { await registro.update(); } catch (updateError) { console.debug("Actualización SW pendiente:", updateError); }
+        document.addEventListener("visibilitychange", () => {
+            if (document.visibilityState === "visible") registro.update().catch(() => {});
+        });
 
+        // Si la nueva versión toma el control, recargar una sola vez para aplicar el HTML actualizado.
+        navigator.serviceWorker.addEventListener("controllerchange", () => {
+            const lastReload = Number(sessionStorage.getItem("planneo-sw-reloaded-at") || 0);
+            const now = Date.now();
+            // Evita ciclos de recarga, pero permite aplicar futuras publicaciones.
+            if (now - lastReload < 10000) return;
+            sessionStorage.setItem("planneo-sw-reloaded-at", String(now));
+            location.reload();
+        }, { once: true });
         window.planneoServiceWorkerRegistration = registro;
         window.planneoMessaging = firebase.messaging();
 
@@ -3956,6 +3970,42 @@ window.addEventListener("load", async () => {
     color: #eaf7ff;
     cursor: pointer;
 }
+.auth-card { backdrop-filter: blur(18px); }
+.auth-password-wrap { position: relative; }
+.auth-password-wrap input { padding-right: 82px; }
+.auth-password-toggle {
+    position:absolute; right:8px; top:50%; transform:translateY(-50%);
+    border:0; border-radius:7px; padding:7px 9px; background:transparent;
+    color:#36e4ff; font:600 12px inherit; cursor:pointer;
+}
+.auth-submit { transition:transform .18s ease, filter .18s ease; }
+.auth-submit:hover { filter:brightness(1.08); transform:translateY(-1px); }
+.auth-card input:focus-visible, .auth-tabs button:focus-visible, .auth-submit:focus-visible,
+.auth-password-toggle:focus-visible { outline:2px solid #36e4ff; outline-offset:2px; }
+#planneoProfile { position:fixed; top:14px; right:16px; z-index:99990; font-family:inherit; }
+#planneoProfileButton {
+  width:46px; height:46px; border-radius:50%; border:2px solid rgba(54,228,255,.8);
+  background:linear-gradient(145deg,#18334a,#101a2b); color:#eaf7ff; font-weight:800;
+  cursor:pointer; box-shadow:0 8px 25px rgba(0,0,0,.24); display:grid; place-items:center;
+}
+#planneoProfileMenu {
+  position:absolute; top:54px; right:0; width:min(290px, calc(100vw - 28px));
+  padding:14px; border:1px solid var(--border, #26384e); border-radius:16px;
+  background:var(--panel, #101a2b); color:var(--text, #eaf7ff);
+  box-shadow:0 18px 50px rgba(0,0,0,.3);
+}
+#planneoProfileMenu[hidden] { display:none !important; }
+.planneo-profile-heading { font-size:12px; color:var(--muted, #8ba4bd); margin:0 0 5px; }
+#planneoProfileEmail { font-size:13px; overflow-wrap:anywhere; margin:0 0 12px; }
+#planneoProfileLogout { width:100%; border:1px solid rgba(255,120,120,.35); border-radius:10px; padding:10px;
+  background:rgba(255,100,100,.08); color:inherit; font:inherit; font-weight:700; cursor:pointer; }
+body:not(.planneo-authenticated) #planneoProfile { display:none; }
+@media (max-width:480px) {
+  .auth-gate { padding:14px; }
+  .auth-card { padding:24px 20px; border-radius:20px; }
+  .auth-card h2 { font-size:24px; }
+  #planneoProfile { top:10px; right:10px; }
+}
 </style>
 <!-- ===== ACCESO A PLANNEO ===== -->
 <div id="authGate" class="auth-gate">
@@ -3999,14 +4049,17 @@ window.addEventListener("load", async () => {
 
             <label for="authPassword">Contraseña</label>
 
-            <input
-                id="authPassword"
-                type="password"
-                autocomplete="current-password"
-                placeholder="Mínimo 6 caracteres"
-                minlength="6"
-                required
-            >
+            <div class="auth-password-wrap">
+                <input
+                    id="authPassword"
+                    type="password"
+                    autocomplete="current-password"
+                    placeholder="Mínimo 6 caracteres"
+                    minlength="6"
+                    required
+                >
+                <button id="authPasswordToggle" class="auth-password-toggle" type="button" aria-label="Mostrar contraseña" aria-pressed="false">Mostrar</button>
+            </div>
 
             <button
                 id="authSubmit"
@@ -4039,14 +4092,14 @@ window.addEventListener("load", async () => {
 /* Planneo: autenticación de cuentas. La sincronización en la nube se añadirá después de verificar el acceso. */
 (() => {
   const firebaseConfig = {
-    apiKey: "AIzaSyDlHZChuc600vie5rnDqyqBXk4gypQ4tgc",
-  authDomain: "planneo-a3bca.firebaseapp.com",
-  projectId: "planneo-a3bca",
-  storageBucket: "planneo-a3bca.firebasestorage.app",
-  messagingSenderId: "594631604240",
-  appId: "1:594631604240:web:2be7df45a75e284235b295",
-  measurementId: "G-T10WL2SLPE"
-};
+    apiKey: "AIzaSyDlHZChuc600vie5rnDqyBXk4gypQ4tgc",
+    authDomain: "planneo-a3bca.firebaseapp.com",
+    projectId: "planneo-a3bca",
+    storageBucket: "planneo-a3bca.firebasestorage.app",
+    messagingSenderId: "594631604240",
+    appId: "1:594631604240:web:2be7df45a75e284235b295",
+    measurementId: "G-T10WL2SLPE"
+  };
   const gate = document.getElementById('authGate');
   const form = document.getElementById('authForm');
   const emailInput = document.getElementById('authEmail');
@@ -4164,6 +4217,63 @@ window.addEventListener("load", async () => {
 })();
 </script>
 
+<script>
+/* Planneo: controles visuales de acceso y menú de perfil */
+(() => {
+  const password = document.getElementById('authPassword');
+  const toggle = document.getElementById('authPasswordToggle');
+  if (password && toggle) toggle.addEventListener('click', () => {
+    const show = password.type === 'password';
+    password.type = show ? 'text' : 'password';
+    toggle.textContent = show ? 'Ocultar' : 'Mostrar';
+    toggle.setAttribute('aria-label', show ? 'Ocultar contraseña' : 'Mostrar contraseña');
+    toggle.setAttribute('aria-pressed', String(show));
+  });
+
+  const profile = document.createElement('div');
+  profile.id = 'planneoProfile';
+  profile.innerHTML = `<button id="planneoProfileButton" type="button" aria-label="Abrir menú de cuenta" aria-expanded="false">P</button>
+    <div id="planneoProfileMenu" hidden>
+      <p class="planneo-profile-heading">Sesión iniciada</p>
+      <p id="planneoProfileEmail">Cuenta Planneo</p>
+      <button id="planneoProfileLogout" type="button">Cerrar sesión</button>
+    </div>`;
+  document.body.appendChild(profile);
+  const button = profile.querySelector('#planneoProfileButton');
+  const menu = profile.querySelector('#planneoProfileMenu');
+  const emailLabel = profile.querySelector('#planneoProfileEmail');
+  const logout = profile.querySelector('#planneoProfileLogout');
+  button.addEventListener('click', () => {
+    menu.hidden = !menu.hidden;
+    button.setAttribute('aria-expanded', String(!menu.hidden));
+  });
+  document.addEventListener('click', event => {
+    if (!profile.contains(event.target)) { menu.hidden = true; button.setAttribute('aria-expanded', 'false'); }
+  });
+  logout.addEventListener('click', async () => {
+    if (!window.firebase || !firebase.auth) return;
+    if (!confirm('¿Quieres cerrar sesión? Tus datos guardados en la nube seguirán en tu cuenta.')) return;
+    logout.disabled = true;
+    logout.textContent = 'Cerrando sesión…';
+    try { await firebase.auth().signOut(); menu.hidden = true; }
+    catch (error) { alert('No se pudo cerrar sesión. Comprueba tu conexión e inténtalo de nuevo.'); }
+    finally { logout.disabled = false; logout.textContent = 'Cerrar sesión'; }
+  });
+
+  function updateProfile(user) {
+    if (!user) return;
+    const email = user.email || 'Cuenta Planneo';
+    emailLabel.textContent = email;
+    button.textContent = (email[0] || 'P').toLocaleUpperCase('es');
+    button.title = email;
+  }
+  function connectProfile() {
+    if (window.firebase && firebase.auth) firebase.auth().onAuthStateChanged(updateProfile);
+  }
+  if (window.firebase) connectProfile();
+  else window.addEventListener('load', connectProfile, {once:true});
+})();
+</script>
 
 <script>
 /* ===== Planneo: Sincronización Firestore + Logout + Migración segura ===== */
