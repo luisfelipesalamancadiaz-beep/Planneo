@@ -1,56 +1,53 @@
-<!DOCTYPE html>
-<html>
-<head>
-  <meta charset="UTF-8">
-  <title>Prueba Auth Planneo</title>
-  <script src="https://www.gstatic.com/firebasejs/10.13.2/firebase-app-compat.js"></script>
-  <script src="https://www.gstatic.com/firebasejs/10.13.2/firebase-auth-compat.js"></script>
-</head>
-<body>
-  <h2>Prueba de registro / login</h2>
-  <input id="email" type="email" placeholder="correo">
-  <input id="pass" type="password" placeholder="contraseña">
-  <button onclick="registrar()">Crear cuenta</button>
-  <button onclick="entrar()">Iniciar sesión</button>
-  <pre id="log"></pre>
-
-  <script>
-    const firebaseConfig = {
-      apiKey: "AIzaSyDlHZChuc600vie5rnDqyBXk4gypQ4tgc",
-      authDomain: "planneo-a3bca.firebaseapp.com",
-      projectId: "planneo-a3bca",
-      storageBucket: "planneo-a3bca.firebasestorage.app",
-      messagingSenderId: "594631604240",
-      appId: "1:594631604240:web:2be7df45a75e284235b295"
-    };
-    firebase.initializeApp(firebaseConfig);
-
-    function log(msg) {
-      document.getElementById("log").textContent += msg + "\n";
-      console.log(msg);
-    }
-
-    async function registrar() {
-      const email = document.getElementById("email").value;
-      const pass = document.getElementById("pass").value;
-      try {
-        const user = await firebase.auth().createUserWithEmailAndPassword(email, pass);
-        log("Cuenta creada: " + user.user.email);
-      } catch (e) {
-        log("ERROR: " + e.code + " - " + e.message);
-      }
-    }
-
-    async function entrar() {
-      const email = document.getElementById("email").value;
-      const pass = document.getElementById("pass").value;
-      try {
-        const user = await firebase.auth().signInWithEmailAndPassword(email, pass);
-        log("Sesión iniciada: " + user.user.email);
-      } catch (e) {
-        log("ERROR: " + e.code + " - " + e.message);
-      }
-    }
-  </script>
-</body>
-</html>
+// Firebase Cloud Messaging para Planneo
+// Este archivo se encuentra en la raíz de GitHub Pages.
+ 
+importScripts(
+"https://www.gstatic.com/firebasejs/10.13.2/firebase-app-compat.js"
+);
+ 
+importScripts(
+"https://www.gstatic.com/firebasejs/10.13.2/firebase-messaging-compat.js"
+);
+ 
+firebase.initializeApp({
+apiKey: "AIzaSyDlHZChuc600vie5rnDqyqBXk4gypQ4tgc",
+authDomain: "planneo-a3bca.firebaseapp.com",
+projectId: "planneo-a3bca",
+storageBucket: "planneo-a3bca.firebasestorage.app",
+messagingSenderId: "594631604240",
+appId: "1:594631604240:web:2be7df45a75e284235b295",
+measurementId: "G-T10WL2SLPE"
+});
+ 
+const messaging = firebase.messaging();
+ 
+messaging.onBackgroundMessage((payload) => {
+console.log(
+"[firebase-messaging-sw.js] Mensaje recibido:",
+payload
+);
+ 
+const notification = payload.notification || {};
+const data = payload.data || {};
+ 
+const title = notification.title || data.title || "Planneo";
+const options = {
+body: notification.body || data.body || "Tienes un nuevo recordatorio.",
+icon: "./icono-192.png",
+data: {
+url: "https://luisfelipesalamancadiaz-beep.github.io/Planneo/"
+}
+};
+ 
+return self.registration.showNotification(title, options);
+});
+ 
+self.addEventListener("notificationclick", (event) => {
+event.notification.close();
+ 
+event.waitUntil(
+clients.openWindow(
+"https://luisfelipesalamancadiaz-beep.github.io/Planneo/"
+)
+);
+});
