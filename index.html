@@ -4008,86 +4008,166 @@ body:not(.planneo-authenticated) #planneoProfile { display:none; }
 }
 </style>
 <!-- ===== ACCESO A PLANNEO ===== -->
-<div id="authGate" class="auth-gate">
-    <section class="auth-card">
-        <div class="auth-brand">PLANNEO</div>
+<div id="authGate" class="auth-gate" hidden>
+  <section class="auth-card">
+    <div class="auth-brand">PLANNEO</div>
+    <h2 id="authTitle">Bienvenido de nuevo</h2>
+    <p class="auth-description">Tu espacio personal para organizar tus tareas, estudiar y avanzar cada día.</p>
 
-        <h2 id="authTitle">Bienvenido de nuevo</h2>
+    <div class="auth-tabs">
+      <button type="button" id="authTabLogin" class="active">Iniciar sesión</button>
+      <button type="button" id="authTabRegister">Crear cuenta</button>
+    </div>
 
-        <p class="auth-description">
-            Tu espacio personal para organizar tus tareas,
-            estudiar y avanzar cada día.
-        </p>
+    <form id="authForm">
+      <label for="authEmail">Correo electrónico</label>
+      <input id="authEmail" type="email" autocomplete="email" placeholder="tucorreo@ejemplo.com" required>
 
-        <div class="auth-tabs">
-            <button
-                type="button"
-                id="authTabLogin"
-                class="active"
-            >
-                Iniciar sesión
-            </button>
+      <label for="authPassword">Contraseña</label>
+      <div class="auth-password-wrap">
+        <input id="authPassword" type="password" autocomplete="current-password" placeholder="Mínimo 6 caracteres" minlength="6" required>
+        <button id="authPasswordToggle" class="auth-password-toggle" type="button">Mostrar</button>
+      </div>
 
-            <button
-                type="button"
-                id="authTabRegister"
-            >
-                Crear cuenta
-            </button>
-        </div>
+      <button id="authSubmit" class="auth-submit" type="submit">Iniciar sesión</button>
+    </form>
 
-        <form id="authForm">
-            <label for="authEmail">Correo electrónico</label>
-
-            <input
-                id="authEmail"
-                type="email"
-                autocomplete="email"
-                placeholder="tucorreo@ejemplo.com"
-                required
-            >
-
-            <label for="authPassword">Contraseña</label>
-
-            <div class="auth-password-wrap">
-                <input
-                    id="authPassword"
-                    type="password"
-                    autocomplete="current-password"
-                    placeholder="Mínimo 6 caracteres"
-                    minlength="6"
-                    required
-                >
-                <button id="authPasswordToggle" class="auth-password-toggle" type="button" aria-label="Mostrar contraseña" aria-pressed="false">Mostrar</button>
-            </div>
-
-            <button
-                id="authSubmit"
-                class="auth-submit"
-                type="submit"
-            >
-                Iniciar sesión
-            </button>
-        </form>
-
-        <button
-            id="authReset"
-            class="auth-reset"
-            type="button"
-        >
-            ¿Olvidaste tu contraseña?
-        </button>
-
-        <div
-            id="authMessage"
-            class="auth-message"
-            role="status"
-            aria-live="polite"
-        ></div>
-    </section>
+    <button id="authReset" class="auth-reset" type="button">¿Olvidaste tu contraseña?</button>
+    <div id="authMessage" class="auth-message" role="status"></div>
+  </section>
 </div>
-<!-- ===== FIN DEL ACCESO ===== -->
 
+<script>
+/* ===== Planneo Auth (versión limpia) ===== */
+(() => {
+  const firebaseConfig = {
+    apiKey: "AIzaSyDlHZChuc600vie5rnDqyBXk4gypQ4tgc",
+    authDomain: "planneo-a3bca.firebaseapp.com",
+    projectId: "planneo-a3bca",
+    storageBucket: "planneo-a3bca.firebasestorage.app",
+    messagingSenderId: "594631604240",
+    appId: "1:594631604240:web:2be7df45a75e284235b295",
+    measurementId: "G-T10WL2SLPE"
+  };
+
+  const gate = document.getElementById('authGate');
+  const form = document.getElementById('authForm');
+  const emailInput = document.getElementById('authEmail');
+  const passwordInput = document.getElementById('authPassword');
+  const loginTab = document.getElementById('authTabLogin');
+  const registerTab = document.getElementById('authTabRegister');
+  const submit = document.getElementById('authSubmit');
+  const reset = document.getElementById('authReset');
+  const title = document.getElementById('authTitle');
+  const message = document.getElementById('authMessage');
+  const toggle = document.getElementById('authPasswordToggle');
+
+  if (!gate || !form) return;
+
+  let mode = 'login';
+
+  const say = (text, isError = false) => {
+    if (!message) return;
+    message.textContent = text;
+    message.style.color = isError ? '#ff8b8b' : '#5cffb1';
+  };
+
+  const setMode = (next) => {
+    mode = next;
+    const registering = mode === 'register';
+    loginTab.classList.toggle('active', !registering);
+    registerTab.classList.toggle('active', registering);
+    title.textContent = registering ? 'Crea tu cuenta' : 'Bienvenido de nuevo';
+    submit.textContent = registering ? 'Crear cuenta' : 'Iniciar sesión';
+    passwordInput.autocomplete = registering ? 'new-password' : 'current-password';
+    reset.hidden = registering;
+    say('');
+  };
+
+  loginTab?.addEventListener('click', () => setMode('login'));
+  registerTab?.addEventListener('click', () => setMode('register'));
+
+  toggle?.addEventListener('click', () => {
+    const show = passwordInput.type === 'password';
+    passwordInput.type = show ? 'text' : 'password';
+    toggle.textContent = show ? 'Ocultar' : 'Mostrar';
+  });
+
+  const friendlyError = (error) => {
+    const codes = {
+      'auth/email-already-in-use': 'Ese correo ya tiene una cuenta. Prueba iniciar sesión.',
+      'auth/invalid-email': 'Escribe un correo electrónico válido.',
+      'auth/weak-password': 'La contraseña debe tener al menos 6 caracteres.',
+      'auth/user-not-found': 'No existe una cuenta con ese correo.',
+      'auth/wrong-password': 'La contraseña no es correcta.',
+      'auth/invalid-credential': 'El correo o la contraseña no son correctos.',
+      'auth/too-many-requests': 'Hubo demasiados intentos. Espera un momento.',
+      'auth/network-request-failed': 'No se pudo conectar. Revisa tu internet.'
+    };
+    return codes[error.code] || 'No se pudo completar la operación. Inténtalo de nuevo.';
+  };
+
+  form.addEventListener('submit', async (e) => {
+    e.preventDefault();
+    const email = emailInput.value.trim();
+    const password = passwordInput.value;
+    submit.disabled = true;
+    submit.textContent = 'Un momento…';
+    say('Conectando…');
+
+    try {
+      if (!window.firebase) throw new Error('Firebase no cargó. Recarga la página.');
+      if (!firebase.apps.length) firebase.initializeApp(firebaseConfig);
+      const auth = firebase.auth();
+      if (mode === 'register') {
+        await auth.createUserWithEmailAndPassword(email, password);
+      } else {
+        await auth.signInWithEmailAndPassword(email, password);
+      }
+    } catch (error) {
+      say(error.code ? friendlyError(error) : error.message, true);
+    } finally {
+      submit.disabled = false;
+      submit.textContent = mode === 'register' ? 'Crear cuenta' : 'Iniciar sesión';
+    }
+  });
+
+  reset?.addEventListener('click', async () => {
+    const email = emailInput.value.trim();
+    if (!email) return say('Escribe tu correo primero.', true);
+    try {
+      if (!firebase.apps.length) firebase.initializeApp(firebaseConfig);
+      await firebase.auth().sendPasswordResetEmail(email);
+      say('Te enviamos un correo para restablecer la contraseña. Revisa spam.');
+    } catch (error) {
+      say(error.code ? friendlyError(error) : error.message, true);
+    }
+  });
+
+  function startAuth() {
+    if (!window.firebase) {
+      say('No se pudo cargar Firebase. Recarga la página.', true);
+      gate.hidden = false;
+      return;
+    }
+    if (!firebase.apps.length) firebase.initializeApp(firebaseConfig);
+
+    firebase.auth().onAuthStateChanged((user) => {
+      if (user) {
+        gate.hidden = true;
+        document.body.classList.add('planneo-authenticated');
+        console.log('Sesión iniciada:', user.email);
+      } else {
+        gate.hidden = false;
+        document.body.classList.remove('planneo-authenticated');
+      }
+    });
+  }
+
+  if (window.firebase) startAuth();
+  else window.addEventListener('load', startAuth);
+})();
+</script>
 <script>
 /* Planneo: autenticación de cuentas. La sincronización en la nube se añadirá después de verificar el acceso. */
 (() => {
