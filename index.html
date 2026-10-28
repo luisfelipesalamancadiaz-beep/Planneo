@@ -3703,7 +3703,7 @@ window.addEventListener("load", async () => {
     try {
         // Configuración de Firebase
         const firebaseConfig = {
-            apiKey: "AIzaSyDlHZChuc600vie5rnDqyBXk4gypQ4tgc",
+            apiKey: "AIzaSyDlHZChuc600vie5rnDqyqBXk4gypQ4tgc",
             authDomain: "planneo-a3bca.firebaseapp.com",
             projectId: "planneo-a3bca",
             storageBucket: "planneo-a3bca.firebasestorage.app",
@@ -4041,7 +4041,7 @@ body:not(.planneo-authenticated) #planneoProfile { display:none; }
 /* ===== Planneo Auth (versión limpia) ===== */
 (() => {
   const firebaseConfig = {
-    apiKey: "AIzaSyDlHZChuc600vie5rnDqyBXk4gypQ4tgc",
+    apiKey: "AIzaSyDlHZChuc600vie5rnDqyqBXk4gypQ4tgc",
     authDomain: "planneo-a3bca.firebaseapp.com",
     projectId: "planneo-a3bca",
     storageBucket: "planneo-a3bca.firebasestorage.app",
@@ -4104,7 +4104,7 @@ body:not(.planneo-authenticated) #planneoProfile { display:none; }
       'auth/too-many-requests': 'Hubo demasiados intentos. Espera un momento.',
       'auth/network-request-failed': 'No se pudo conectar. Revisa tu internet.'
     };
-    return codes[error.code] || 'No se pudo completar la operación. Inténtalo de nuevo.';
+    return codes[error.code] || ('No se pudo completar la operación. Código: ' + (error.code || error.message));
   };
  
   form.addEventListener('submit', async (e) => {
@@ -4396,7 +4396,7 @@ body:not(.planneo-authenticated) #planneoProfile { display:none; }
     try {
       if (!firebase.apps.length) {
         firebase.initializeApp({
-          apiKey: "AIzaSyDlHZChuc600vie5rnDqyBXk4gypQ4tgc",
+          apiKey: "AIzaSyDlHZChuc600vie5rnDqyqBXk4gypQ4tgc",
           authDomain: "planneo-a3bca.firebaseapp.com",
           projectId: "planneo-a3bca",
           storageBucket: "planneo-a3bca.firebasestorage.app",
