@@ -1255,7 +1255,10 @@ textarea { min-height: 100px; resize: vertical; }
         <button type="button" class="advisor-chip" data-advisor-example="Tengo examen de matemáticas el viernes">📚 Examen</button>
         <button type="button" class="advisor-chip" data-advisor-example="Debo entregar un trabajo de historia el miércoles">📝 Entrega</button>
         <button type="button" class="advisor-chip" data-advisor-example="Tengo una exposición la próxima semana">🎤 Exposición</button>
+        <button type="button" class="advisor-chip" data-advisor-example="Quiero organizar mi semana de estudio">📅 Semana</button>
         <button type="button" class="advisor-chip advisor-chip-quiet" id="advisorAnalyzeTasks">↗ Analizar tareas</button>
+        <button type="button" class="advisor-chip advisor-chip-quiet" id="advisorDailyTip">💡 Consejo del día</button>
+        <button type="button" class="advisor-chip advisor-chip-quiet" id="advisorWeeklySummary">📊 Resumen semanal</button>
       </div>
       <label class="advisor-input-label" for="advisorInput">¿Qué necesitas organizar?</label>
       <textarea id="advisorInput" class="advisor-textarea" placeholder="Ej.: examen de química el miércoles"></textarea>
@@ -2357,6 +2360,68 @@ function renderAlarms() {
     $("#advisorResponse").innerHTML = html;
   }
  
+  function showDailyTip() {
+    const tips = [
+      "Estudia en bloques de 25 minutos con 5 de descanso (técnica Pomodoro). Tu cerebro lo agradece.",
+      "Empieza siempre por la tarea más difícil o urgente. El resto se sentirá más fácil.",
+      "Revisa tus tareas al final del día y planifica las 3 más importantes de mañana.",
+      "Bebe agua y toma pausas. Estudiar cansado reduce mucho la concentración.",
+      "Agrupa tareas similares (por ejemplo, todas las de matemáticas juntas) para entrar en flujo.",
+      "Si una tarea te abruma, divídela en 3 pasos más pequeños y empieza por el primero.",
+      "Celebra los avances pequeños. Marcar una tarea como hecha motiva a seguir.",
+      "Prepara tu espacio de estudio la noche anterior para no perder tiempo por la mañana."
+    ];
+    const tip = tips[Math.floor(Math.random() * tips.length)];
+    $("#advisorResponse").innerHTML = `
+      <div class="card" style="background:var(--bg-soft);border-left:4px solid var(--primary);">
+        <strong>💡 Consejo del día</strong>
+        <p style="margin:10px 0 0;line-height:1.5;">${tip}</p>
+      </div>
+    `;
+  }
+
+  function showWeeklySummary() {
+    const now = new Date();
+    const startOfWeek = new Date(now);
+    startOfWeek.setDate(now.getDate() - now.getDay());
+    const endOfWeek = new Date(startOfWeek);
+    endOfWeek.setDate(startOfWeek.getDate() + 6);
+
+    const weekTasks = tasks.filter(t => {
+      if (!t.date) return false;
+      const d = new Date(t.date + "T12:00");
+      return d >= startOfWeek && d <= endOfWeek;
+    });
+
+    const done = weekTasks.filter(t => t.done).length;
+    const pending = weekTasks.length - done;
+    const overdue = weekTasks.filter(t => !t.done && isOverdue(t)).length;
+
+    let html = `
+      <div class="card" style="background:var(--bg-soft);">
+        <strong>📊 Resumen de esta semana</strong>
+        <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin:12px 0;">
+          <div style="text-align:center;padding:8px;background:var(--surface);border-radius:10px;">
+            <b style="font-size:20px;color:var(--primary);">${weekTasks.length}</b><br>
+            <span style="font-size:11px;color:var(--muted);">Tareas</span>
+          </div>
+          <div style="text-align:center;padding:8px;background:var(--surface);border-radius:10px;">
+            <b style="font-size:20px;color:var(--success);">${done}</b><br>
+            <span style="font-size:11px;color:var(--muted);">Hechas</span>
+          </div>
+          <div style="text-align:center;padding:8px;background:var(--surface);border-radius:10px;">
+            <b style="font-size:20px;color:var(--danger);">${overdue}</b><br>
+            <span style="font-size:11px;color:var(--muted);">Vencidas</span>
+          </div>
+        </div>
+        <p style="font-size:13px;color:var(--muted);margin:0;">
+          ${pending === 0 ? "¡Excelente! No tienes pendientes esta semana." : `Te quedan ${pending} tareas pendientes. Enfócate en las vencidas primero.`}
+        </p>
+      </div>
+    `;
+    $("#advisorResponse").innerHTML = html;
+  }
+
   function applyAdvisorPlan() {
     if (!lastAdvisorPlan || !lastAdvisorPlan.allPlans?.length) {
       return toast("Genera un plan primero", "warn");
@@ -3421,6 +3486,8 @@ if (installBtn) {
     if (addSub) addSub.onclick = () => addSubtaskRow();
     $("#advisorGenerate").onclick = generateAdvisorSuggestion;
     $("#advisorAnalyzeTasks").onclick = analyzeCurrentTasks;
+    $("#advisorDailyTip").onclick = showDailyTip;
+    $("#advisorWeeklySummary").onclick = showWeeklySummary;
     document.querySelectorAll("[data-advisor-example]").forEach(btn => {
       btn.onclick = () => {
         const input = $("#advisorInput");
@@ -4234,19 +4301,22 @@ window.addEventListener("load", async () => {
   const profile = document.createElement('div');
   profile.id = 'planneoProfile';
   profile.style.cssText = 'position:relative;';
-  profile.innerHTML = `<button id="planneoProfileButton" type="button" aria-label="Cuenta" aria-expanded="false" style="width:40px;height:40px;border-radius:50%;border:2px solid var(--primary);background:var(--surface);color:var(--primary);font-weight:800;cursor:pointer;display:grid;place-items:center;overflow:hidden;">
-      <span id="planneoProfileInitial">P</span>
-      <img id="planneoProfileImg" alt="" style="display:none;width:100%;height:100%;object-fit:cover;">
+  profile.innerHTML = `<button id="planneoProfileButton" type="button" aria-label="Cuenta" aria-expanded="false" style="width:42px;height:42px;border-radius:50%;border:2.5px solid var(--primary);background:var(--surface);color:var(--primary);font-weight:800;cursor:pointer;display:grid;place-items:center;overflow:hidden;position:relative;padding:0;">
+      <span id="planneoProfileInitial" style="font-size:18px;z-index:1;">P</span>
+      <img id="planneoProfileImg" alt="" style="display:none;position:absolute;inset:0;width:100%;height:100%;object-fit:cover;border-radius:50%;z-index:2;">
     </button>
-    <div id="planneoProfileMenu" hidden style="position:absolute;top:48px;right:0;width:min(280px, calc(100vw - 32px));padding:14px;border:1px solid var(--border);border-radius:16px;background:var(--surface);color:var(--text);box-shadow:var(--shadow-lg);z-index:70;">
+    <div id="planneoProfileMenu" hidden style="position:absolute;top:50px;right:0;width:min(290px, calc(100vw - 32px));padding:16px;border:1px solid var(--border);border-radius:18px;background:var(--surface);color:var(--text);box-shadow:var(--shadow-lg);z-index:70;">
       <p class="planneo-profile-heading" id="planneoProfileHeading">Cuenta</p>
-      <p id="planneoProfileEmail" style="font-size:13px;margin:0 0 10px;overflow-wrap:anywhere;">No has iniciado sesión</p>
-      <button id="planneoProfileLogin" type="button" class="btn btn-primary" style="width:100%;margin-bottom:6px;">Iniciar sesión / Crear cuenta</button>
+      <p id="planneoProfileEmail" style="font-size:13px;margin:0 0 12px;overflow-wrap:anywhere;">No has iniciado sesión</p>
+      <button id="planneoProfileLogin" type="button" class="btn btn-primary" style="width:100%;margin-bottom:8px;">Iniciar sesión / Crear cuenta</button>
       <button id="planneoProfileLogout" type="button" hidden class="btn" style="width:100%;border:1px solid var(--border);">Cerrar sesión</button>
-      <hr style="border:none;border-top:1px solid var(--border);margin:12px 0;">
-      <label style="font-size:13px;font-weight:600;display:block;margin-bottom:6px;">Foto de perfil</label>
-      <input type="file" id="planneoProfilePhoto" accept="image/*" style="width:100%;font-size:12px;">
-      <button id="planneoProfilePhotoClear" type="button" style="margin-top:6px;font-size:12px;background:none;border:none;color:var(--muted);cursor:pointer;">Quitar foto</button>
+      <hr style="border:none;border-top:1px solid var(--border);margin:14px 0;">
+      <p style="font-size:13px;font-weight:700;margin:0 0 8px;">Foto de perfil</p>
+      <label for="planneoProfilePhoto" id="planneoProfilePhotoLabel" style="display:flex;align-items:center;justify-content:center;gap:8px;width:100%;padding:10px 12px;border:1.5px dashed var(--primary);border-radius:12px;background:var(--primary-light);color:var(--primary);font-weight:600;font-size:13px;cursor:pointer;transition:all .15s;">
+        📷 Subir foto
+      </label>
+      <input type="file" id="planneoProfilePhoto" accept="image/*" style="display:none;">
+      <button id="planneoProfilePhotoClear" type="button" style="display:none;margin-top:8px;width:100%;padding:8px;border:none;background:var(--bg-soft);border-radius:10px;color:var(--muted);font-size:12px;font-weight:600;cursor:pointer;">Quitar foto</button>
     </div>`;
 
   // Insert into the nav menu, before the settings button
@@ -4296,13 +4366,16 @@ window.addEventListener("load", async () => {
 
   function applyPhoto() {
     const data = localStorage.getItem('planneo_profile_photo');
+    const clearBtn = profile.querySelector('#planneoProfilePhotoClear');
     if (data && imgEl && initialSpan) {
       imgEl.src = data;
       imgEl.style.display = 'block';
       initialSpan.style.display = 'none';
+      if (clearBtn) clearBtn.style.display = 'block';
     } else if (imgEl && initialSpan) {
       imgEl.style.display = 'none';
       initialSpan.style.display = 'block';
+      if (clearBtn) clearBtn.style.display = 'none';
     }
   }
 
