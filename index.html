@@ -4068,7 +4068,7 @@ window.addEventListener("load", async () => {
 /* ===== Planneo Auth (versión limpia) ===== */
 (() => {
   const firebaseConfig = {
-    apiKey: "AIzaSyDlHZChuc600vie5rnDqyBXk4gypQ4tgc",
+    apiKey: "AIzaSyDlHZChuc600vie5rnDqyqBXk4gypQ4tgc",
     authDomain: "planneo-a3bca.firebaseapp.com",
     projectId: "planneo-a3bca",
     storageBucket: "planneo-a3bca.firebasestorage.app",
@@ -4178,9 +4178,18 @@ window.addEventListener("load", async () => {
     if (gate) gate.hidden = true;
   }
   function showAuth() {
-    if (gate) gate.hidden = false;
+    if (gate) {
+      gate.hidden = false;
+      // Focus email field for better UX
+      setTimeout(() => {
+        const email = document.getElementById('authEmail');
+        if (email) email.focus();
+      }, 100);
+    }
   }
   window.planneoShowAuth = showAuth;
+  // Also allow opening via URL hash for debugging
+  if (location.hash === '#login') showAuth();
 
   closeBtn?.addEventListener('click', hideAuth);
   skipBtn?.addEventListener('click', hideAuth);
@@ -4544,7 +4553,7 @@ window.addEventListener("load", async () => {
     try {
       if (!firebase.apps.length) {
         firebase.initializeApp({
-          apiKey: "AIzaSyDlHZChuc600vie5rnDqyBXk4gypQ4tgc",
+          apiKey: "AIzaSyDlHZChuc600vie5rnDqyqBXk4gypQ4tgc",
           authDomain: "planneo-a3bca.firebaseapp.com",
           projectId: "planneo-a3bca",
           storageBucket: "planneo-a3bca.firebasestorage.app",
