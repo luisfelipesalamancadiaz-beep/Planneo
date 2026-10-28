@@ -3702,14 +3702,14 @@ window.planneoMessaging = null;
 window.addEventListener("load", async () => {
     try {
         // Configuración de Firebase
-        const firebaseConfig = {
-            apiKey: "AIzaSyDlHZChuc600vie5rnDqyqBXk4gypQ4tgc",
-            authDomain: "planneo-a3bca.firebaseapp.com",
-            projectId: "planneo-a3bca",
-            storageBucket: "planneo-a3bca.firebasestorage.app",
-            messagingSenderId: "594631604240",
-            appId: "1:594631604240:web:2be7df45a75e284235b295",
-            measurementId: "G-T10WL2SLPE"
+       const firebaseConfig = {
+  apiKey: "AIzaSyDlHZChuc600vie5rnDqyqBXk4gypQ4tgc",
+  authDomain: "planneo-a3bca.firebaseapp.com",
+  projectId: "planneo-a3bca",
+  storageBucket: "planneo-a3bca.firebasestorage.app",
+  messagingSenderId: "594631604240",
+  appId: "1:594631604240:web:2be7df45a75e284235b295",
+  measurementId: "G-T10WL2SLPE"
         };
  
         // Inicializar Firebase una sola vez
@@ -3810,209 +3810,235 @@ window.addEventListener("load", async () => {
   50% { transform: rotate(8deg); }
 }
 /* ===== ACCESO Y CUENTAS DE PLANNEO ===== */
- 
+
 .auth-gate {
-    position: fixed;
-    inset: 0;
-    z-index: 99999;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    padding: 20px;
-    background: #080d18;
-    color: #eaf7ff;
-    font-family: inherit;
+  position: fixed;
+  inset: 0;
+  z-index: 10000;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
+  background: rgba(15, 23, 42, 0.55);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  font-family: inherit;
+  animation: authFadeIn 0.25s ease;
 }
- 
-.auth-gate[hidden] {
-    display: none !important;
-}
-.auth-gate:not([hidden]) {
-    display: flex !important;
-    z-index: 999999 !important;
-}
- 
+@keyframes authFadeIn { from { opacity: 0; } to { opacity: 1; } }
+.auth-gate[hidden] { display: none !important; }
+.auth-gate:not([hidden]) { display: flex !important; }
+
 .auth-card {
-    width: 100%;
-    max-width: 410px;
-    padding: 30px;
-    border: 1px solid rgba(54, 228, 255, 0.2);
-    border-radius: 22px;
-    background: #101a2b;
-    box-shadow: 0 20px 70px rgba(0, 0, 0, 0.35);
+  width: 100%;
+  max-width: 420px;
+  padding: 36px 32px 28px;
+  border: 1px solid var(--border);
+  border-radius: 28px;
+  background: var(--surface);
+  color: var(--text);
+  box-shadow: var(--shadow-lg);
+  position: relative;
+  animation: authCardIn 0.35s cubic-bezier(0.22, 1, 0.36, 1);
 }
- 
+@keyframes authCardIn { from { opacity: 0; transform: translateY(20px) scale(0.96); } to { opacity: 1; transform: none; } }
+
+.auth-close {
+  position: absolute;
+  top: 14px;
+  right: 14px;
+  width: 36px;
+  height: 36px;
+  border: none;
+  background: var(--bg-soft);
+  border-radius: 50%;
+  color: var(--muted);
+  font-size: 22px;
+  line-height: 1;
+  cursor: pointer;
+  display: grid;
+  place-items: center;
+  transition: all 0.15s;
+}
+.auth-close:hover { background: var(--border); color: var(--text); }
+
 .auth-brand {
-    margin-bottom: 8px;
-    color: #36e4ff;
-    font-size: 13px;
-    font-weight: 800;
-    letter-spacing: 3px;
-    text-align: center;
+  text-align: center;
+  color: var(--primary);
+  font-weight: 800;
+  letter-spacing: 2.5px;
+  font-size: 13px;
+  margin-bottom: 6px;
 }
- 
+
 .auth-card h2 {
-    margin: 10px 0;
-    text-align: center;
-    font-size: 27px;
+  margin: 6px 0 8px;
+  text-align: center;
+  font-size: 28px;
+  font-weight: 800;
+  letter-spacing: -0.5px;
 }
- 
+
 .auth-description {
-    margin-bottom: 24px;
-    color: #8ba4bd;
-    font-size: 14px;
-    line-height: 1.5;
-    text-align: center;
+  margin-bottom: 24px;
+  color: var(--muted);
+  font-size: 14.5px;
+  line-height: 1.55;
+  text-align: center;
 }
- 
+
 .auth-tabs {
-    display: flex;
-    gap: 8px;
-    margin-bottom: 20px;
+  display: flex;
+  gap: 8px;
+  margin-bottom: 20px;
+  background: var(--bg-soft);
+  padding: 4px;
+  border-radius: 14px;
 }
- 
+
 .auth-tabs button {
-    flex: 1;
-    padding: 11px;
-    border: 1px solid #26384e;
-    border-radius: 10px;
-    background: transparent;
-    color: #8ba4bd;
-    cursor: pointer;
+  flex: 1;
+  padding: 10px 8px;
+  border: none;
+  border-radius: 10px;
+  background: transparent;
+  color: var(--muted);
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.15s;
 }
- 
+
 .auth-tabs button.active {
-    border-color: #36e4ff;
-    background: rgba(54, 228, 255, 0.1);
-    color: #36e4ff;
+  background: var(--surface);
+  color: var(--primary);
+  box-shadow: 0 1px 4px rgba(0,0,0,0.08);
 }
- 
+
 .auth-card label {
-    display: block;
-    margin: 14px 0 7px;
-    color: #eaf7ff;
-    font-size: 13px;
-    font-weight: 600;
+  display: block;
+  margin: 16px 0 6px;
+  color: var(--text);
+  font-size: 13px;
+  font-weight: 600;
 }
- 
+
 .auth-card input {
-    box-sizing: border-box;
-    width: 100%;
-    padding: 13px;
-    border: 1px solid #26384e;
-    border-radius: 10px;
-    outline: none;
-    background: #080d18;
-    color: #eaf7ff;
-    font: inherit;
+  box-sizing: border-box;
+  width: 100%;
+  padding: 13px 14px;
+  border: 1.5px solid var(--border);
+  border-radius: 12px;
+  outline: none;
+  background: var(--bg);
+  color: var(--text);
+  font: inherit;
+  transition: border-color 0.15s, box-shadow 0.15s;
 }
- 
+
 .auth-card input:focus {
-    border-color: #36e4ff;
-    box-shadow: 0 0 0 3px rgba(54, 228, 255, 0.1);
+  border-color: var(--primary);
+  box-shadow: 0 0 0 3px var(--primary-light);
 }
- 
+
 .auth-submit {
-    width: 100%;
-    margin-top: 22px;
-    padding: 14px;
-    border: none;
-    border-radius: 10px;
-    background: #36e4ff;
-    color: #080d18;
-    font-size: 15px;
-    font-weight: 800;
-    cursor: pointer;
+  width: 100%;
+  margin-top: 22px;
+  padding: 14px;
+  border: none;
+  border-radius: 12px;
+  background: var(--primary);
+  color: white;
+  font-size: 15.5px;
+  font-weight: 700;
+  cursor: pointer;
+  transition: all 0.15s;
 }
- 
-.auth-submit:disabled {
-    opacity: 0.6;
-    cursor: wait;
-}
- 
+.auth-submit:hover { background: var(--primary-dark); transform: translateY(-1px); }
+.auth-submit:disabled { opacity: 0.65; cursor: wait; transform: none; }
+
 .auth-reset {
-    display: block;
-    margin: 16px auto 0;
-    padding: 5px;
-    border: none;
-    background: transparent;
-    color: #8ba4bd;
-    cursor: pointer;
+  display: block;
+  margin: 14px auto 0;
+  padding: 6px;
+  border: none;
+  background: transparent;
+  color: var(--muted);
+  font-size: 13px;
+  cursor: pointer;
 }
- 
+.auth-reset:hover { color: var(--primary); }
+
+.auth-skip {
+  display: block;
+  width: 100%;
+  margin-top: 12px;
+  padding: 12px;
+  border: 1.5px solid var(--border);
+  border-radius: 12px;
+  background: transparent;
+  color: var(--muted);
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.15s;
+}
+.auth-skip:hover { border-color: var(--primary); color: var(--primary); background: var(--primary-light); }
+
 .auth-message {
-    margin-top: 14px;
-    color: #8ba4bd;
-    font-size: 13px;
-    line-height: 1.5;
-    text-align: center;
-    overflow-wrap: anywhere;
+  margin-top: 14px;
+  color: var(--muted);
+  font-size: 13px;
+  line-height: 1.5;
+  text-align: center;
+  overflow-wrap: anywhere;
+  min-height: 1.2em;
 }
- 
-.account-pill {
-    display: flex;
-    align-items: center;
-    gap: 10px;
-    flex-wrap: wrap;
-}
- 
-.account-email {
-    color: #8ba4bd;
-    font-size: 12px;
-    overflow-wrap: anywhere;
-}
- 
-.auth-logout {
-    padding: 7px 11px;
-    border: 1px solid #26384e;
-    border-radius: 8px;
-    background: transparent;
-    color: #eaf7ff;
-    cursor: pointer;
-}
-.auth-card { backdrop-filter: blur(18px); }
+
 .auth-password-wrap { position: relative; }
 .auth-password-wrap input { padding-right: 82px; }
 .auth-password-toggle {
-    position:absolute; right:8px; top:50%; transform:translateY(-50%);
-    border:0; border-radius:7px; padding:7px 9px; background:transparent;
-    color:#36e4ff; font:600 12px inherit; cursor:pointer;
+  position: absolute; right: 8px; top: 50%; transform: translateY(-50%);
+  border: 0; border-radius: 8px; padding: 6px 10px; background: transparent;
+  color: var(--primary); font: 600 12px inherit; cursor: pointer;
 }
-.auth-submit { transition:transform .18s ease, filter .18s ease; }
-.auth-submit:hover { filter:brightness(1.08); transform:translateY(-1px); }
-.auth-card input:focus-visible, .auth-tabs button:focus-visible, .auth-submit:focus-visible,
-.auth-password-toggle:focus-visible { outline:2px solid #36e4ff; outline-offset:2px; }
-#planneoProfile { position:fixed; top:14px; right:16px; z-index:99990; font-family:inherit; }
+
+#planneoProfile { position: fixed; top: 14px; right: 16px; z-index: 50; font-family: inherit; }
 #planneoProfileButton {
-  width:46px; height:46px; border-radius:50%; border:2px solid rgba(54,228,255,.8);
-  background:linear-gradient(145deg,#18334a,#101a2b); color:#eaf7ff; font-weight:800;
-  cursor:pointer; box-shadow:0 8px 25px rgba(0,0,0,.24); display:grid; place-items:center;
+  width: 46px; height: 46px; border-radius: 50%; border: 2px solid var(--primary);
+  background: var(--surface); color: var(--primary); font-weight: 800;
+  cursor: pointer; box-shadow: var(--shadow); display: grid; place-items: center;
+  transition: all 0.15s;
 }
+#planneoProfileButton:hover { transform: scale(1.05); box-shadow: var(--shadow-lg); }
 #planneoProfileMenu {
-  position:absolute; top:54px; right:0; width:min(290px, calc(100vw - 28px));
-  padding:14px; border:1px solid var(--border, #26384e); border-radius:16px;
-  background:var(--panel, #101a2b); color:var(--text, #eaf7ff);
-  box-shadow:0 18px 50px rgba(0,0,0,.3);
+  position: absolute; top: 54px; right: 0; width: min(290px, calc(100vw - 28px));
+  padding: 14px; border: 1px solid var(--border); border-radius: 16px;
+  background: var(--surface); color: var(--text);
+  box-shadow: var(--shadow-lg);
 }
-#planneoProfileMenu[hidden] { display:none !important; }
-.planneo-profile-heading { font-size:12px; color:var(--muted, #8ba4bd); margin:0 0 5px; }
-#planneoProfileEmail { font-size:13px; overflow-wrap:anywhere; margin:0 0 12px; }
-#planneoProfileLogout { width:100%; border:1px solid rgba(255,120,120,.35); border-radius:10px; padding:10px;
-  background:rgba(255,100,100,.08); color:inherit; font:inherit; font-weight:700; cursor:pointer; }
-body:not(.planneo-authenticated) #planneoProfile { display:none; }
-@media (max-width:480px) {
-  .auth-gate { padding:14px; }
-  .auth-card { padding:24px 20px; border-radius:20px; }
-  .auth-card h2 { font-size:24px; }
-  #planneoProfile { top:10px; right:10px; }
+#planneoProfileMenu[hidden] { display: none !important; }
+.planneo-profile-heading { font-size: 12px; color: var(--muted); margin: 0 0 5px; }
+#planneoProfileEmail { font-size: 13px; overflow-wrap: anywhere; margin: 0 0 12px; }
+#planneoProfileLogout, #planneoProfileLogin {
+  width: 100%; border: 1px solid var(--border); border-radius: 10px; padding: 10px;
+  background: var(--bg-soft); color: inherit; font: inherit; font-weight: 700; cursor: pointer;
+  margin-top: 4px;
+}
+#planneoProfileLogout { border-color: rgba(239,68,68,.35); background: rgba(239,68,68,.08); color: var(--danger); }
+
+@media (max-width: 480px) {
+  .auth-gate { padding: 14px; }
+  .auth-card { padding: 28px 20px 22px; border-radius: 22px; }
+  .auth-card h2 { font-size: 24px; }
+  #planneoProfile { top: 10px; right: 10px; }
 }
 </style>
 <!-- ===== ACCESO A PLANNEO ===== -->
 <div id="authGate" class="auth-gate" hidden>
   <section class="auth-card">
+    <button id="authClose" class="auth-close" type="button" aria-label="Cerrar">×</button>
     <div class="auth-brand">PLANNEO</div>
     <h2 id="authTitle">Bienvenido de nuevo</h2>
-    <p class="auth-description">Tu espacio personal para organizar tus tareas, estudiar y avanzar cada día.</p>
+    <p class="auth-description">Inicia sesión para sincronizar tus datos entre dispositivos. Puedes usar Planneo sin cuenta.</p>
  
     <div class="auth-tabs">
       <button type="button" id="authTabLogin" class="active">Iniciar sesión</button>
@@ -4033,6 +4059,7 @@ body:not(.planneo-authenticated) #planneoProfile { display:none; }
     </form>
  
     <button id="authReset" class="auth-reset" type="button">¿Olvidaste tu contraseña?</button>
+    <button id="authSkip" class="auth-skip" type="button">Continuar sin cuenta</button>
     <div id="authMessage" class="auth-message" role="status"></div>
   </section>
 </div>
@@ -4041,7 +4068,7 @@ body:not(.planneo-authenticated) #planneoProfile { display:none; }
 /* ===== Planneo Auth (versión limpia) ===== */
 (() => {
   const firebaseConfig = {
-    apiKey: "AIzaSyDlHZChuc600vie5rnDqyqBXk4gypQ4tgc",
+    apiKey: "AIzaSyDlHZChuc600vie5rnDqyBXk4gypQ4tgc",
     authDomain: "planneo-a3bca.firebaseapp.com",
     projectId: "planneo-a3bca",
     storageBucket: "planneo-a3bca.firebasestorage.app",
@@ -4104,7 +4131,7 @@ body:not(.planneo-authenticated) #planneoProfile { display:none; }
       'auth/too-many-requests': 'Hubo demasiados intentos. Espera un momento.',
       'auth/network-request-failed': 'No se pudo conectar. Revisa tu internet.'
     };
-    return codes[error.code] || ('No se pudo completar la operación. Código: ' + (error.code || error.message));
+    return codes[error.code] || 'No se pudo completar la operación. Inténtalo de nuevo.';
   };
  
   form.addEventListener('submit', async (e) => {
@@ -4144,22 +4171,35 @@ body:not(.planneo-authenticated) #planneoProfile { display:none; }
     }
   });
  
+  const closeBtn = document.getElementById('authClose');
+  const skipBtn = document.getElementById('authSkip');
+
+  function hideAuth() {
+    if (gate) gate.hidden = true;
+  }
+  function showAuth() {
+    if (gate) gate.hidden = false;
+  }
+  window.planneoShowAuth = showAuth;
+
+  closeBtn?.addEventListener('click', hideAuth);
+  skipBtn?.addEventListener('click', hideAuth);
+
   function startAuth() {
     if (!window.firebase) {
       say('No se pudo cargar Firebase. Recarga la página.', true);
-      gate.hidden = false;
       return;
     }
     if (!firebase.apps.length) firebase.initializeApp(firebaseConfig);
  
     firebase.auth().onAuthStateChanged((user) => {
       if (user) {
-        gate.hidden = true;
+        hideAuth();
         document.body.classList.add('planneo-authenticated');
         console.log('Sesión iniciada:', user.email);
       } else {
-        gate.hidden = false;
         document.body.classList.remove('planneo-authenticated');
+        // No forzamos el login; el usuario puede usar la app sin cuenta
       }
     });
   }
@@ -4184,17 +4224,21 @@ body:not(.planneo-authenticated) #planneoProfile { display:none; }
  
   const profile = document.createElement('div');
   profile.id = 'planneoProfile';
-  profile.innerHTML = `<button id="planneoProfileButton" type="button" aria-label="Abrir menú de cuenta" aria-expanded="false">P</button>
+  profile.innerHTML = `<button id="planneoProfileButton" type="button" aria-label="Cuenta" aria-expanded="false">P</button>
     <div id="planneoProfileMenu" hidden>
-      <p class="planneo-profile-heading">Sesión iniciada</p>
-      <p id="planneoProfileEmail">Cuenta Planneo</p>
-      <button id="planneoProfileLogout" type="button">Cerrar sesión</button>
+      <p class="planneo-profile-heading" id="planneoProfileHeading">Cuenta</p>
+      <p id="planneoProfileEmail">No has iniciado sesión</p>
+      <button id="planneoProfileLogin" type="button">Iniciar sesión / Crear cuenta</button>
+      <button id="planneoProfileLogout" type="button" hidden>Cerrar sesión</button>
     </div>`;
   document.body.appendChild(profile);
   const button = profile.querySelector('#planneoProfileButton');
   const menu = profile.querySelector('#planneoProfileMenu');
+  const heading = profile.querySelector('#planneoProfileHeading');
   const emailLabel = profile.querySelector('#planneoProfileEmail');
+  const loginBtn = profile.querySelector('#planneoProfileLogin');
   const logout = profile.querySelector('#planneoProfileLogout');
+
   button.addEventListener('click', () => {
     menu.hidden = !menu.hidden;
     button.setAttribute('aria-expanded', String(!menu.hidden));
@@ -4202,6 +4246,12 @@ body:not(.planneo-authenticated) #planneoProfile { display:none; }
   document.addEventListener('click', event => {
     if (!profile.contains(event.target)) { menu.hidden = true; button.setAttribute('aria-expanded', 'false'); }
   });
+
+  loginBtn?.addEventListener('click', () => {
+    menu.hidden = true;
+    if (typeof window.planneoShowAuth === 'function') window.planneoShowAuth();
+  });
+
   logout.addEventListener('click', async () => {
     if (!window.firebase || !firebase.auth) return;
     if (!confirm('¿Quieres cerrar sesión? Tus datos guardados en la nube seguirán en tu cuenta.')) return;
@@ -4213,11 +4263,22 @@ body:not(.planneo-authenticated) #planneoProfile { display:none; }
   });
  
   function updateProfile(user) {
-    if (!user) return;
-    const email = user.email || 'Cuenta Planneo';
-    emailLabel.textContent = email;
-    button.textContent = (email[0] || 'P').toLocaleUpperCase('es');
-    button.title = email;
+    if (user) {
+      const email = user.email || 'Cuenta Planneo';
+      emailLabel.textContent = email;
+      button.textContent = (email[0] || 'P').toLocaleUpperCase('es');
+      button.title = email;
+      heading.textContent = 'Sesión iniciada';
+      loginBtn.hidden = true;
+      logout.hidden = false;
+    } else {
+      emailLabel.textContent = 'Usa Planneo sin cuenta o inicia sesión para sincronizar.';
+      button.textContent = 'P';
+      button.title = 'Iniciar sesión';
+      heading.textContent = 'Cuenta';
+      loginBtn.hidden = false;
+      logout.hidden = true;
+    }
   }
   function connectProfile() {
     if (window.firebase && firebase.auth) firebase.auth().onAuthStateChanged(updateProfile);
@@ -4350,11 +4411,14 @@ body:not(.planneo-authenticated) #planneoProfile { display:none; }
  
   async function onUserChange(user) {
     const gate = document.getElementById("authGate");
-    if (gate) gate.hidden = !!user;
+    if (user && gate) gate.hidden = true;
     document.body.classList.toggle("planneo-authenticated", !!user);
  
     if (!user) {
       currentUserId = null;
+      // Remove account pill if exists
+      const pill = document.getElementById("accountPill");
+      if (pill) pill.remove();
       return;
     }
  
@@ -4396,7 +4460,7 @@ body:not(.planneo-authenticated) #planneoProfile { display:none; }
     try {
       if (!firebase.apps.length) {
         firebase.initializeApp({
-          apiKey: "AIzaSyDlHZChuc600vie5rnDqyqBXk4gypQ4tgc",
+          apiKey: "AIzaSyDlHZChuc600vie5rnDqyBXk4gypQ4tgc",
           authDomain: "planneo-a3bca.firebaseapp.com",
           projectId: "planneo-a3bca",
           storageBucket: "planneo-a3bca.firebasestorage.app",
