@@ -4001,7 +4001,7 @@ window.addEventListener("load", async () => {
   color: var(--primary); font: 600 12px inherit; cursor: pointer;
 }
 
-#planneoProfile { position: fixed; top: 14px; right: 16px; z-index: 50; font-family: inherit; }
+#planneoProfile { position: relative; font-family: inherit; }
 #planneoProfileButton {
   width: 46px; height: 46px; border-radius: 50%; border: 2px solid var(--primary);
   background: var(--surface); color: var(--primary); font-weight: 800;
@@ -4224,14 +4224,32 @@ window.addEventListener("load", async () => {
  
   const profile = document.createElement('div');
   profile.id = 'planneoProfile';
-  profile.innerHTML = `<button id="planneoProfileButton" type="button" aria-label="Cuenta" aria-expanded="false">P</button>
-    <div id="planneoProfileMenu" hidden>
+  profile.style.cssText = 'position:relative;';
+  profile.innerHTML = `<button id="planneoProfileButton" type="button" aria-label="Cuenta" aria-expanded="false" style="width:40px;height:40px;border-radius:50%;border:2px solid var(--primary);background:var(--surface);color:var(--primary);font-weight:800;cursor:pointer;display:grid;place-items:center;overflow:hidden;">
+      <span id="planneoProfileInitial">P</span>
+      <img id="planneoProfileImg" alt="" style="display:none;width:100%;height:100%;object-fit:cover;">
+    </button>
+    <div id="planneoProfileMenu" hidden style="position:absolute;top:48px;right:0;width:min(280px, calc(100vw - 32px));padding:14px;border:1px solid var(--border);border-radius:16px;background:var(--surface);color:var(--text);box-shadow:var(--shadow-lg);z-index:70;">
       <p class="planneo-profile-heading" id="planneoProfileHeading">Cuenta</p>
-      <p id="planneoProfileEmail">No has iniciado sesión</p>
-      <button id="planneoProfileLogin" type="button">Iniciar sesión / Crear cuenta</button>
-      <button id="planneoProfileLogout" type="button" hidden>Cerrar sesión</button>
+      <p id="planneoProfileEmail" style="font-size:13px;margin:0 0 10px;overflow-wrap:anywhere;">No has iniciado sesión</p>
+      <button id="planneoProfileLogin" type="button" class="btn btn-primary" style="width:100%;margin-bottom:6px;">Iniciar sesión / Crear cuenta</button>
+      <button id="planneoProfileLogout" type="button" hidden class="btn" style="width:100%;border:1px solid var(--border);">Cerrar sesión</button>
+      <hr style="border:none;border-top:1px solid var(--border);margin:12px 0;">
+      <label style="font-size:13px;font-weight:600;display:block;margin-bottom:6px;">Foto de perfil</label>
+      <input type="file" id="planneoProfilePhoto" accept="image/*" style="width:100%;font-size:12px;">
+      <button id="planneoProfilePhotoClear" type="button" style="margin-top:6px;font-size:12px;background:none;border:none;color:var(--muted);cursor:pointer;">Quitar foto</button>
     </div>`;
-  document.body.appendChild(profile);
+
+  // Insert into the nav menu, before the settings button
+  const navMenu = document.querySelector('.nav-menu');
+  const settingsBtn = document.getElementById('settingsBtn');
+  if (navMenu && settingsBtn) {
+    const li = document.createElement('li');
+    li.appendChild(profile);
+    navMenu.insertBefore(li, settingsBtn.parentElement);
+  } else {
+    document.body.appendChild(profile);
+  }
   const button = profile.querySelector('#planneoProfileButton');
   const menu = profile.querySelector('#planneoProfileMenu');
   const heading = profile.querySelector('#planneoProfileHeading');
@@ -4262,18 +4280,60 @@ window.addEventListener("load", async () => {
     finally { logout.disabled = false; logout.textContent = 'Cerrar sesión'; }
   });
  
+  const initialSpan = profile.querySelector('#planneoProfileInitial');
+  const imgEl = profile.querySelector('#planneoProfileImg');
+  const photoInput = profile.querySelector('#planneoProfilePhoto');
+  const clearPhotoBtn = profile.querySelector('#planneoProfilePhotoClear');
+
+  function applyPhoto() {
+    const data = localStorage.getItem('planneo_profile_photo');
+    if (data && imgEl && initialSpan) {
+      imgEl.src = data;
+      imgEl.style.display = 'block';
+      initialSpan.style.display = 'none';
+    } else if (imgEl && initialSpan) {
+      imgEl.style.display = 'none';
+      initialSpan.style.display = 'block';
+    }
+  }
+
+  photoInput?.addEventListener('change', (e) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+    const reader = new FileReader();
+    reader.onload = () => {
+      const result = reader.result;
+      // Limit size roughly (data URL of small images is ok)
+      if (result.length > 500000) {
+        alert('La imagen es muy grande. Elige una más pequeña.');
+        return;
+      }
+      localStorage.setItem('planneo_profile_photo', result);
+      applyPhoto();
+      if (typeof window.planneoSaveToCloud === 'function') window.planneoSaveToCloud();
+    };
+    reader.readAsDataURL(file);
+  });
+
+  clearPhotoBtn?.addEventListener('click', () => {
+    localStorage.removeItem('planneo_profile_photo');
+    applyPhoto();
+    if (typeof window.planneoSaveToCloud === 'function') window.planneoSaveToCloud();
+  });
+
   function updateProfile(user) {
+    applyPhoto();
     if (user) {
       const email = user.email || 'Cuenta Planneo';
       emailLabel.textContent = email;
-      button.textContent = (email[0] || 'P').toLocaleUpperCase('es');
+      if (initialSpan) initialSpan.textContent = (email[0] || 'P').toLocaleUpperCase('es');
       button.title = email;
       heading.textContent = 'Sesión iniciada';
       loginBtn.hidden = true;
       logout.hidden = false;
     } else {
       emailLabel.textContent = 'Usa Planneo sin cuenta o inicia sesión para sincronizar.';
-      button.textContent = 'P';
+      if (initialSpan) initialSpan.textContent = 'P';
       button.title = 'Iniciar sesión';
       heading.textContent = 'Cuenta';
       loginBtn.hidden = false;
@@ -4285,6 +4345,27 @@ window.addEventListener("load", async () => {
   }
   if (window.firebase) connectProfile();
   else window.addEventListener('load', connectProfile, {once:true});
+
+  // Añadir acceso rápido a login dentro de Ajustes
+  function addSettingsLogin() {
+    const panel = document.getElementById('settingsPanel');
+    if (!panel || document.getElementById('settingsLoginBox')) return;
+    const box = document.createElement('div');
+    box.id = 'settingsLoginBox';
+    box.style.cssText = 'margin:0 0 14px;padding:12px;background:var(--bg-soft);border-radius:12px;';
+    box.innerHTML = `<p style="margin:0 0 8px;font-size:13px;color:var(--muted);">Sincroniza tus datos entre dispositivos</p>
+      <button type="button" id="settingsOpenAuth" class="btn btn-primary" style="width:100%;">Iniciar sesión / Crear cuenta</button>`;
+    panel.insertBefore(box, panel.firstChild);
+    document.getElementById('settingsOpenAuth')?.addEventListener('click', () => {
+      if (typeof window.planneoShowAuth === 'function') window.planneoShowAuth();
+      panel.classList.remove('open');
+    });
+  }
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', addSettingsLogin);
+  } else {
+    addSettingsLogin();
+  }
 })();
 </script>
  
@@ -4328,7 +4409,8 @@ window.addEventListener("load", async () => {
       doneTotal: get(DB_KEYS.done, 0),
       pomoSessions: get(DB_KEYS.pomo, 0),
       config: get(DB_KEYS.config, {}),
-      alarms: get(DB_KEYS.alarms, [])
+      alarms: get(DB_KEYS.alarms, []),
+      profilePhoto: localStorage.getItem('planneo_profile_photo') || null
     };
   }
  
@@ -4346,6 +4428,8 @@ window.addEventListener("load", async () => {
     set(DB_KEYS.pomo, data.pomoSessions || 0);
     set(DB_KEYS.config, data.config || {});
     set(DB_KEYS.alarms, data.alarms || []);
+    if (data.profilePhoto) localStorage.setItem('planneo_profile_photo', data.profilePhoto);
+    else localStorage.removeItem('planneo_profile_photo');
   }
  
   async function loadFromCloud(uid) {
@@ -4460,7 +4544,7 @@ window.addEventListener("load", async () => {
     try {
       if (!firebase.apps.length) {
         firebase.initializeApp({
-          apiKey: "AIzaSyDlHZChuc600vie5rnDqyqBXk4gypQ4tgc",
+          apiKey: "AIzaSyDlHZChuc600vie5rnDqyBXk4gypQ4tgc",
           authDomain: "planneo-a3bca.firebaseapp.com",
           projectId: "planneo-a3bca",
           storageBucket: "planneo-a3bca.firebasestorage.app",
