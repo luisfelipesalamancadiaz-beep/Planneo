@@ -4465,51 +4465,6 @@ body:not(.planneo-authenticated) #planneoProfile { display:none; }
 </script>
 
 
-<script>
-/* Forzar pantalla de login + ayuda para limpiar caché de PWA */
-(() => {
-  function forceLoginVisible() {
-    const gate = document.getElementById('authGate');
-    if (!gate) return;
-    // Si Firebase aún no respondió o no hay usuario, mostrar login
-    const hasUser = window.firebase && firebase.auth && firebase.auth().currentUser;
-    if (!hasUser) {
-      gate.hidden = false;
-      gate.style.display = 'flex';
-      gate.style.zIndex = '999999';
-    }
-  }
-
-  // Mostrar login lo antes posible
-  setTimeout(forceLoginVisible, 800);
-  setTimeout(forceLoginVisible, 2500);
-
-  // Botón flotante de emergencia (por si la pantalla no aparece)
-  const btn = document.createElement('button');
-  btn.id = 'forceLoginBtn';
-  btn.textContent = '🔐 Iniciar sesión';
-  btn.style.cssText = `
-    position:fixed; bottom:18px; left:18px; z-index:999998;
-    padding:12px 16px; border-radius:12px; border:none;
-    background:#6366f1; color:white; font-weight:700; cursor:pointer;
-    box-shadow:0 4px 16px rgba(0,0,0,.25); font-family:inherit;
-  `;
-  btn.onclick = () => {
-    forceLoginVisible();
-    const gate = document.getElementById('authGate');
-    if (gate) gate.scrollIntoView();
-  };
-  document.body.appendChild(btn);
-
-  // Ocultar el botón cuando hay sesión
-  function updateForceBtn() {
-    const hasUser = window.firebase && firebase.auth && firebase.auth().currentUser;
-    btn.style.display = hasUser ? 'none' : 'block';
-  }
-  setInterval(updateForceBtn, 1500);
-  window.addEventListener('load', updateForceBtn);
-})();
-</script>
 
 </body>
 </html>
