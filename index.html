@@ -57,7 +57,7 @@
 html { -webkit-text-size-adjust: 100%; font-size: var(--font-size); }
 body { font-family: var(--font); background: var(--bg); color: var(--text); min-height: 100vh; line-height: 1.5; transition: background .2s, color .2s; }
 :focus-visible { outline: 2px solid var(--primary); outline-offset: 2px; }
-
+ 
 #splash {
   position: fixed; inset: 0; background: linear-gradient(135deg, #4f46e5 0%, #7c3aed 50%, #6366f1 100%);
   display: flex; flex-direction: column; align-items: center; justify-content: center;
@@ -82,7 +82,7 @@ body { font-family: var(--font); background: var(--bg); color: var(--text); min-
 @keyframes logoIn { from { opacity: 0; transform: translateY(20px) scale(0.95); } to { opacity: 1; transform: none; } }
 @keyframes tagIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 0.95; transform: none; } }
 @keyframes fadeOut { to { opacity: 0; visibility: hidden; } }
-
+ 
 nav {
   background: var(--surface); border-bottom: 1px solid var(--border);
   padding: calc(10px * var(--density)) 20px; display: flex; align-items: center; gap: 16px;
@@ -114,7 +114,7 @@ nav {
 .search-type { font-size: 10px; font-weight: 700; color: var(--primary); text-transform: uppercase; }
 .search-title { font-weight: 600; }
 .search-detail { font-size: 12px; color: var(--muted); }
-
+ 
 .settings-panel {
   display: none; position: absolute; right: 16px; top: 58px; width: 380px;
   background: var(--surface); border: 1px solid var(--border); border-radius: 14px;
@@ -135,15 +135,15 @@ nav {
 .slider:before { content: ""; position: absolute; width: 18px; height: 18px; left: 3px; top: 3px; background: white; border-radius: 50%; transition: .2s; }
 .switch input:checked + .slider { background: var(--primary); }
 .switch input:checked + .slider:before { transform: translateX(18px); }
-
+ 
 .container { max-width: 1080px; margin: 0 auto; padding: calc(24px * var(--density)) 16px 80px; }
 .view { display: none; }
 .view.active { display: block; animation: fadeIn .25s ease; }
 @keyframes fadeIn { from { opacity: 0; transform: translateY(6px); } to { opacity: 1; transform: none; } }
-
+ 
 .page-title { font-size: calc(28px * var(--density)); font-weight: 800; margin-bottom: 4px; }
 .page-sub { color: var(--muted); margin-bottom: 20px; }
-
+ 
 .card {
   background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius);
   padding: calc(20px * var(--density)); box-shadow: var(--shadow); margin-bottom: 16px;
@@ -155,9 +155,9 @@ nav {
       var(--surface) 0%,
       var(--bg-soft) 100%
     );
-
+ 
   border: 1px solid var(--border);
-
+ 
   box-shadow:
     0 10px 30px rgba(99,102,241,.08);
 }
@@ -167,12 +167,12 @@ nav {
   font-weight: 800;
 }
 .card h2 { font-size: 18px; margin-bottom: 12px; }
-
+ 
 .dashboard-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 16px; margin-bottom: 20px; }
 .dash-card { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); padding: 16px; box-shadow: var(--shadow); }
 .dash-card b { display: block; font-size: 28px; font-weight: 800; color: var(--primary); }
 .dash-card span { color: var(--muted); font-size: 14px; }
-
+ 
 .form-grid { display: grid; gap: 12px; }
 .form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
 label { display: block; font-size: 13px; font-weight: 600; color: var(--muted); margin-bottom: 4px; }
@@ -184,7 +184,7 @@ input:focus, select:focus, textarea:focus { border-color: var(--primary); }
 textarea { min-height: 100px; resize: vertical; }
 .actions { display: flex; gap: 8px; margin-top: 12px; }
 .actions .btn { flex: 1; }
-
+ 
 .task-list { display: flex; flex-direction: column; gap: 10px; }
 .task {
   background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius-sm);
@@ -206,14 +206,14 @@ textarea { min-height: 100px; resize: vertical; }
 .tag-blue { background: #e0e7ff; color: #3730a3; }
 .tag-green { background: #d1fae5; color: #065f46; }
 .empty { padding: 32px; text-align: center; color: var(--muted); background: var(--bg-soft); border-radius: var(--radius-sm); }
-
+ 
 .filters { display: flex; gap: 6px; flex-wrap: wrap; margin-bottom: 12px; }
 .filter-btn {
   padding: 6px 12px; border-radius: 8px; border: 1px solid var(--border);
   background: var(--bg-soft); font-family: inherit; font-size: 13px; font-weight: 600; cursor: pointer;
 }
 .filter-btn.active { background: var(--primary); color: white; border-color: var(--primary); }
-
+ 
 .pomo-card { text-align: center; padding: 28px 20px; }
 .pomo-ring {
   width: 110px;
@@ -229,7 +229,7 @@ textarea { min-height: 100px; resize: vertical; }
 .pomo-mode { font-size: 14px; color: var(--muted); margin-bottom: 12px; }
 .pomo-controls { display: flex; gap: 8px; justify-content: center; margin-top: 12px; flex-wrap: wrap; }
 .pomo-sessions { margin-top: 12px; font-size: 14px; color: var(--muted); }
-
+ 
 .note {
   background: var(--bg-soft); border: 1px solid var(--border); border-radius: var(--radius-sm);
   padding: 14px; margin-bottom: 10px;
@@ -238,18 +238,18 @@ textarea { min-height: 100px; resize: vertical; }
 .note-type { font-weight: 700; color: var(--primary); font-size: 13px; }
 .note-date { font-size: 12px; color: var(--muted-2); }
 .note-text { white-space: pre-wrap; word-break: break-word; }
-
+ 
 .stats-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(140px, 1fr)); gap: 12px; margin-bottom: 16px; }
 .stat-card { background: var(--bg-soft); border-radius: 12px; padding: 16px; text-align: center; border: 1px solid var(--border); }
 .stat-card b { display: block; font-size: 28px; font-weight: 800; color: var(--primary); }
 .progress-bar { height: 10px; background: var(--bg-soft); border-radius: 999px; overflow: hidden; margin-top: 8px; }
 .progress-bar > div { height: 100%; background: var(--success); border-radius: 999px; transition: width .4s; }
-
+ 
 #calendar { margin-top: 12px; }
 .fc { font-family: var(--font); }
 .fc-button { border-radius: 8px !important; font-weight: 600 !important; }
 .fc-button-active { background: var(--primary) !important; }
-
+ 
 #toasts {
   position: fixed; right: 16px; bottom: 16px; z-index: 100;
   display: flex; flex-direction: column; gap: 8px; width: min(360px, calc(100vw - 32px));
@@ -262,7 +262,7 @@ textarea { min-height: 100px; resize: vertical; }
 .toast.warn { border-left-color: var(--warning); }
 .toast.error { border-left-color: var(--danger); }
 @keyframes slideIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: none; } }
-
+ 
 .modal-bg {
   display: none; position: fixed; inset: 0; background: rgba(0,0,0,.5);
   z-index: 80; align-items: center; justify-content: center; padding: 20px;
@@ -273,12 +273,12 @@ textarea { min-height: 100px; resize: vertical; }
   box-shadow: var(--shadow-lg);
 }
 .modal-actions { display: flex; gap: 8px; justify-content: flex-end; margin-top: 16px; }
-
+ 
 .subtask { display: flex; align-items: center; gap: 8px; margin: 4px 0; font-size: 14px; }
 .subtask input[type="checkbox"] { width: auto; }
 .habit { display: flex; justify-content: space-between; align-items: center; padding: 12px; border: 1px solid var(--border); border-radius: var(--radius-sm); margin-bottom: 8px; background: var(--surface); }
 .color-dot { width: 12px; height: 12px; border-radius: 50%; display: inline-block; margin-right: 6px; }
-
+ 
 /* My Day improvements */
 .day-hero { text-align: center; margin-bottom: 20px; }
 .day-progress-ring { width: 120px; height: 120px; margin: 0 auto 12px; border-radius: 50%; background: conic-gradient(var(--success) var(--day-progress, 0%), var(--bg-soft) 0); display: grid; place-items: center; position: relative; }
@@ -286,7 +286,7 @@ textarea { min-height: 100px; resize: vertical; }
 .day-progress-text { position: relative; font-weight: 800; color: var(--primary); font-size: 20px; }
 .day-sections { display: grid; gap: 16px; }
 .section-toggle { display: flex; align-items: center; gap: 8px; margin: 6px 0; font-size: 14px; }
-
+ 
 /* Onboarding - diseño profesional */
 .onboarding-backdrop {
   display: none; position: fixed; inset: 0; z-index: 10000; overflow-y: auto;
@@ -348,7 +348,7 @@ textarea { min-height: 100px; resize: vertical; }
 .onboarding-footer { display: flex; gap: 12px; justify-content: flex-end; margin-top: 36px; flex-wrap: wrap; }
 .onboarding-footer .btn { padding: 14px 24px; font-size: 15px; font-weight: 600; border-radius: 12px; }
 .settings-customize { width: 100%; margin: 0 0 16px; }
-
+ 
 /* Wizard de configuración profesional con animaciones */
 .onboarding-progress {
   display: flex;
@@ -424,7 +424,7 @@ textarea { min-height: 100px; resize: vertical; }
   border: 1.5px solid var(--border);
 }
 .name-input:focus { border-color: var(--primary); box-shadow: 0 0 0 4px rgba(99,102,241,0.1); }
-
+ 
 /* Landing page profesional */
 .landing {
   min-height: 100vh;
@@ -553,7 +553,7 @@ textarea { min-height: 100px; resize: vertical; }
 }
 @media (max-width: 600px) { .choice-grid { grid-template-columns: repeat(2,minmax(0,1fr)); } .onboarding-card { border-radius: 20px; } }
 @media (max-width: 390px) { .choice-grid { grid-template-columns: 1fr; } }
-
+ 
 @media (max-width: 720px) {
   nav { flex-wrap: wrap; padding: 10px 12px; }
   .nav-menu { order: 3; width: 100%; justify-content: center; margin: 6px 0 0; }
@@ -563,7 +563,7 @@ textarea { min-height: 100px; resize: vertical; }
   .settings-panel { left: 10px; right: 10px; width: auto; }
   .dashboard-grid { grid-template-columns: 1fr; }
 }
-
+ 
 /* Presentación Planneo: estilo limpio, profesional y adaptable */
 .landing { overflow:hidden; background:var(--bg); color:var(--text); }
 .landing-topbar { max-width:1120px; margin:auto; padding:20px 28px; display:flex; align-items:center; justify-content:space-between; gap:16px; }
@@ -651,9 +651,9 @@ textarea { min-height: 100px; resize: vertical; }
 .privacy-modal-done { margin-top:8px; }
 @media(max-width:760px) { .landing-topbar { padding:16px 18px; } .landing-topnote { font-size:11px; text-align:right; } .landing-hero { padding:48px 18px 42px; } .landing-hero h1 { letter-spacing:-1.7px; } .landing-hero p { font-size:15px; } .hero-trust { gap:9px 14px; font-size:11px; } .hero-preview { margin-top:30px; } .preview-content { padding:16px; } .landing-section { padding:54px 18px; } .landing-feature-grid { grid-template-columns:repeat(2,minmax(0,1fr)); gap:12px; } .landing-feature-grid .feature-card { padding:17px; } .landing-final-cta { padding:28px 18px; } .privacy-notice { left:10px; right:10px; bottom:10px; flex-direction:column; align-items:stretch; gap:13px; padding:16px; } .privacy-notice-actions { justify-content:flex-end; } .privacy-modal { padding:27px 20px 22px; } }
 @media(max-width:430px) { .landing-feature-grid { grid-template-columns:1fr; } .landing-topnote { max-width:150px; } .privacy-notice-actions { flex-direction:column-reverse; align-items:stretch; } .privacy-more,.privacy-accept { width:100%; } }
-
-
-
+ 
+ 
+ 
 /* ===== AJUSTES MÓVILES: PLANNEO MÁS CÓMODO EN CELULAR ===== */
 @media (max-width: 720px) {
   html { scroll-padding-top: 120px; }
@@ -773,7 +773,7 @@ textarea { min-height: 100px; resize: vertical; }
   box-shadow: var(--shadow);
   overflow: hidden;
 }
-
+ 
 .fc {
   font-family: var(--font);
   font-size: 14px;
@@ -821,7 +821,7 @@ textarea { min-height: 100px; resize: vertical; }
 .fc-list-event-title {
   font-weight: 600;
 }
-
+ 
 /* Mejoras específicas para celular */
 @media (max-width: 720px) {
   #calendar {
@@ -892,7 +892,7 @@ textarea { min-height: 100px; resize: vertical; }
     font-size: 14px;
   }
 }
-
+ 
 /* Planneo Advisor: compacto, elegante y responsive */
 .advisor-card { position:relative; overflow:hidden; padding:clamp(16px, 2.5vw, 26px); }
 .advisor-card::before { content:""; position:absolute; inset:0 0 auto; height:3px; background:linear-gradient(90deg,var(--primary),#a78bfa,#38bdf8); }
@@ -933,7 +933,7 @@ textarea { min-height: 100px; resize: vertical; }
   .advisor-card { padding:25px 28px; }
   .advisor-textarea { min-height:82px; }
 }
-
+ 
 </style>
 </head>
 <body>
@@ -941,14 +941,14 @@ textarea { min-height: 100px; resize: vertical; }
   <div class="logo">Planneo</div>
   <div class="tag">Tu agenda inteligente</div>
 </div>
-
+ 
 <!-- Presentación de Planneo: diseño limpio y contenido completo -->
 <div id="landing" class="landing" style="display:none;">
   <header class="landing-topbar">
     <a class="landing-wordmark" href="#landing" aria-label="Planneo, inicio"><span class="landing-mark">P</span> Planneo</a>
     <span class="landing-topnote">Tu espacio para organizarte mejor</span>
   </header>
-
+ 
   <section class="landing-hero">
     <div class="hero-pill"><span aria-hidden="true">✦</span> ORGANIZA · ESTUDIA · AVANZA</div>
     <h1>Tu día, tus metas,<br><span>todo en su lugar.</span></h1>
@@ -973,7 +973,7 @@ textarea { min-height: 100px; resize: vertical; }
       </div>
     </div>
   </section>
-
+ 
   <section class="landing-section landing-about">
     <div class="section-kicker">MENOS DESORDEN, MÁS CLARIDAD</div>
     <h2>Una agenda que se adapta a ti</h2>
@@ -987,7 +987,7 @@ textarea { min-height: 100px; resize: vertical; }
       <article class="feature-card"><span class="feature-icon">▤</span><h3>Estadísticas</h3><p>Consulta tu actividad y visualiza el tiempo que has dedicado a tus objetivos.</p></article>
     </div>
   </section>
-
+ 
   <section class="landing-how">
     <div class="landing-section">
       <div class="section-kicker">EMPIEZA EN MINUTOS</div>
@@ -1000,7 +1000,7 @@ textarea { min-height: 100px; resize: vertical; }
       </div>
     </div>
   </section>
-
+ 
   <section class="landing-section landing-customize">
     <div class="section-kicker">HECHA PARA TU RITMO</div>
     <h2>Tu agenda no tiene que parecerse a la de nadie más</h2>
@@ -1008,7 +1008,7 @@ textarea { min-height: 100px; resize: vertical; }
     <div class="customize-points"><div><span>01</span><p><b>Elige tu vista inicial</b><small>Abre directamente la sección que más utilizas.</small></p></div><div><span>02</span><p><b>Muestra solo lo necesario</b><small>Activa u oculta módulos y apartados de Mi día.</small></p></div><div><span>03</span><p><b>Define una meta realista</b><small>Ajusta tus minutos diarios de estudio a tu rutina.</small></p></div></div>
     <div class="landing-final-cta"><h2>¿Listo para poner tus ideas en orden?</h2><p>Configura tu espacio una vez y empieza a usar Planneo a tu manera.</p><button class="landing-cta" id="startConfig2">Empezar ahora <span aria-hidden="true">→</span></button></div>
   </section>
-
+ 
   <section class="landing-section landing-faq">
     <div class="section-kicker">PREGUNTAS FRECUENTES</div><h2>Antes de empezar</h2>
     <details><summary>¿Necesito crear una cuenta?</summary><p>No. Puedes empezar sin registrarte. Tus datos de agenda se guardan en el almacenamiento de este navegador.</p></details>
@@ -1017,10 +1017,10 @@ textarea { min-height: 100px; resize: vertical; }
     <details><summary>¿Mis datos se sincronizan automáticamente entre dispositivos?</summary><p>No. Como los datos se guardan en el navegador de cada dispositivo, no se sincronizan automáticamente entre celulares y computadores.</p></details>
     <details><summary>¿Qué pasa si borro los datos del navegador?</summary><p>Podrías perder las tareas, notas y preferencias guardadas en ese navegador. Evita borrar sus datos si quieres conservar tu información.</p></details>
   </section>
-
+ 
   <footer class="landing-footer"><a class="landing-wordmark" href="#landing"><span class="landing-mark">P</span> Planneo</a><p>Organiza tu presente. Avanza hacia tus metas.</p><button type="button" class="privacy-link" id="openPrivacy">Privacidad y almacenamiento de datos</button><small>© <span id="landingYear"></span> Planneo · Agenda digital para estudiantes</small></footer>
 </div>
-
+ 
 <!-- Aviso informativo de privacidad. No se presenta como consentimiento de cookies porque Planneo guarda sus datos de agenda en el navegador. -->
 <div class="privacy-notice" id="privacyNotice" role="region" aria-label="Aviso de privacidad" hidden>
   <div class="privacy-notice-copy"><strong>Tu privacidad importa</strong><p>Planneo guarda tus tareas y preferencias en este navegador y no necesita una cuenta. Consulta cómo se almacenan tus datos antes de empezar.</p></div>
@@ -1036,13 +1036,13 @@ textarea { min-height: 100px; resize: vertical; }
     <button type="button" class="landing-cta privacy-modal-done" id="privacyModalDone">Volver a Planneo</button>
   </div>
 </div>
-
+ 
 <div class="onboarding-backdrop" id="onboarding" role="dialog" aria-modal="true" aria-labelledby="onboardingTitle">
   <form class="onboarding-card" id="onboardingForm">
     <div class="onboarding-brand">PLANNEO</div>
     <h1 id="onboardingTitle">Configura tu agenda</h1>
     <p class="onboarding-lead">Vamos a personalizarla paso a paso. Toma menos de un minuto.</p>
-
+ 
     <div class="onboarding-progress" id="wizardProgress">
       <div class="onboarding-progress-fill" id="progressFill" style="width:20%;"></div>
       <div class="progress-step active" data-step="1">1</div>
@@ -1051,14 +1051,14 @@ textarea { min-height: 100px; resize: vertical; }
       <div class="progress-step" data-step="4">4</div>
       <div class="progress-step" data-step="5">5</div>
     </div>
-
+ 
     <!-- Paso 1: Nombre -->
     <div class="onboarding-step active" data-step="1">
       <h2>¿Cómo te llamas?</h2>
       <p class="onboarding-help">Esto personaliza los saludos y el título de tu agenda.</p>
       <input type="text" class="name-input" id="userName" placeholder="Tu nombre o apodo" maxlength="30" value="">
     </div>
-
+ 
     <!-- Paso 2: Apariencia -->
     <div class="onboarding-step" data-step="2">
       <h2>Apariencia</h2>
@@ -1077,7 +1077,7 @@ textarea { min-height: 100px; resize: vertical; }
         <label class="color-choice"><input type="radio" name="accent" value="#f59e0b"><span class="theme-swatch" style="width:18px;height:18px;background:#f59e0b;border-radius:50%;"></span>Ámbar</label>
       </div>
     </div>
-
+ 
     <!-- Paso 3: Módulos -->
     <div class="onboarding-step" data-step="3">
       <h2>¿Qué secciones quieres ver?</h2>
@@ -1091,7 +1091,7 @@ textarea { min-height: 100px; resize: vertical; }
         <label class="choice-card"><input type="checkbox" name="module" value="trash"><span>🗑️ <b>Papelera</b></span></label>
       </div>
     </div>
-
+ 
     <!-- Paso 4: Vista y meta -->
     <div class="onboarding-step" data-step="4">
       <h2>Cómo quieres empezar</h2>
@@ -1108,7 +1108,7 @@ textarea { min-height: 100px; resize: vertical; }
       <label>Meta de estudio diario (minutos)</label>
       <input type="number" id="onboardingStudyGoal" min="0" max="480" value="60" placeholder="60">
     </div>
-
+ 
     <!-- Paso 5: Recordatorios -->
     <div class="onboarding-step" data-step="5">
       <h2>Recordatorios</h2>
@@ -1116,14 +1116,14 @@ textarea { min-height: 100px; resize: vertical; }
       <label class="choice-card"><input type="checkbox" name="notifications" id="onboardingNotifications" checked><span>🔔 Quiero recibir recordatorios de Planneo</span></label>
       <p style="margin-top:16px;color:var(--muted);font-size:14px;">Puedes ajustar el tiempo de aviso más adelante en Ajustes.</p>
     </div>
-
+ 
     <div class="wizard-nav">
       <button type="button" class="btn btn-ghost" id="wizardPrev" style="display:none;">Atrás</button>
       <button type="button" class="btn btn-primary" id="wizardNext">Continuar</button>
     </div>
   </form>
 </div>
-
+ 
 <nav>
   <button class="brand" id="brand">📒 Planneo</button>
   <div class="search-wrap">
@@ -1232,14 +1232,14 @@ textarea { min-height: 100px; resize: vertical; }
     <button class="btn btn-ghost" id="exportIcs" style="width:100%;margin-top:6px;">Exportar a calendario (.ics)</button>
   </div>
 </nav>
-
+ 
 <main class="container">
   <!-- Home / Dashboard -->
   <section class="view active" id="view-home">
     <h1 class="page-title" id="greeting">Planneo</h1>
     <p class="page-sub" id="todayDate"></p>
     <div class="dashboard-grid" id="dashCards"></div>
-
+ 
     <!-- Planneo Advisor: entrada breve y adaptable -->
     <div class="card advisor-card" id="advisorCard">
       <div class="advisor-heading">
@@ -1272,7 +1272,7 @@ textarea { min-height: 100px; resize: vertical; }
       </div>
       <div id="advisorResponse" class="advisor-response"></div>
     </div>
-
+ 
     <div class="filters">
       <button class="filter-btn active" data-filter="all">Todas</button>
       <button class="filter-btn" data-filter="pending">Pendientes</button>
@@ -1283,7 +1283,7 @@ textarea { min-height: 100px; resize: vertical; }
     <input type="search" id="taskSearch" placeholder="Buscar tareas..." style="margin-bottom:12px;">
     <div class="task-list" id="taskList"></div>
   </section>
-
+ 
   <!-- Mi día mejorado -->
   <section class="view" id="view-day">
     <div class="day-hero">
@@ -1297,7 +1297,7 @@ textarea { min-height: 100px; resize: vertical; }
         <div style="margin-top:8px;font-size:13px;color:var(--muted);" id="studyProgress">Estudio: 0 / 60 min</div>
       </div>
     </div>
-
+ 
     <!-- Añadir tarea rápida en Mi día -->
     <div class="card">
       <h2>➕ Añadir tarea rápida</h2>
@@ -1317,7 +1317,7 @@ textarea { min-height: 100px; resize: vertical; }
         </div>
       </div>
     </div>
-
+ 
     <details class="card" id="pomoWrapper">
   <summary style="
     cursor:pointer;
@@ -1327,7 +1327,7 @@ textarea { min-height: 100px; resize: vertical; }
   ">
     🍅 Temporizador Pomodoro
   </summary>
-
+ 
   <div class="pomo-card" id="pomoSection">
       <div class="pomo-mode" id="pomoMode">Sesión de estudio</div>
       <div class="pomo-ring" id="pomoRing">
@@ -1353,36 +1353,36 @@ textarea { min-height: 100px; resize: vertical; }
 </details>
 <div class="card">
   <h2>⏰ Alarmas</h2>
-
+ 
   <div class="form-row">
     <input type="time" id="alarmTime">
-
+ 
     <input
       type="text"
       id="alarmTitle"
       placeholder="Nombre de la alarma">
   </div>
-
+ 
   <button
     class="btn btn-primary"
     id="addAlarm"
     style="margin-top:10px;">
     Crear alarma
   </button>
-
+ 
   <div id="alarmList" style="margin-top:12px;"></div>
 </div>
     <div id="habitsDaySection" class="card" style="display:none;">
       <h2>Hábitos de hoy</h2>
       <div id="habitsDayList"></div>
     </div>
-
+ 
     <div id="tasksDaySection">
       <h2 style="margin:16px 0 8px;">Tareas de hoy</h2>
       <div class="task-list" id="dayList"></div>
     </div>
   </section>
-
+ 
   <!-- Notes -->
   <section class="view" id="view-notes">
     <h1 class="page-title">Notas</h1>
@@ -1417,14 +1417,14 @@ textarea { min-height: 100px; resize: vertical; }
     <input type="search" id="noteSearch" placeholder="Buscar notas..." style="margin-bottom:12px;">
     <div id="noteList"></div>
   </section>
-
+ 
   <!-- Calendar -->
   <section class="view" id="view-calendar">
     <h1 class="page-title">Calendario</h1>
     <p class="page-sub">Haz clic en un día para crear una tarea. Haz clic en un evento para verlo.</p>
     <div id="calendar"></div>
   </section>
-
+ 
   <!-- Habits -->
   <section class="view" id="view-habits">
     <h1 class="page-title">Mis hábitos</h1>
@@ -1442,7 +1442,7 @@ textarea { min-height: 100px; resize: vertical; }
     </div>
     <div id="habitList"></div>
   </section>
-
+ 
   <!-- Stats -->
   <section class="view" id="view-stats">
     <h1 class="page-title">Estadísticas</h1>
@@ -1464,7 +1464,7 @@ textarea { min-height: 100px; resize: vertical; }
       <div style="font-size:32px;font-weight:800;color:var(--primary);" id="streak">0 días</div>
     </div>
   </section>
-
+ 
   <!-- Trash -->
   <section class="view" id="view-trash">
     <h1 class="page-title">Papelera</h1>
@@ -1473,9 +1473,9 @@ textarea { min-height: 100px; resize: vertical; }
     <button class="btn btn-danger" id="emptyTrash" style="margin-top:12px;">Vaciar papelera</button>
   </section>
 </main>
-
+ 
 <div id="toasts"></div>
-
+ 
 <div class="modal-bg" id="modal">
   <div class="modal">
     <h3 id="modalTitle">Tarea</h3>
@@ -1487,7 +1487,7 @@ textarea { min-height: 100px; resize: vertical; }
     </div>
   </div>
 </div>
-
+ 
 <div class="modal-bg" id="confirmModal">
   <div class="modal">
     <h3>¿Confirmas?</h3>
@@ -1498,14 +1498,14 @@ textarea { min-height: 100px; resize: vertical; }
     </div>
   </div>
 </div>
-
+ 
 <script>
 (function() {
   "use strict";
-
+ 
   const ONBOARDING_KEY = "planneo_onboarding_complete_v1";
   const SPLASH_KEY = "planneo_splash_seen_v1";
-
+ 
   const DB = {
     tasks: "planneo_v8_tasks",
       alarms: "planneo_v8_alarms",
@@ -1519,7 +1519,7 @@ textarea { min-height: 100px; resize: vertical; }
     trash: "planneo_v8_trash",
     categories: "planneo_v8_categories"
   };
-
+ 
   let tasks = [],
     alarms = [],
     notes = [],
@@ -1552,7 +1552,7 @@ textarea { min-height: 100px; resize: vertical; }
   let pomoRemaining = 25 * 60, pomoRunning = false, pomoStart = null, pomoDuration = 25 * 60, pomoInterval = null;
   let confirmResolve = null, lastDeleted = null;
   let alarmInterval = null;
-
+ 
   const config = {
     theme: "auto", lang: "es", notif: true, remindBefore: 15, sound: true,
     accent: "#6366f1", onboardingComplete: false, startView: "home", userName: "Estudiante",
@@ -1560,10 +1560,10 @@ textarea { min-height: 100px; resize: vertical; }
     fontSize: "15", density: "normal", studyGoal: 60,
     myDay: { pomo: true, habits: true, tasks: true, progress: true }
   };
-
+ 
   const $ = s => document.querySelector(s);
   const $$ = s => Array.from(document.querySelectorAll(s));
-
+ 
   function id() { return Date.now().toString(36) + Math.random().toString(36).slice(2, 6); }
   function today() { const d = new Date(); return d.toISOString().slice(0, 10); }
   function load(k, def) { try { return JSON.parse(localStorage.getItem(k)) ?? def; } catch { return def; } }
@@ -1575,7 +1575,7 @@ textarea { min-height: 100px; resize: vertical; }
     toast("No se pudo guardar (espacio lleno)", "error");
   }
 }
-
+ 
   function toast(text, type = "ok", duration = 3500, undo = null) {
     const el = document.createElement("div");
     el.className = `toast ${type}`;
@@ -1584,7 +1584,7 @@ textarea { min-height: 100px; resize: vertical; }
     $("#toasts").appendChild(el);
     setTimeout(() => el.remove(), duration);
   }
-
+ 
   function confirm(text) {
     $("#confirmText").textContent = text;
     $("#confirmModal").classList.add("show");
@@ -1594,7 +1594,7 @@ textarea { min-height: 100px; resize: vertical; }
     $("#confirmModal").classList.remove("show");
     if (confirmResolve) { confirmResolve(ok); confirmResolve = null; }
   }
-
+ 
   function applyTheme() {
     const dark = config.theme === "dark" || (config.theme === "auto" && window.matchMedia("(prefers-color-scheme: dark)").matches);
     document.documentElement.setAttribute("data-theme", dark ? "dark" : "light");
@@ -1615,7 +1615,7 @@ textarea { min-height: 100px; resize: vertical; }
     document.documentElement.style.setProperty("--font-size", config.fontSize + "px");
     document.documentElement.setAttribute("data-density", config.density || "normal");
   }
-
+ 
   function applyModules() {
     const modules = config.modules || {};
     Object.entries({ day: "Mi día", notes: "Notas", calendar: "Calendario", habits: "Hábitos", stats: "Stats", trash: "Papelera" }).forEach(([key]) => {
@@ -1625,7 +1625,7 @@ textarea { min-height: 100px; resize: vertical; }
     const current = location.hash.slice(1);
     if (current && modules[current] === false) showView("home");
   }
-
+ 
   function applyMyDaySections() {
     const m = config.myDay || {};
     $("#pomoSection").style.display = m.pomo !== false ? "" : "none";
@@ -1633,7 +1633,7 @@ textarea { min-height: 100px; resize: vertical; }
     $("#tasksDaySection").style.display = m.tasks !== false ? "" : "none";
     $("#dayProgressSection").style.display = m.progress !== false ? "" : "none";
   }
-
+ 
   function openOnboarding(editing = false) {
     const form = $("#onboardingForm");
     if (!form) return;
@@ -1658,9 +1658,9 @@ textarea { min-height: 100px; resize: vertical; }
       if (title) title.focus();
     }, 50);
   }
-
+ 
   function closeOnboarding() { $("#onboarding").classList.remove("show"); }
-
+ 
   function saveOnboarding(event) {
     if (event) event.preventDefault();
     const previousComplete = !!config.onboardingComplete;
@@ -1689,7 +1689,7 @@ textarea { min-height: 100px; resize: vertical; }
     showView(config.startView || "home");
     toast("¡Listo, " + config.userName + "! Tu agenda está configurada.");
   }
-
+ 
   function getGreeting() {
     const h = new Date().getHours();
     let base = "Hola";
@@ -1699,7 +1699,7 @@ textarea { min-height: 100px; resize: vertical; }
     const name = config.userName && config.userName !== "Estudiante" ? ", " + config.userName : "";
     return base + name;
   }
-
+ 
   function defaultCategories() {
     return [
       { id: "general", name: "General", color: "#6366f1" },
@@ -1709,7 +1709,7 @@ textarea { min-height: 100px; resize: vertical; }
       { id: "salud", name: "Salud", color: "#ef4444" }
     ];
   }
-
+ 
   function normalizeTask(t) {
     return {
       id: t.id || id(),
@@ -1727,7 +1727,7 @@ textarea { min-height: 100px; resize: vertical; }
       completedAt: t.completedAt || null
     };
   }
-
+ 
   function migrateFromOld() {
     const oldTasks = load("planneo_v6_tasks", null) || load("planneo_v5_tasks", null);
     if (oldTasks && !load(DB.tasks, null)) {
@@ -1739,7 +1739,7 @@ textarea { min-height: 100px; resize: vertical; }
       toast("Datos migrados desde versión anterior");
     }
   }
-
+ 
   function loadData() {
     migrateFromOld();
     alarms = load(DB.alarms, []) || [];
@@ -1774,17 +1774,17 @@ textarea { min-height: 100px; resize: vertical; }
     } catch (e) {}
     save(DB.categories, categories);
   }
-
+ 
   function isOverdue(t) {
     if (t.done) return false;
     const dt = new Date(`${t.date}T${t.time}:00`);
     return !isNaN(dt) && dt < new Date();
   }
-
+ 
   function getCategory(id) {
     return categories.find(c => c.id === id) || categories[0];
   }
-
+ 
   function renderCategorySelect() {
     const sel = $("#taskCategory");
     if (sel) {
@@ -1795,17 +1795,17 @@ textarea { min-height: 100px; resize: vertical; }
       list.innerHTML = categories.map(c => `<div style="margin:4px 0;display:flex;align-items:center;"><span class="color-dot" style="background:${c.color}"></span>${c.name} <button data-del-cat="${c.id}" style="font-size:11px;margin-left:auto;background:none;border:none;color:var(--danger);cursor:pointer;">×</button></div>`).join("");
     }
   }
-
+ 
   function renderDashboard() {
     const now = today();
     const pending = tasks.filter(t => !t.done).length;
     const doneToday = tasks.filter(t => t.done && t.date === now).length;
     const overdue = tasks.filter(isOverdue).length;
     const studyToday = sessions.filter(s => s.date === now).reduce((a, s) => a + (s.minutes || 0), 0);
-
+ 
     $("#greeting").textContent = getGreeting() + " 👋";
     $("#todayDate").textContent = new Date().toLocaleDateString("es", { weekday: "long", year: "numeric", month: "long", day: "numeric" });
-
+ 
     $("#dashCards").innerHTML = `
       <div class="dash-card"><b>${pending}</b><span>Pendientes</span></div>
       <div class="dash-card"><b>${doneToday}</b><span>Hechas hoy</span></div>
@@ -1813,7 +1813,7 @@ textarea { min-height: 100px; resize: vertical; }
       <div class="dash-card"><b>${studyToday}</b><span>Min estudiados hoy</span></div>
     `;
   }
-
+ 
   function renderTasks() {
     const list = $("#taskList");
     const q = $("#taskSearch").value.toLowerCase().trim();
@@ -1832,7 +1832,7 @@ textarea { min-height: 100px; resize: vertical; }
       if (prio[a.priority] !== prio[b.priority]) return prio[a.priority] - prio[b.priority];
       return new Date(`${a.date}T${a.time}`) - new Date(`${b.date}T${b.time}`);
     });
-
+ 
     list.innerHTML = "";
     if (!filtered.length) {
       list.innerHTML = '<div class="empty">No hay tareas que mostrar</div>';
@@ -1846,16 +1846,16 @@ textarea { min-height: 100px; resize: vertical; }
       else if (isOverdue(t)) el.classList.add("overdue");
       else if (t.priority === "urgent") el.classList.add("urgent");
       else if (t.priority === "important") el.classList.add("important");
-
+ 
       const tags = [];
       if (!t.done && isOverdue(t)) tags.push('<span class="tag tag-red">Vencida</span>');
       if (t.priority === "urgent") tags.push('<span class="tag tag-red">Urgente</span>');
       else if (t.priority === "important") tags.push('<span class="tag tag-amber">Importante</span>');
       tags.push(`<span class="tag tag-blue" style="background:${cat.color}22;color:${cat.color}">${cat.name}</span>`);
-
+ 
       const subProgress = t.subtasks.length ? Math.round(t.subtasks.filter(s => s.done).length / t.subtasks.length * 100) : 0;
       const subHtml = t.subtasks.length ? `<div class="progress-bar" style="margin:6px 0;"><div style="width:${subProgress}%"></div></div><div style="font-size:12px;color:var(--muted);">${t.subtasks.filter(s=>s.done).length}/${t.subtasks.length} subtareas</div>` : "";
-
+ 
       el.innerHTML = `
         <div class="task-title">${t.title} ${tags.join("")}</div>
         <div class="task-meta">📅 ${t.date} · ⏰ ${t.time}${t.duration ? ` · ⏱ ${t.duration} min` : ""}</div>
@@ -1870,7 +1870,7 @@ textarea { min-height: 100px; resize: vertical; }
       list.appendChild(el);
     });
   }
-
+ 
   function renderDay() {
     const list = $("#dayList");
     const now = today();
@@ -1879,16 +1879,16 @@ textarea { min-height: 100px; resize: vertical; }
     const doneTodayCount = todayTasks.filter(t => t.done).length;
     const totalToday = todayTasks.length || 1;
     const progressPct = Math.round((doneTodayCount / totalToday) * 100);
-
+ 
     $("#dayGreeting").textContent = pendingToday.length ? `Tienes ${pendingToday.length} tarea(s) pendiente(s) hoy` : "¡Hoy no tienes tareas pendientes! 🎉";
     $("#dayProgressText").textContent = progressPct + "%";
     $("#dayProgressRing").style.setProperty("--day-progress", progressPct + "%");
-
+ 
     const studyToday = sessions.filter(s => s.date === now).reduce((a, s) => a + (s.minutes || 0), 0);
     const goal = config.studyGoal || 60;
     $("#studyProgress").textContent = `Estudio: ${studyToday} / ${goal} min`;
     $("#studyToday").textContent = studyToday;
-
+ 
     list.innerHTML = "";
     if (!pendingToday.length) {
       list.innerHTML = '<div class="empty">Nada pendiente para hoy. ¡Buen trabajo!</div>';
@@ -1909,7 +1909,7 @@ textarea { min-height: 100px; resize: vertical; }
         list.appendChild(el);
       });
     }
-
+ 
     // Habits today
     const habitsList = $("#habitsDayList");
     habitsList.innerHTML = "";
@@ -1928,14 +1928,14 @@ textarea { min-height: 100px; resize: vertical; }
         habitsList.appendChild(el);
       });
     }
-
+ 
     // Pomo task select
     const pomoSel = $("#pomoTask");
     pomoSel.innerHTML = '<option value="">— Ninguna —</option>' + pendingToday.map(t => `<option value="${t.id}">${t.title}</option>`).join("");
-
+ 
     applyMyDaySections();
   }
-
+ 
   function renderNotes() {
     const list = $("#noteList");
     const q = $("#noteSearch").value.toLowerCase().trim();
@@ -1964,7 +1964,7 @@ textarea { min-height: 100px; resize: vertical; }
       list.appendChild(el);
     });
   }
-
+ 
   function renderHabits() {
     const list = $("#habitList");
     const now = today();
@@ -1988,49 +1988,49 @@ textarea { min-height: 100px; resize: vertical; }
     });
   }
 function renderAlarms() {
-
+ 
   const list = $("#alarmList");
-
+ 
   if (!list) return;
-
+ 
   list.innerHTML = "";
-
+ 
   if (!alarms.length) {
     list.innerHTML =
       '<div class="empty">No hay alarmas</div>';
     return;
   }
-
+ 
   alarms.forEach(alarm => {
-
+ 
     const div = document.createElement("div");
-
+ 
     div.className = "habit";
-
+ 
     div.innerHTML = `
       <div>
         <strong>${alarm.time}</strong>
         <div>${alarm.title}</div>
       </div>
-
+ 
       <button
         class="btn btn-ghost"
         data-alarm-delete="${alarm.id}">
         Eliminar
       </button>
     `;
-
+ 
     list.appendChild(div);
   });
-
+ 
 }
   let lastAdvisorPlan = null;
-
+ 
   function parseAdvisorText(text) {
     const original = text.trim();
     const lower = original.toLowerCase()
       .normalize("NFD").replace(/[\u0300-\u036f]/g, "");
-
+ 
     // Lista de verbos y conjugaciones relevantes (infinitivo + formas comunes)
     const verbMap = {
       estudiar: "estudio",
@@ -2066,7 +2066,7 @@ function renderAlarms() {
       "tengo que hacer": "entrega",
       "tengo que presentar": "exposicion"
     };
-
+ 
     // Tipo de actividad por palabras clave + verbos
     let type = "estudio";
     const typeRules = [
@@ -2075,14 +2075,14 @@ function renderAlarms() {
       { type: "proyecto", patterns: ["proyecto", "investigacion", "investigar"] },
       { type: "exposicion", patterns: ["exposicion", "presentacion", "oral", "exponer", "presentar"] }
     ];
-
+ 
     for (const rule of typeRules) {
       if (rule.patterns.some(p => lower.includes(p))) {
         type = rule.type;
         break;
       }
     }
-
+ 
     // Si no se detectó por palabras, revisar verbos
     if (type === "estudio") {
       for (const [verb, mapped] of Object.entries(verbMap)) {
@@ -2092,7 +2092,7 @@ function renderAlarms() {
         }
       }
     }
-
+ 
     // Materia / tema
     let subject = "";
     const subjectMatch = lower.match(/(?:de|para|sobre)\s+([a-z0-9áéíóúñ\s]{3,40})(?:\s+(?:el|la|para|mañana|proximo|proxima|este|esta)|$)/i);
@@ -2111,7 +2111,7 @@ function renderAlarms() {
       }
     }
     subject = subject || "general";
-
+ 
     // Fecha (mejorada)
     const todayDate = new Date();
     todayDate.setHours(0,0,0,0);
@@ -2120,7 +2120,7 @@ function renderAlarms() {
       "domingo": 0, "lunes": 1, "martes": 2, "miercoles": 3, "jueves": 4,
       "viernes": 5, "sabado": 6, "sábado": 6
     };
-
+ 
     if (/\b(hoy)\b/.test(lower)) {
       targetDate = new Date(todayDate);
     } else if (/\b(manana|mañana)\b/.test(lower)) {
@@ -2147,7 +2147,7 @@ function renderAlarms() {
         }
       }
     }
-
+ 
     // Fecha numérica
     if (!targetDate) {
       const numMatch = lower.match(/(\d{1,2})\s*(?:de\s+)?(enero|febrero|marzo|abril|mayo|junio|julio|agosto|septiembre|octubre|noviembre|diciembre|\d{1,2})/);
@@ -2162,14 +2162,14 @@ function renderAlarms() {
         }
       }
     }
-
+ 
     if (!targetDate) {
       targetDate = new Date(todayDate);
       targetDate.setDate(targetDate.getDate() + (type === "examen" ? 2 : 3));
     }
-
+ 
     const daysLeft = Math.max(0, Math.ceil((targetDate - todayDate) / 86400000));
-
+ 
     return {
       original,
       type,
@@ -2178,25 +2178,25 @@ function renderAlarms() {
       daysLeft
     };
   }
-
+ 
   function generateStudyPlan(parsed, intensity) {
     const { type, subject, targetDate, daysLeft } = parsed;
     const sessions = [];
     const baseMinutes = intensity === "intensive" ? 50 : intensity === "light" ? 25 : 35;
-
+ 
     // Distribuye sesiones hacia atrás desde el día del evento
     const availableDays = Math.min(daysLeft, intensity === "light" ? 3 : intensity === "intensive" ? 6 : 5);
     const startOffset = Math.max(0, daysLeft - availableDays);
-
+ 
     for (let i = 0; i < availableDays; i++) {
       const d = new Date(targetDate + "T12:00:00");
       d.setDate(d.getDate() - (availableDays - 1 - i));
       const dateStr = d.toISOString().slice(0, 10);
       if (dateStr < today()) continue;
-
+ 
       let title = "";
       let minutes = baseMinutes;
-
+ 
       if (type === "examen") {
         if (i === 0) title = `Repasar teoría de ${subject}`;
         else if (i === availableDays - 1) { title = `Repaso final de ${subject}`; minutes = Math.round(baseMinutes * 0.8); }
@@ -2212,7 +2212,7 @@ function renderAlarms() {
       } else {
         title = `Estudiar ${subject}`;
       }
-
+ 
       sessions.push({
         title,
         date: dateStr,
@@ -2222,7 +2222,7 @@ function renderAlarms() {
         category: "estudio"
       });
     }
-
+ 
     if (!sessions.length) {
       sessions.push({
         title: `Preparar ${subject}`,
@@ -2233,30 +2233,30 @@ function renderAlarms() {
         category: "estudio"
       });
     }
-
+ 
     return sessions;
   }
-
+ 
   function generateAdvisorSuggestion() {
     const text = ($("#advisorInput")?.value || "").trim();
     if (!text) return toast("Escribe qué tienes pendiente", "warn");
-
+ 
     const lines = text.split(/\n+/).map(l => l.trim()).filter(Boolean);
     const intensity = $("#advisorIntensity")?.value || "balanced";
     const allPlans = [];
-
+ 
     lines.forEach(line => {
       const parsed = parseAdvisorText(line);
       const plan = generateStudyPlan(parsed, intensity);
       allPlans.push({ parsed, plan });
     });
-
+ 
     lastAdvisorPlan = { intensity, allPlans };
-
+ 
     let totalSessions = 0;
     let totalMinutes = 0;
     let html = `<div class="card" style="background:var(--bg-soft);">`;
-
+ 
     allPlans.forEach((item, idx) => {
       const { parsed, plan } = item;
       const typeLabel = {
@@ -2266,10 +2266,10 @@ function renderAlarms() {
         exposicion: "Exposición",
         estudio: "Estudio"
       }[parsed.type] || "Actividad";
-
+ 
       totalSessions += plan.length;
       totalMinutes += plan.reduce((a, s) => a + (s.duration || 0), 0);
-
+ 
       html += `
         <div style="margin-bottom:14px;${idx > 0 ? 'padding-top:12px;border-top:1px solid var(--border);' : ''}">
           <strong>${typeLabel} · ${parsed.subject}</strong><br>
@@ -2278,7 +2278,7 @@ function renderAlarms() {
           </span>
           <div style="margin-top:8px;">
       `;
-
+ 
       plan.forEach((s, i) => {
         html += `
           <div class="habit" style="margin-bottom:6px;">
@@ -2289,12 +2289,12 @@ function renderAlarms() {
           </div>
         `;
       });
-
+ 
       html += `</div></div>`;
     });
-
+ 
     const intensityLabel = { light: "Ligero", balanced: "Equilibrado", intensive: "Intensivo" }[intensity];
-
+ 
     html += `
       <div style="font-size:13px;color:var(--muted);margin:8px 0;">
         Total: ${totalSessions} sesiones · ${totalMinutes} min · Plan ${intensityLabel}
@@ -2303,20 +2303,20 @@ function renderAlarms() {
         ✅ Aplicar todo el plan
       </button>
     </div>`;
-
+ 
     $("#advisorResponse").innerHTML = html;
-
+ 
     const applyBtn = document.getElementById("advisorApply");
     if (applyBtn) applyBtn.onclick = applyAdvisorPlan;
   }
-
+ 
   function analyzeCurrentTasks() {
     const pending = tasks.filter(t => !t.done);
     if (!pending.length) {
       $("#advisorResponse").innerHTML = `<div class="empty">No tienes tareas pendientes. ¡Buen trabajo!</div>`;
       return;
     }
-
+ 
     const ranked = pending.map(t => {
       let score = 0;
       if (t.priority === "urgent") score += 100;
@@ -2328,13 +2328,13 @@ function renderAlarms() {
       else if (days <= 3) score += 20;
       return { task: t, score, days };
     }).sort((a, b) => b.score - a.score).slice(0, 5);
-
+ 
     let html = `
       <div class="card" style="background:var(--bg-soft);">
         <strong>Prioridades recomendadas</strong>
         <p style="color:var(--muted);font-size:13px;margin:6px 0 12px;">Basado en urgencia, prioridad y fechas.</p>
     `;
-
+ 
     ranked.forEach((item, i) => {
       const t = item.task;
       html += `
@@ -2346,22 +2346,22 @@ function renderAlarms() {
         </div>
       `;
     });
-
+ 
     html += `
       <p style="font-size:13px;color:var(--muted);margin-top:8px;">
         Consejo: empieza por la primera. Puedes usar el Pomodoro en Mi día.
       </p>
       </div>
     `;
-
+ 
     $("#advisorResponse").innerHTML = html;
   }
-
+ 
   function applyAdvisorPlan() {
     if (!lastAdvisorPlan || !lastAdvisorPlan.allPlans?.length) {
       return toast("Genera un plan primero", "warn");
     }
-
+ 
     let count = 0;
     lastAdvisorPlan.allPlans.forEach(item => {
       item.plan.forEach(s => {
@@ -2378,7 +2378,7 @@ function renderAlarms() {
         count++;
       });
     });
-
+ 
     save(DB.tasks, tasks);
     refresh();
     toast(`Se añadieron ${count} tareas al calendario`, "ok");
@@ -2389,7 +2389,7 @@ function renderAlarms() {
     `;
     lastAdvisorPlan = null;
   }
-
+ 
   function renderAdvisor() {
     // Se mantiene por compatibilidad; el Advisor principal es por texto
   }
@@ -2411,7 +2411,7 @@ function renderAlarms() {
     $("#statMessage").textContent = total ? "Sigue así, cada tarea cuenta." : "Aún no hay tareas.";
     $("#streak").textContent = streak.days + (streak.days === 1 ? " día" : " días");
   }
-
+ 
   function updateStreak() {
     const t = today();
     if (streak.last === t) return;
@@ -2422,7 +2422,7 @@ function renderAlarms() {
     streak.last = t;
     save(DB.streak, streak);
   }
-
+ 
   function saveTask() {
     const titleEl = $("#taskTitle");
     if (!titleEl) return toast("El formulario avanzado no está disponible. Usa la tarea rápida en Mi día.", "warn");
@@ -2431,13 +2431,13 @@ function renderAlarms() {
     const date = $("#taskDate")?.value;
     const time = $("#taskTime")?.value;
     if (!date || !time) return toast("Fecha y hora son obligatorias", "warn");
-
+ 
     const subtasks = Array.from(document.querySelectorAll("#subtaskList .subtask")).map(el => ({
       id: el.dataset.id || id(),
       title: el.querySelector("input[type=text]")?.value.trim() || "",
       done: el.querySelector("input[type=checkbox]")?.checked || false
     })).filter(s => s.title);
-
+ 
     const data = {
       title, date, time,
       priority: $("#taskPriority")?.value || "normal",
@@ -2447,7 +2447,7 @@ function renderAlarms() {
       notes: $("#taskNotes")?.value.trim() || "",
       subtasks
     };
-
+ 
     if (editingTask) {
       tasks = tasks.map(t => t.id === editingTask ? normalizeTask({ ...t, ...data }) : t);
       toast("Tarea actualizada");
@@ -2459,7 +2459,7 @@ function renderAlarms() {
     clearForm();
     refresh();
   }
-
+ 
   function quickSaveTask() {
     const title = ($("#quickTaskTitle")?.value || "").trim();
     if (!title) return toast("Escribe la tarea", "warn");
@@ -2481,7 +2481,7 @@ function renderAlarms() {
     toast("Tarea añadida a hoy");
     refresh();
   }
-
+ 
   function clearForm() {
     editingTask = null;
     const formTitle = $("#formTitle");
@@ -2507,7 +2507,7 @@ function renderAlarms() {
     const cancelEdit = $("#cancelEdit");
     if (cancelEdit) cancelEdit.style.display = "none";
   }
-
+ 
   function addSubtaskRow(title = "", done = false, sid = null) {
     const div = document.createElement("div");
     div.className = "subtask";
@@ -2520,7 +2520,7 @@ function renderAlarms() {
     div.querySelector("button").onclick = () => div.remove();
     $("#subtaskList").appendChild(div);
   }
-
+ 
   function toggleTask(id) {
     const t = tasks.find(x => x.id === id);
     if (!t) return;
@@ -2543,7 +2543,7 @@ function renderAlarms() {
     save(DB.tasks, tasks);
     refresh();
   }
-
+ 
   async function deleteTask(id) {
     if (!(await confirm("¿Mover esta tarea a la papelera?"))) return;
     const t = tasks.find(x => x.id === id);
@@ -2563,14 +2563,14 @@ function renderAlarms() {
     });
     refresh();
   }
-
+ 
   function editTask(id) {
     const t = tasks.find(x => x.id === id);
     if (!t) return;
     toast("Para editar, usa Mi día o borra y crea de nuevo la tarea.", "warn");
     // El formulario completo se quitó de Inicio para simplificar
   }
-
+ 
   function saveNote() {
     const text = $("#noteText").value.trim();
     if (!text) return toast("Escribe algo", "warn");
@@ -2588,7 +2588,7 @@ function renderAlarms() {
     renderNotes();
     renderStats();
   }
-
+ 
   function cancelNote() {
     editingNote = null;
     $("#noteTitle").value = "";
@@ -2596,7 +2596,7 @@ function renderAlarms() {
     $("#noteSubject").value = "";
     $("#cancelNote").style.display = "none";
   }
-
+ 
   function saveHabit() {
     const title = $("#habitTitle").value.trim();
     if (!title) return toast("Escribe el hábito", "warn");
@@ -2608,7 +2608,7 @@ function renderAlarms() {
     renderStats();
     renderDay();
   }
-
+ 
   function toggleHabit(id) {
     const h = habits.find(x => x.id === id);
     if (!h) return;
@@ -2627,20 +2627,20 @@ function renderAlarms() {
     renderHabits();
     renderDay();
   }
-
+ 
   function refresh() {
-
+ 
   renderDashboard();
   renderTasks();
   renderDay();
   renderStats();
   renderAlarms();
   renderAdvisor();
-
+ 
   syncCalendar();
-
+ 
 }
-
+ 
   // Pomodoro
   function updatePomo() {
     const m = Math.floor(pomoRemaining / 60);
@@ -2649,7 +2649,7 @@ function renderAlarms() {
     const progress = ((pomoDuration - pomoRemaining) / pomoDuration) * 100;
     $("#pomoRing").style.setProperty("--progress", progress + "%");
   }
-
+ 
   function startPomo() {
     if (pomoRunning) return;
     pomoRunning = true;
@@ -2661,14 +2661,14 @@ function renderAlarms() {
       if (pomoRemaining <= 0) finishPomo();
     }, 250);
   }
-
+ 
   function pausePomo() {
     if (!pomoRunning) return;
     clearInterval(pomoInterval);
     pomoRunning = false;
     pomoDuration = pomoRemaining;
   }
-
+ 
   function resetPomo() {
     pausePomo();
     const type = document.querySelector('input[name="pomoType"]:checked').value;
@@ -2681,7 +2681,7 @@ function renderAlarms() {
     pomoRemaining = pomoDuration;
     updatePomo();
   }
-
+ 
   function finishPomo() {
     pausePomo();
     pomoSessions++;
@@ -2701,7 +2701,7 @@ function renderAlarms() {
     updatePomo();
     refresh();
   }
-
+ 
   function playSound() {
     if (!config.sound) return;
     try {
@@ -2715,10 +2715,10 @@ function renderAlarms() {
       o.start(); o.stop(ctx.currentTime + 0.5);
     } catch {}
   }
-
+ 
   let alarmCtx = null;
   let alarmGainNode = null;
-
+ 
   function startAlarmSound() {
     if (!config.sound) return;
     stopAlarmSound();
@@ -2728,7 +2728,7 @@ function renderAlarms() {
       alarmGainNode = alarmCtx.createGain();
       alarmGainNode.gain.value = 0.6;
       alarmGainNode.connect(alarmCtx.destination);
-
+ 
       function playAlarmPattern() {
         if (!alarmCtx || alarmCtx.state === "closed") return;
         const now = alarmCtx.currentTime;
@@ -2742,14 +2742,14 @@ function renderAlarms() {
           osc.stop(now + i * 0.2 + 0.15);
         }
       }
-
+ 
       playAlarmPattern();
       alarmInterval = setInterval(playAlarmPattern, 900);
     } catch (e) {
       console.warn("No se pudo iniciar el sonido de alarma", e);
     }
   }
-
+ 
   function stopAlarmSound() {
     if (alarmInterval) {
       clearInterval(alarmInterval);
@@ -2763,7 +2763,7 @@ function renderAlarms() {
       alarmGainNode = null;
     }
   }
-
+ 
   function startFullScreenAlarm(title) {
     const overlay = $("#alarmOverlay");
     if (overlay) {
@@ -2780,13 +2780,13 @@ function renderAlarms() {
     }
     try { window.focus(); } catch {}
   }
-
+ 
   function stopFullScreenAlarm() {
     const overlay = $("#alarmOverlay");
     if (overlay) overlay.style.display = "none";
     stopAlarmSound();
   }
-
+ 
   function syncCalendar() {
     if (!calendar) return;
     calendar.removeAllEventSources();
@@ -2802,7 +2802,7 @@ function renderAlarms() {
       };
     }));
   }
-
+ 
   function initCalendar() {
     const el = $("#calendar");
     if (!el || typeof FullCalendar === "undefined") {
@@ -2856,7 +2856,7 @@ function renderAlarms() {
     calendar.render();
     syncCalendar();
   }
-
+ 
   function openModal(t) {
     $("#modalTitle").textContent = t.title;
     $("#modalBody").textContent = `${t.date} · ${t.time}\n${t.notes || ""}`;
@@ -2866,7 +2866,7 @@ function renderAlarms() {
     $("#modal").classList.add("show");
   }
   function closeModal() { $("#modal").classList.remove("show"); }
-
+ 
   function updateNotifStatus() {
     const p = "Notification" in window ? Notification.permission : "unsupported";
     const el = $("#notifStatus");
@@ -2875,18 +2875,18 @@ function renderAlarms() {
     else if (p === "default") el.textContent = "Permiso pendiente.";
     else el.textContent = config.notif ? "Listo para avisos." : "Avisos apagados.";
   }
-
+ 
   async function requestNotif() {
   if (!("Notification" in window)) {
     toast("Tu navegador no soporta notificaciones", "error");
     return;
   }
-
+ 
   if (!("serviceWorker" in navigator)) {
     toast("Este navegador no admite notificaciones en segundo plano", "error");
     return;
   }
-
+ 
   if (Notification.permission === "denied") {
     toast(
       "Las notificaciones están bloqueadas. Actívalas en los permisos del navegador.",
@@ -2894,17 +2894,17 @@ function renderAlarms() {
     );
     return;
   }
-
+ 
   try {
     const permiso = await Notification.requestPermission();
-
+ 
     updateNotifStatus();
-
+ 
     if (permiso !== "granted") {
       toast("Necesitas permitir las notificaciones", "warn");
       return;
     }
-
+ 
     // Comprobar que Firebase esté inicializado
     if (!window.planneoMessaging) {
       toast(
@@ -2913,55 +2913,55 @@ function renderAlarms() {
       );
       return;
     }
-
+ 
     // Obtener el Service Worker de Planneo
     const registro =
       window.planneoServiceWorkerRegistration ||
       await navigator.serviceWorker.ready;
-
+ 
     // Registrar este navegador en Firebase Cloud Messaging
     const token = await window.planneoMessaging.getToken({
       vapidKey: "BBhF0_nu75dZJqxEXkesnnMwbUFftWcVKlX9x9BPsvjLTaJVtQR2hfgyepC7O1Ld4jlhjZ3bCOGExrwhFqbAeoU",
       serviceWorkerRegistration: registro
     });
-
+ 
     if (!token) {
       throw new Error("Firebase no devolvió un token de notificaciones.");
     }
-
+ 
     // Guardar el token en este dispositivo
     localStorage.setItem("planneo_fcm_token", token);
-
+ 
     // Activar las preferencias de notificación de Planneo
     config.notif = true;
-
+ 
     const toggle = $("#notifToggle");
     if (toggle) toggle.checked = true;
-
+ 
     save(DB.config, config);
-
+ 
     updateNotifStatus();
-
+ 
     // Mostrar una notificación de prueba
     await showNotification(
       "¡Planneo está conectado!",
       "El navegador se ha registrado para recibir mensajes de Firebase."
     );
-
+ 
     toast("Dispositivo registrado en Firebase correctamente");
-
+ 
     console.log("✅ Planneo: dispositivo registrado en Firebase");
-
+ 
   } catch (error) {
     console.error("❌ Error al registrar notificaciones:", error);
-
+ 
     toast(
       "No se pudo completar el registro. Revisa la conexión y los permisos.",
       "error"
     );
   }
 }
-
+ 
   async function showNotification(title, body) {
     if (!("Notification" in window)) {
       toast("Este navegador no soporta notificaciones", "error");
@@ -2971,14 +2971,14 @@ function renderAlarms() {
       toast("Permiso de notificaciones no concedido", "warn");
       return;
     }
-
+ 
     const options = {
       body: body || "Notificación de Planneo",
       icon: "data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>📒</text></svg>",
       tag: "planneo-test",
       renotify: true
     };
-
+ 
     try {
       if ("serviceWorker" in navigator) {
         const reg = await navigator.serviceWorker.ready;
@@ -2991,7 +2991,7 @@ function renderAlarms() {
     } catch (swError) {
       console.warn("Falló SW, usando Notification directa", swError);
     }
-
+ 
     // Fallback directo
     try {
       new Notification(title, options);
@@ -3001,21 +3001,21 @@ function renderAlarms() {
       toast("No se pudo mostrar la notificación", "error");
     }
   }
-
+ 
   function checkReminders() {
   if (!config.notif || !("Notification" in window) || Notification.permission !== "granted") return;
-
+ 
   const now = Date.now();
-
+ 
   tasks.forEach(t => {
     if (t.done) return;
-
+ 
     const when = new Date(`${t.date}T${t.time}:00`).getTime();
     if (isNaN(when)) return;
-
+ 
     const before = when - (config.remindBefore || 0) * 60000;
     const key = "remind_" + t.id;
-
+ 
     if (
       config.remindBefore > 0 &&
       now >= before &&
@@ -3025,11 +3025,11 @@ function renderAlarms() {
         "⏰ Próxima tarea",
         `${t.title} empieza en ${config.remindBefore} min`
       );
-
+ 
       localStorage.setItem(key, "1");
       playSound();
     }
-
+ 
     if (
       now >= when &&
       !localStorage.getItem(key + "_now")
@@ -3038,48 +3038,48 @@ function renderAlarms() {
         "🔔 Es la hora",
         t.title
       );
-
+ 
       localStorage.setItem(key + "_now", "1");
       playSound();
     }
   });
 }
 function checkAlarms() {
-
+ 
   const now = new Date();
-
+ 
   const currentTime =
     String(now.getHours()).padStart(2, "0")
     + ":" +
     String(now.getMinutes()).padStart(2, "0");
-
+ 
   alarms.forEach(alarm => {
-
+ 
     const key =
       "alarm_" +
       alarm.id +
       "_" +
       today();
-
+ 
     if (
       currentTime === alarm.time &&
       !localStorage.getItem(key)
     ) {
-
+ 
       showNotification(
         "⏰ " + alarm.title,
         "Es hora"
       );
-
+ 
       startFullScreenAlarm(alarm.title);
-
+ 
       localStorage.setItem(key, "1");
     }
-
+ 
   });
-
+ 
 }
-
+ 
   function doSearch() {
     const q = $("#globalSearch").value.toLowerCase().trim();
     const box = $("#searchResults");
@@ -3106,7 +3106,7 @@ function checkAlarms() {
     `).join("") || '<div style="padding:12px;text-align:center;color:var(--muted);">Nada encontrado</div>';
     box.classList.add("show");
   }
-
+ 
   function showView(name) {
     $$(".view").forEach(v => v.classList.remove("active"));
     const view = $("#view-" + name);
@@ -3120,7 +3120,7 @@ function checkAlarms() {
     if (name === "trash") renderTrash();
     history.replaceState(null, "", "#" + name);
   }
-
+ 
   function renderTrash() {
     const list = $("#trashList");
     list.innerHTML = "";
@@ -3142,7 +3142,7 @@ function checkAlarms() {
       list.appendChild(el);
     });
   }
-
+ 
   function exportData() {
     const data = { version: 8, tasks, notes, habits, sessions, trash, categories, streak, doneTotal, pomoSessions, config };
     const blob = new Blob([JSON.stringify(data, null, 2)], { type: "application/json" });
@@ -3152,7 +3152,7 @@ function checkAlarms() {
     a.click();
     toast("Datos exportados");
   }
-
+ 
   function exportIcs() {
     let ics = "BEGIN:VCALENDAR\nVERSION:2.0\nPRODID:-//Planneo//ES\n";
     tasks.forEach(t => {
@@ -3168,7 +3168,7 @@ function checkAlarms() {
     a.click();
     toast("Calendario exportado (.ics)");
   }
-
+ 
   async function importData(file) {
     try {
       const text = await file.text();
@@ -3194,7 +3194,7 @@ function checkAlarms() {
       toast("Archivo no válido", "error");
     }
   }
-
+ 
   async function clearAll() {
     if (!(await confirm("Esto borrará todas las tareas, notas, hábitos y estadísticas. ¿Continuar?"))) return;
     tasks = []; notes = []; habits = []; sessions = []; trash = [];
@@ -3206,71 +3206,71 @@ function checkAlarms() {
     refresh(); renderNotes(); renderHabits(); renderCategorySelect();
   }
 let deferredPrompt = null;
-
+ 
 window.addEventListener("beforeinstallprompt", (e) => {
   e.preventDefault();
   deferredPrompt = e;
-
+ 
   const btn = document.getElementById("installAppBtn");
   if (btn) btn.style.display = "inline-flex";
 });
 window.addEventListener(
   "appinstalled",
   () => {
-
+ 
     toast(
       "Planneo instalada correctamente 🎉",
       "ok"
     );
-
+ 
     const btn =
       document.getElementById("installAppBtn");
-
+ 
     if (btn)
       btn.style.display = "none";
-
+ 
   }
 );
-
+ 
   function init() {
-
+ 
     loadData();
     applyTheme();
     const installBtn =
   document.getElementById("installAppBtn");
-
+ 
 if (installBtn) {
-
+ 
   installBtn.onclick = async () => {
-
+ 
     if (!deferredPrompt) {
-
+ 
       toast(
         "La aplicación ya está instalada o este dispositivo no permite instalarla.",
         "warn"
       );
-
+ 
       return;
     }
-
+ 
     deferredPrompt.prompt();
-
+ 
     const result =
       await deferredPrompt.userChoice;
-
+ 
     if (result.outcome === "accepted") {
-
+ 
       toast(
         "Planneo instalada correctamente 🎉",
         "ok"
       );
     }
-
+ 
     deferredPrompt = null;
-
+ 
     installBtn.style.display = "none";
   };
-
+ 
 }
     const taskDateEl = $("#taskDate");
     if (taskDateEl) taskDateEl.value = today();
@@ -3293,13 +3293,13 @@ if (installBtn) {
     updateNotifStatus();
     updatePomo();
     renderCategorySelect();
-
+ 
     $("#brand").onclick = () => showView("home");
     $$(".nav-menu button[data-view]").forEach(b => b.onclick = () => showView(b.dataset.view));
     $("#settingsBtn").onclick = e => { e.stopPropagation(); $("#settingsPanel").classList.toggle("open"); };
     $("#customizeBtn").onclick = () => openOnboarding(true);
     $("#onboardingForm").addEventListener("submit", saveOnboarding);
-
+ 
     // Eventos del wizard
     const nextBtn = document.getElementById("wizardNext");
     const prevBtn = document.getElementById("wizardPrev");
@@ -3322,7 +3322,7 @@ if (installBtn) {
       if (!$("#settingsPanel").contains(e.target) && e.target.id !== "settingsBtn")
         $("#settingsPanel").classList.remove("open");
     });
-
+ 
     $("#themeSelect").onchange = function() { config.theme = this.value; save(DB.config, config); applyTheme(); };
     $("#accentColor").oninput = function() { config.accent = this.value; save(DB.config, config); applyTheme(); };
     $("#fontSizeSelect").onchange = function() { config.fontSize = this.value; save(DB.config, config); applyTheme(); };
@@ -3348,7 +3348,7 @@ if (installBtn) {
       toast("Enviando notificación de prueba...");
       await showNotification("🌟 Prueba Planneo", "Si ves esto, las notificaciones funcionan correctamente.");
     };
-
+ 
     ["showPomo", "showHabitsDay", "showTasksDay", "showProgress"].forEach(id => {
       $("#" + id).onchange = function() {
         config.myDay[id.replace("show", "").toLowerCase().replace("day", "")] = this.checked;
@@ -3361,7 +3361,7 @@ if (installBtn) {
         applyMyDaySections();
       };
     });
-
+ 
     $("#addCategory").onclick = () => {
       const name = $("#newCatName").value.trim();
       if (!name) return;
@@ -3382,14 +3382,14 @@ if (installBtn) {
       save(DB.categories, categories);
       renderCategorySelect();
     };
-
+ 
     const saveBtn = $("#saveTask");
     if (saveBtn) saveBtn.onclick = saveTask;
     const quickBtn = $("#quickSaveTask");
     if (quickBtn) quickBtn.onclick = quickSaveTask;
     const cancelBtn = $("#cancelEdit");
     if (cancelBtn) cancelBtn.onclick = clearForm;
-
+ 
     $("#addAlarm").onclick = () => {
       const time = $("#alarmTime").value;
       const title = $("#alarmTitle").value.trim();
@@ -3407,7 +3407,7 @@ if (installBtn) {
       renderAlarms();
       toast("Alarma creada");
     };
-
+ 
     $("#alarmList").onclick = e => {
       const btn = e.target.closest("[data-alarm-delete]");
       if (!btn) return;
@@ -3416,7 +3416,7 @@ if (installBtn) {
       renderAlarms();
       toast("Alarma eliminada");
     };
-
+ 
     const addSub = $("#addSubtask");
     if (addSub) addSub.onclick = () => addSubtaskRow();
     $("#advisorGenerate").onclick = generateAdvisorSuggestion;
@@ -3451,7 +3451,7 @@ if (installBtn) {
       if (btn.dataset.action === "toggle") toggleTask(btn.dataset.id);
       else if (btn.dataset.action === "edit") editTask(btn.dataset.id);
     };
-
+ 
     $("#saveNote").onclick = saveNote;
     $("#cancelNote").onclick = cancelNote;
     $$(".filter-btn[data-note-type]").forEach(b => b.onclick = () => {
@@ -3490,7 +3490,7 @@ if (installBtn) {
         toast("Nota movida a la papelera");
       }
     };
-
+ 
     $("#saveHabit").onclick = saveHabit;
     $("#habitList").onclick = e => {
       const btn = e.target.closest("[data-habit-toggle]");
@@ -3500,7 +3500,7 @@ if (installBtn) {
       const btn = e.target.closest("[data-habit-toggle]");
       if (btn) toggleHabit(btn.dataset.habitToggle);
     };
-
+ 
     // Pomodoro
     $("#pomoStart").onclick = startPomo;
     $("#pomoPause").onclick = pausePomo;
@@ -3511,7 +3511,7 @@ if (installBtn) {
       if (!pomoRunning) resetPomo();
     });
     $("#customMinutes").oninput = () => { if (!pomoRunning) resetPomo(); };
-
+ 
     // Search
     $("#globalSearch").oninput = doSearch;
     $("#searchResults").onclick = e => {
@@ -3534,14 +3534,14 @@ if (installBtn) {
     document.addEventListener("click", e => {
       if (!$(".search-wrap").contains(e.target)) $("#searchResults").classList.remove("show");
     });
-
+ 
     // Backup
     $("#exportBtn").onclick = exportData;
     $("#importBtn").onclick = () => $("#importFile").click();
     $("#importFile").onchange = function() { if (this.files[0]) importData(this.files[0]); this.value = ""; };
     $("#clearBtn").onclick = clearAll;
     $("#exportIcs").onclick = exportIcs;
-
+ 
     // Trash
     $("#trashList").onclick = e => {
       const restore = e.target.closest("[data-restore]");
@@ -3571,14 +3571,14 @@ if (installBtn) {
         toast("Papelera vaciada");
       }
     };
-
+ 
     // Modals
     $("#modalClose").onclick = closeModal;
     $("#modal").onclick = e => { if (e.target.id === "modal") closeModal(); };
     $("#confirmYes").onclick = () => closeConfirm(true);
     $("#confirmNo").onclick = () => closeConfirm(false);
     $("#confirmModal").onclick = e => { if (e.target.id === "confirmModal") closeConfirm(false); };
-
+ 
     // Keyboard
     document.addEventListener("keydown", e => {
       if (e.key === "Escape") {
@@ -3593,7 +3593,7 @@ if (installBtn) {
         if (quick) quick.focus();
       }
     });
-
+ 
     document.addEventListener("visibilitychange", () => {
       if (!document.hidden && pomoRunning) {
         const elapsed = Math.floor((Date.now() - pomoStart) / 1000);
@@ -3605,12 +3605,12 @@ if (installBtn) {
     setInterval(checkReminders, 30000);
     setInterval(checkAlarms, 10000);
     setInterval(() => { if (pomoRunning) updatePomo(); }, 1000);
-
+ 
     initCalendar();
     refresh();
     renderNotes();
     renderHabits();
-
+ 
     const hash = location.hash.slice(1);
     const allowedViews = ["home", "day", "notes", "calendar", "stats", "habits", "trash"];
     if (config.onboardingComplete) {
@@ -3626,7 +3626,7 @@ if (installBtn) {
       document.querySelector("nav").style.display = "none";
       document.querySelector(".container").style.display = "none";
     }
-
+ 
     // La animación de bienvenida se muestra solo en la primera apertura.
     const splash = $("#splash");
     let showSplash = false;
@@ -3642,7 +3642,7 @@ if (installBtn) {
         splash.style.display = "none";
       }
     }
-
+ 
     // Botones de configurar
     const openConfig = () => {
       const landing = document.getElementById("landing");
@@ -3657,7 +3657,7 @@ if (installBtn) {
     const btn2 = document.getElementById("startConfig2");
     if (btn1) btn1.onclick = openConfig;
     if (btn2) btn2.onclick = openConfig;
-
+ 
     // Aviso informativo de privacidad: se muestra una vez y puede consultarse desde el pie de página.
     const privacyNotice = document.getElementById("privacyNotice");
     const privacyModal = document.getElementById("privacyModal");
@@ -3683,7 +3683,7 @@ if (installBtn) {
     const landingYear = document.getElementById("landingYear");
     if (landingYear) landingYear.textContent = new Date().getFullYear();
   }
-
+ 
   if (document.readyState === "loading") document.addEventListener("DOMContentLoaded", init);
   else init();
 })();
@@ -3693,12 +3693,12 @@ if (installBtn) {
 <script src="https://www.gstatic.com/firebasejs/10.13.2/firebase-auth-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/10.13.2/firebase-messaging-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/10.13.2/firebase-firestore-compat.js"></script>
-
-
+ 
+ 
 <script>
 window.planneoServiceWorkerRegistration = null;
 window.planneoMessaging = null;
-
+ 
 window.addEventListener("load", async () => {
     try {
         // Configuración de Firebase
@@ -3711,28 +3711,28 @@ window.addEventListener("load", async () => {
             appId: "1:594631604240:web:2be7df45a75e284235b295",
             measurementId: "G-T10WL2SLPE"
         };
-
+ 
         // Inicializar Firebase una sola vez
         if (!firebase.apps.length) {
             firebase.initializeApp(firebaseConfig);
         }
-
+ 
         // Registrar el trabajador existente de Planneo
         if (!("serviceWorker" in navigator)) {
             throw new Error("Este navegador no admite Service Workers.");
         }
-
+ 
         const registro = await navigator.serviceWorker.register(
             "./service-worker.js",
             { updateViaCache: "none" }
         );
-
+ 
         // Buscar actualizaciones al abrir Planneo y cuando vuelve a primer plano.
         try { await registro.update(); } catch (updateError) { console.debug("Actualización SW pendiente:", updateError); }
         document.addEventListener("visibilitychange", () => {
             if (document.visibilityState === "visible") registro.update().catch(() => {});
         });
-
+ 
         // Si la nueva versión toma el control, recargar una sola vez para aplicar el HTML actualizado.
         navigator.serviceWorker.addEventListener("controllerchange", () => {
             const lastReload = Number(sessionStorage.getItem("planneo-sw-reloaded-at") || 0);
@@ -3744,10 +3744,10 @@ window.addEventListener("load", async () => {
         }, { once: true });
         window.planneoServiceWorkerRegistration = registro;
         window.planneoMessaging = firebase.messaging();
-
+ 
         console.log("✅ Planneo: Firebase inicializado");
         console.log("✅ Planneo: Service Worker listo", registro.scope);
-
+ 
     } catch (error) {
         console.error("❌ Error al conectar Firebase:", error);
     }
@@ -3764,25 +3764,25 @@ window.addEventListener("load", async () => {
   flex-direction:column;
   animation: alarmPulse 0.8s infinite alternate;
 ">
-
+ 
   <div style="
     text-align:center;
     color:white;
     max-width:90vw;
     padding:30px;
   ">
-
+ 
     <div style="font-size:140px; margin-bottom:10px; animation: alarmShake 0.4s infinite;">⏰</div>
-
+ 
     <h1 id="alarmOverlayTitle"
         style="font-size:52px; margin:10px 0 16px; font-weight:800; letter-spacing:3px; text-shadow: 0 0 20px #ff4444;">
       ¡ALARMA!
     </h1>
-
+ 
     <p id="alarmOverlayText"
        style="font-size:30px; margin-bottom:36px; line-height:1.4;">
     </p>
-
+ 
     <button
       id="stopAlarm"
       class="btn btn-danger"
@@ -3796,9 +3796,9 @@ window.addEventListener("load", async () => {
       ">
       Detener alarma
     </button>
-
+ 
   </div>
-
+ 
 </div>
 <style>
 @keyframes alarmPulse {
@@ -3810,7 +3810,7 @@ window.addEventListener("load", async () => {
   50% { transform: rotate(8deg); }
 }
 /* ===== ACCESO Y CUENTAS DE PLANNEO ===== */
-
+ 
 .auth-gate {
     position: fixed;
     inset: 0;
@@ -3823,7 +3823,7 @@ window.addEventListener("load", async () => {
     color: #eaf7ff;
     font-family: inherit;
 }
-
+ 
 .auth-gate[hidden] {
     display: none !important;
 }
@@ -3831,7 +3831,7 @@ window.addEventListener("load", async () => {
     display: flex !important;
     z-index: 999999 !important;
 }
-
+ 
 .auth-card {
     width: 100%;
     max-width: 410px;
@@ -3841,7 +3841,7 @@ window.addEventListener("load", async () => {
     background: #101a2b;
     box-shadow: 0 20px 70px rgba(0, 0, 0, 0.35);
 }
-
+ 
 .auth-brand {
     margin-bottom: 8px;
     color: #36e4ff;
@@ -3850,13 +3850,13 @@ window.addEventListener("load", async () => {
     letter-spacing: 3px;
     text-align: center;
 }
-
+ 
 .auth-card h2 {
     margin: 10px 0;
     text-align: center;
     font-size: 27px;
 }
-
+ 
 .auth-description {
     margin-bottom: 24px;
     color: #8ba4bd;
@@ -3864,13 +3864,13 @@ window.addEventListener("load", async () => {
     line-height: 1.5;
     text-align: center;
 }
-
+ 
 .auth-tabs {
     display: flex;
     gap: 8px;
     margin-bottom: 20px;
 }
-
+ 
 .auth-tabs button {
     flex: 1;
     padding: 11px;
@@ -3880,13 +3880,13 @@ window.addEventListener("load", async () => {
     color: #8ba4bd;
     cursor: pointer;
 }
-
+ 
 .auth-tabs button.active {
     border-color: #36e4ff;
     background: rgba(54, 228, 255, 0.1);
     color: #36e4ff;
 }
-
+ 
 .auth-card label {
     display: block;
     margin: 14px 0 7px;
@@ -3894,7 +3894,7 @@ window.addEventListener("load", async () => {
     font-size: 13px;
     font-weight: 600;
 }
-
+ 
 .auth-card input {
     box-sizing: border-box;
     width: 100%;
@@ -3906,12 +3906,12 @@ window.addEventListener("load", async () => {
     color: #eaf7ff;
     font: inherit;
 }
-
+ 
 .auth-card input:focus {
     border-color: #36e4ff;
     box-shadow: 0 0 0 3px rgba(54, 228, 255, 0.1);
 }
-
+ 
 .auth-submit {
     width: 100%;
     margin-top: 22px;
@@ -3924,12 +3924,12 @@ window.addEventListener("load", async () => {
     font-weight: 800;
     cursor: pointer;
 }
-
+ 
 .auth-submit:disabled {
     opacity: 0.6;
     cursor: wait;
 }
-
+ 
 .auth-reset {
     display: block;
     margin: 16px auto 0;
@@ -3939,7 +3939,7 @@ window.addEventListener("load", async () => {
     color: #8ba4bd;
     cursor: pointer;
 }
-
+ 
 .auth-message {
     margin-top: 14px;
     color: #8ba4bd;
@@ -3948,20 +3948,20 @@ window.addEventListener("load", async () => {
     text-align: center;
     overflow-wrap: anywhere;
 }
-
+ 
 .account-pill {
     display: flex;
     align-items: center;
     gap: 10px;
     flex-wrap: wrap;
 }
-
+ 
 .account-email {
     color: #8ba4bd;
     font-size: 12px;
     overflow-wrap: anywhere;
 }
-
+ 
 .auth-logout {
     padding: 7px 11px;
     border: 1px solid #26384e;
@@ -4013,30 +4013,30 @@ body:not(.planneo-authenticated) #planneoProfile { display:none; }
     <div class="auth-brand">PLANNEO</div>
     <h2 id="authTitle">Bienvenido de nuevo</h2>
     <p class="auth-description">Tu espacio personal para organizar tus tareas, estudiar y avanzar cada día.</p>
-
+ 
     <div class="auth-tabs">
       <button type="button" id="authTabLogin" class="active">Iniciar sesión</button>
       <button type="button" id="authTabRegister">Crear cuenta</button>
     </div>
-
+ 
     <form id="authForm">
       <label for="authEmail">Correo electrónico</label>
       <input id="authEmail" type="email" autocomplete="email" placeholder="tucorreo@ejemplo.com" required>
-
+ 
       <label for="authPassword">Contraseña</label>
       <div class="auth-password-wrap">
         <input id="authPassword" type="password" autocomplete="current-password" placeholder="Mínimo 6 caracteres" minlength="6" required>
         <button id="authPasswordToggle" class="auth-password-toggle" type="button">Mostrar</button>
       </div>
-
+ 
       <button id="authSubmit" class="auth-submit" type="submit">Iniciar sesión</button>
     </form>
-
+ 
     <button id="authReset" class="auth-reset" type="button">¿Olvidaste tu contraseña?</button>
     <div id="authMessage" class="auth-message" role="status"></div>
   </section>
 </div>
-
+ 
 <script>
 /* ===== Planneo Auth (versión limpia) ===== */
 (() => {
@@ -4049,7 +4049,7 @@ body:not(.planneo-authenticated) #planneoProfile { display:none; }
     appId: "1:594631604240:web:2be7df45a75e284235b295",
     measurementId: "G-T10WL2SLPE"
   };
-
+ 
   const gate = document.getElementById('authGate');
   const form = document.getElementById('authForm');
   const emailInput = document.getElementById('authEmail');
@@ -4061,17 +4061,17 @@ body:not(.planneo-authenticated) #planneoProfile { display:none; }
   const title = document.getElementById('authTitle');
   const message = document.getElementById('authMessage');
   const toggle = document.getElementById('authPasswordToggle');
-
+ 
   if (!gate || !form) return;
-
+ 
   let mode = 'login';
-
+ 
   const say = (text, isError = false) => {
     if (!message) return;
     message.textContent = text;
     message.style.color = isError ? '#ff8b8b' : '#5cffb1';
   };
-
+ 
   const setMode = (next) => {
     mode = next;
     const registering = mode === 'register';
@@ -4083,16 +4083,16 @@ body:not(.planneo-authenticated) #planneoProfile { display:none; }
     reset.hidden = registering;
     say('');
   };
-
+ 
   loginTab?.addEventListener('click', () => setMode('login'));
   registerTab?.addEventListener('click', () => setMode('register'));
-
+ 
   toggle?.addEventListener('click', () => {
     const show = passwordInput.type === 'password';
     passwordInput.type = show ? 'text' : 'password';
     toggle.textContent = show ? 'Ocultar' : 'Mostrar';
   });
-
+ 
   const friendlyError = (error) => {
     const codes = {
       'auth/email-already-in-use': 'Ese correo ya tiene una cuenta. Prueba iniciar sesión.',
@@ -4106,7 +4106,7 @@ body:not(.planneo-authenticated) #planneoProfile { display:none; }
     };
     return codes[error.code] || 'No se pudo completar la operación. Inténtalo de nuevo.';
   };
-
+ 
   form.addEventListener('submit', async (e) => {
     e.preventDefault();
     const email = emailInput.value.trim();
@@ -4114,7 +4114,7 @@ body:not(.planneo-authenticated) #planneoProfile { display:none; }
     submit.disabled = true;
     submit.textContent = 'Un momento…';
     say('Conectando…');
-
+ 
     try {
       if (!window.firebase) throw new Error('Firebase no cargó. Recarga la página.');
       if (!firebase.apps.length) firebase.initializeApp(firebaseConfig);
@@ -4131,7 +4131,7 @@ body:not(.planneo-authenticated) #planneoProfile { display:none; }
       submit.textContent = mode === 'register' ? 'Crear cuenta' : 'Iniciar sesión';
     }
   });
-
+ 
   reset?.addEventListener('click', async () => {
     const email = emailInput.value.trim();
     if (!email) return say('Escribe tu correo primero.', true);
@@ -4143,7 +4143,7 @@ body:not(.planneo-authenticated) #planneoProfile { display:none; }
       say(error.code ? friendlyError(error) : error.message, true);
     }
   });
-
+ 
   function startAuth() {
     if (!window.firebase) {
       say('No se pudo cargar Firebase. Recarga la página.', true);
@@ -4151,7 +4151,7 @@ body:not(.planneo-authenticated) #planneoProfile { display:none; }
       return;
     }
     if (!firebase.apps.length) firebase.initializeApp(firebaseConfig);
-
+ 
     firebase.auth().onAuthStateChanged((user) => {
       if (user) {
         gate.hidden = true;
@@ -4163,140 +4163,12 @@ body:not(.planneo-authenticated) #planneoProfile { display:none; }
       }
     });
   }
-
+ 
   if (window.firebase) startAuth();
   else window.addEventListener('load', startAuth);
 })();
 </script>
-<script>
-/* Planneo: autenticación de cuentas. La sincronización en la nube se añadirá después de verificar el acceso. */
-(() => {
-  const firebaseConfig = {
-    apiKey: "AIzaSyDlHZChuc600vie5rnDqyBXk4gypQ4tgc",
-    authDomain: "planneo-a3bca.firebaseapp.com",
-    projectId: "planneo-a3bca",
-    storageBucket: "planneo-a3bca.firebasestorage.app",
-    messagingSenderId: "594631604240",
-    appId: "1:594631604240:web:2be7df45a75e284235b295",
-    measurementId: "G-T10WL2SLPE"
-  };
-  const gate = document.getElementById('authGate');
-  const form = document.getElementById('authForm');
-  const emailInput = document.getElementById('authEmail');
-  const passwordInput = document.getElementById('authPassword');
-  const loginTab = document.getElementById('authTabLogin');
-  const registerTab = document.getElementById('authTabRegister');
-  const submit = document.getElementById('authSubmit');
-  const reset = document.getElementById('authReset');
-  const title = document.getElementById('authTitle');
-  const message = document.getElementById('authMessage');
-  if (!gate || !form) return;
-
-  let mode = 'login';
-  const say = (text, isError = false) => {
-    message.textContent = text;
-    message.style.color = isError ? '#ff8b8b' : '#5cffb1';
-  };
-  const setMode = (next) => {
-    mode = next;
-    const registering = mode === 'register';
-    loginTab.classList.toggle('active', !registering);
-    registerTab.classList.toggle('active', registering);
-    title.textContent = registering ? 'Crea tu cuenta' : 'Bienvenido de nuevo';
-    submit.textContent = registering ? 'Crear cuenta' : 'Iniciar sesión';
-    passwordInput.autocomplete = registering ? 'new-password' : 'current-password';
-    reset.hidden = registering;
-    say('');
-  };
-  loginTab.addEventListener('click', () => setMode('login'));
-  registerTab.addEventListener('click', () => setMode('register'));
-
-  const friendlyError = (error) => {
-    const codes = {
-      'auth/email-already-in-use': 'Ese correo ya tiene una cuenta. Prueba iniciar sesión.',
-      'auth/invalid-email': 'Escribe un correo electrónico válido.',
-      'auth/weak-password': 'La contraseña debe tener al menos 6 caracteres.',
-      'auth/user-not-found': 'No existe una cuenta con ese correo.',
-      'auth/wrong-password': 'La contraseña no es correcta.',
-      'auth/invalid-credential': 'El correo o la contraseña no son correctos.',
-      'auth/too-many-requests': 'Hubo demasiados intentos. Espera un momento y vuelve a intentarlo.',
-      'auth/network-request-failed': 'No se pudo conectar. Revisa tu conexión a internet.'
-    };
-    return codes[error.code] || 'No se pudo completar la operación. Revisa la configuración de Firebase e inténtalo de nuevo.';
-  };
-
-  form.addEventListener('submit', async (event) => {
-    event.preventDefault();
-    const email = emailInput.value.trim();
-    const password = passwordInput.value;
-    submit.disabled = true;
-    submit.textContent = 'Un momento…';
-    say('Conectando con Firebase…');
-    try {
-      if (!window.firebase) throw new Error('Firebase no se ha cargado. Comprueba tu conexión y recarga la página.');
-      if (!firebase.apps.length) firebase.initializeApp(firebaseConfig);
-      const auth = firebase.auth();
-      if (mode === 'register') {
-        await auth.createUserWithEmailAndPassword(email, password);
-      } else {
-        await auth.signInWithEmailAndPassword(email, password);
-      }
-    } catch (error) {
-      say(error.code ? friendlyError(error) : error.message, true);
-    } finally {
-      submit.disabled = false;
-      submit.textContent = mode === 'register' ? 'Crear cuenta' : 'Iniciar sesión';
-    }
-  });
-
-  reset.addEventListener('click', async () => {
-    const email = emailInput.value.trim();
-    if (!email) {
-      say('Escribe tu correo y luego pulsa «¿Olvidaste tu contraseña?».', true);
-      emailInput.focus();
-      return;
-    }
-    try {
-      if (!window.firebase) throw new Error('Firebase no se ha cargado.');
-      if (!firebase.apps.length) firebase.initializeApp(firebaseConfig);
-      await firebase.auth().sendPasswordResetEmail(email);
-      say('Te enviamos un correo para restablecer la contraseña. Revisa también el spam.');
-    } catch (error) { say(error.code ? friendlyError(error) : error.message, true); }
-  });
-
-  function connectAuth() {
-    if (!window.firebase) {
-      say('No se pudo cargar Firebase. Comprueba tu conexión y recarga.', true);
-      return;
-    }
-    try {
-      if (!firebase.apps.length) firebase.initializeApp(firebaseConfig);
-      firebase.auth().onAuthStateChanged(user => {
-        const gateEl = document.getElementById('authGate');
-        if (gateEl) {
-          gateEl.hidden = !!user;
-          if (!user) {
-            gateEl.style.display = 'flex';
-            gateEl.style.zIndex = '999999';
-          }
-        }
-        document.body.classList.toggle('planneo-authenticated', !!user);
-        if (user) {
-          console.log('Planneo: sesión iniciada para', user.email);
-        } else {
-          console.log('Planneo: no hay sesión, mostrando login');
-        }
-      });
-    } catch (error) {
-      say('No se pudo iniciar el acceso. Comprueba la configuración de Firebase.', true);
-      console.error('Error de autenticación Planneo:', error);
-    }
-  }
-  if (window.firebase) connectAuth();
-  else window.addEventListener('load', connectAuth, { once: true });
-})();
-</script>
-
+ 
 <script>
 /* Planneo: controles visuales de acceso y menú de perfil */
 (() => {
@@ -4309,7 +4181,7 @@ body:not(.planneo-authenticated) #planneoProfile { display:none; }
     toggle.setAttribute('aria-label', show ? 'Ocultar contraseña' : 'Mostrar contraseña');
     toggle.setAttribute('aria-pressed', String(show));
   });
-
+ 
   const profile = document.createElement('div');
   profile.id = 'planneoProfile';
   profile.innerHTML = `<button id="planneoProfileButton" type="button" aria-label="Abrir menú de cuenta" aria-expanded="false">P</button>
@@ -4339,7 +4211,7 @@ body:not(.planneo-authenticated) #planneoProfile { display:none; }
     catch (error) { alert('No se pudo cerrar sesión. Comprueba tu conexión e inténtalo de nuevo.'); }
     finally { logout.disabled = false; logout.textContent = 'Cerrar sesión'; }
   });
-
+ 
   function updateProfile(user) {
     if (!user) return;
     const email = user.email || 'Cuenta Planneo';
@@ -4354,7 +4226,7 @@ body:not(.planneo-authenticated) #planneoProfile { display:none; }
   else window.addEventListener('load', connectProfile, {once:true});
 })();
 </script>
-
+ 
 <script>
 /* ===== Planneo: Sincronización Firestore + Logout + Migración segura ===== */
 (() => {
@@ -4371,15 +4243,15 @@ body:not(.planneo-authenticated) #planneoProfile { display:none; }
     config: "planneo_v8_config",
     alarms: "planneo_v8_alarms"
   };
-
+ 
   let currentUserId = null;
   let saving = false;
-
+ 
   function getDB() {
     if (!window.firebase || !firebase.apps.length) return null;
     return firebase.firestore();
   }
-
+ 
   function collectLocal() {
     const get = (k, def) => {
       try { return JSON.parse(localStorage.getItem(k)) ?? def; } catch { return def; }
@@ -4398,7 +4270,7 @@ body:not(.planneo-authenticated) #planneoProfile { display:none; }
       alarms: get(DB_KEYS.alarms, [])
     };
   }
-
+ 
   function applyToLocal(data) {
     if (!data) return;
     const set = (k, v) => localStorage.setItem(k, JSON.stringify(v ?? (Array.isArray(v) ? [] : {})));
@@ -4414,7 +4286,7 @@ body:not(.planneo-authenticated) #planneoProfile { display:none; }
     set(DB_KEYS.config, data.config || {});
     set(DB_KEYS.alarms, data.alarms || []);
   }
-
+ 
   async function loadFromCloud(uid) {
     const db = getDB();
     if (!db) return null;
@@ -4426,7 +4298,7 @@ body:not(.planneo-authenticated) #planneoProfile { display:none; }
       return null;
     }
   }
-
+ 
   async function saveToCloud(uid, data) {
     const db = getDB();
     if (!db || !uid) return;
@@ -4439,7 +4311,7 @@ body:not(.planneo-authenticated) #planneoProfile { display:none; }
       console.error("Error guardando Firestore:", e);
     }
   }
-
+ 
   window.planneoSaveToCloud = async function () {
     if (!currentUserId || saving) return;
     saving = true;
@@ -4449,7 +4321,7 @@ body:not(.planneo-authenticated) #planneoProfile { display:none; }
       saving = false;
     }
   };
-
+ 
   function addAccountUI(email) {
     let box = document.getElementById("accountPill");
     if (!box) {
@@ -4475,23 +4347,23 @@ body:not(.planneo-authenticated) #planneoProfile { display:none; }
       }
     };
   }
-
+ 
   async function onUserChange(user) {
     const gate = document.getElementById("authGate");
     if (gate) gate.hidden = !!user;
     document.body.classList.toggle("planneo-authenticated", !!user);
-
+ 
     if (!user) {
       currentUserId = null;
       return;
     }
-
+ 
     currentUserId = user.uid;
     const cloud = await loadFromCloud(user.uid);
     const local = collectLocal();
     const hasLocal = (local.tasks && local.tasks.length) || (local.notes && local.notes.length) || (local.habits && local.habits.length);
     const hasCloud = cloud && ((cloud.tasks && cloud.tasks.length) || (cloud.notes && cloud.notes.length) || (cloud.habits && cloud.habits.length));
-
+ 
     if (hasLocal && !hasCloud) {
       const ok = confirm("Encontré datos locales en este dispositivo.\n\n¿Quieres importarlos a tu cuenta de Planneo?\n\n(Si dices No, se usarán solo los datos de la nube o empezarás de cero.)");
       if (ok) {
@@ -4505,7 +4377,7 @@ body:not(.planneo-authenticated) #planneoProfile { display:none; }
     } else if (hasLocal) {
       await saveToCloud(user.uid, local);
     }
-
+ 
     // Recargar datos en la app
     try {
       if (typeof loadData === "function") loadData();
@@ -4515,10 +4387,10 @@ body:not(.planneo-authenticated) #planneoProfile { display:none; }
       if (typeof renderCategorySelect === "function") renderCategorySelect();
       if (typeof applyTheme === "function") applyTheme();
     } catch (e) { console.warn("Recarga de UI:", e); }
-
+ 
     addAccountUI(user.email);
   }
-
+ 
   function start() {
     if (!window.firebase) return;
     try {
@@ -4538,13 +4410,13 @@ body:not(.planneo-authenticated) #planneoProfile { display:none; }
       console.error("Error iniciando sincronización:", e);
     }
   }
-
+ 
   if (window.firebase) start();
   else window.addEventListener("load", start, { once: true });
 })();
 </script>
-
-
-
+ 
+ 
+ 
 </body>
 </html>
