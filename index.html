@@ -3916,37 +3916,44 @@ window.addEventListener("load", async () => {
     top: auto;
     width: 100%;
     margin: 0;
-    padding: 6px 8px calc(8px + env(safe-area-inset-bottom, 0px));
-    background: color-mix(in srgb, var(--surface) 96%, transparent);
-    backdrop-filter: blur(16px);
-    -webkit-backdrop-filter: blur(16px);
+    padding: 4px 6px calc(6px + env(safe-area-inset-bottom, 0px));
+    background: color-mix(in srgb, var(--surface) 97%, transparent);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
     border-top: 1px solid var(--border);
-    box-shadow: 0 -4px 24px rgba(0,0,0,.08);
+    box-shadow: 0 -6px 30px rgba(0,0,0,.1);
     z-index: 45;
-    justify-content: space-around;
-    gap: 2px;
+    justify-content: space-evenly;
+    gap: 0;
     overflow-x: auto;
     grid-column: auto;
   }
 
   .nav-menu li {
-    flex: 1 1 0;
-    min-width: 0;
+    flex: 0 0 auto;
+    min-width: 52px;
   }
 
   .nav-menu button {
     width: 100%;
-    min-height: 48px;
-    padding: 6px 4px;
-    font-size: 11px;
+    min-height: 52px;
+    padding: 4px 2px;
+    font-size: 10px;
     font-weight: 700;
-    border-radius: 14px;
+    border-radius: 12px;
     display: flex;
     flex-direction: column;
     align-items: center;
     justify-content: center;
-    gap: 2px;
-    line-height: 1.15;
+    gap: 1px;
+    line-height: 1.1;
+    white-space: nowrap;
+  }
+
+  /* Hide less-used items on very small screens to reduce crowding */
+  .nav-menu li:has(button[data-view="trash"]),
+  .nav-menu li:has(#settingsBtn) {
+    display: none;
   }
 
   .nav-menu button.active {
@@ -4090,6 +4097,19 @@ window.addEventListener("load", async () => {
     margin: 12px;
     padding: 28px 20px 22px;
     border-radius: 24px;
+  }
+
+  /* Profile button stays accessible at top on mobile */
+  #planneoProfile {
+    position: absolute;
+    top: 8px;
+    right: 12px;
+    z-index: 50;
+  }
+  #planneoProfileButton {
+    width: 36px !important;
+    height: 36px !important;
+    border-width: 2px !important;
   }
 }
 
