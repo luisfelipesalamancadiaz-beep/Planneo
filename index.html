@@ -2345,8 +2345,10 @@ function renderAlarms() {
   async function generateAdvisorSuggestion() {
     const text = ($("#advisorInput")?.value || "").trim();
     if (!text) return toast("Escribe qué necesitas", "warn");
-    if (await askAI(text, $("#advisorResponse"))) { $("#advisorInput").value = ""; return; }
+    // Preferir siempre el planificador local (funciona sin internet ni cuenta)
     if (await runAdvisorCommand(text)) return;
+    // Intentar IA remota solo si está disponible y hay sesión (opcional)
+    if (await askAI(text, $("#advisorResponse"))) { $("#advisorInput").value = ""; return; }
  
     const lines = text.split(/\n+/).map(l => l.trim()).filter(Boolean);
     const intensity = $("#advisorIntensity")?.value || "balanced";
@@ -2629,10 +2631,17 @@ function renderAlarms() {
   }
 
   async function askAI(text, target) {
-    if (!AI_URL || AI_URL.includes("TU-USUARIO")) return false;
+    // Modo local siempre disponible. La llamada remota es opcional.
+    if (!AI_URL || AI_URL.includes("TU-USUARIO")) {
+      // Fallback local inmediato
+      return false;
+    }
     if (aiBusy) return true;
     const user = window.firebase && firebase.apps && firebase.apps.length ? firebase.auth().currentUser : null;
-    if (!user) { toast("Inicia sesión para usar la IA del Advisor", "warn"); return false; }
+    if (!user) {
+      // Sin sesión: usar planificador local
+      return false;
+    }
     const th = (aiThreads[target.id] = aiThreads[target.id] || []);
     th.push({ role: "user", text });
     aiBusy = true; aiRender(target, true);
@@ -3762,7 +3771,17 @@ if (installBtn) {
       if (btn) return dayAction(btn);
       if (e.target.closest("[data-ai-plan]")) {
         const box = $("#dayAdvisorResponse"); $("#dayAiCard").hidden = false;
-        askAI("Planea mi día de hoy: ordena mis tareas pendientes por prioridad, propón horarios realistas y, si tengo huecos, sugiere sesiones de estudio.", box);
+        // Plan local del día (sin depender de IA remota)
+        const pending = tasks.filter(t => !t.done && t.date === today());
+        const overdue = tasks.filter(t => !t.done && isOverdue(t));
+        let msg = "<div class='ai-msg ai-bot'><b>Plan del día (local)</b><br>";
+        if (overdue.length) msg += "⚠️ Primero las atrasadas: " + overdue.map(t => t.title).join(", ") + ".<br>";
+        if (pending.length) {
+          msg += "Hoy: " + pending.slice(0, 5).map(t => t.title + " (" + t.time + ")").join(" · ") + ".<br>";
+          msg += "Sugerencia: usa el Pomodoro para las más importantes y deja descansos.";
+        } else msg += "No hay tareas para hoy. ¡Buen momento para adelantar o descansar!";
+        msg += "</div>";
+        box.innerHTML = msg;
       }
     });
     $("#quickTaskTitle").addEventListener("keydown", e => { if (e.key === "Enter") quickSaveTask(); });
@@ -3917,7 +3936,8 @@ if (installBtn) {
         else updatePomo();
       }
     });
-    setInterval(checkReminders, 30000);
+    setInterval(checkReminders, 15000); // más frecuente mientras la app esté abierta o en segundo plano
+    // Nota: las notificaciones con la app completamente cerrada dependen del Service Worker + Firebase Messaging (no modificado).
     setInterval(checkAlarms, 10000);
     setInterval(() => { if (pomoRunning) updatePomo(); }, 1000);
  
