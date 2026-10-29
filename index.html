@@ -3876,6 +3876,232 @@ window.addEventListener("load", async () => {
   0%, 100% { transform: rotate(-8deg); }
   50% { transform: rotate(8deg); }
 }
+
+/* ===== MEJORAS MÓVIL PREMIUM ===== */
+@media (max-width: 720px) {
+  :root {
+    --radius: 18px;
+    --radius-sm: 14px;
+  }
+
+  body {
+    padding-bottom: calc(72px + env(safe-area-inset-bottom, 0px));
+  }
+
+  nav {
+    padding: 8px 12px 6px;
+    gap: 8px;
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    background: color-mix(in srgb, var(--surface) 92%, transparent);
+  }
+
+  .brand {
+    font-size: 17px;
+    letter-spacing: -0.3px;
+  }
+
+  .search-wrap input {
+    border-radius: 14px;
+    min-height: 44px;
+    padding-left: 40px;
+    font-size: 15px;
+  }
+
+  .nav-menu {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    top: auto;
+    width: 100%;
+    margin: 0;
+    padding: 6px 8px calc(8px + env(safe-area-inset-bottom, 0px));
+    background: color-mix(in srgb, var(--surface) 96%, transparent);
+    backdrop-filter: blur(16px);
+    -webkit-backdrop-filter: blur(16px);
+    border-top: 1px solid var(--border);
+    box-shadow: 0 -4px 24px rgba(0,0,0,.08);
+    z-index: 45;
+    justify-content: space-around;
+    gap: 2px;
+    overflow-x: auto;
+    grid-column: auto;
+  }
+
+  .nav-menu li {
+    flex: 1 1 0;
+    min-width: 0;
+  }
+
+  .nav-menu button {
+    width: 100%;
+    min-height: 48px;
+    padding: 6px 4px;
+    font-size: 11px;
+    font-weight: 700;
+    border-radius: 14px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 2px;
+    line-height: 1.15;
+  }
+
+  .nav-menu button.active {
+    background: var(--primary-light);
+    color: var(--primary);
+  }
+
+  .container {
+    padding: 12px 12px 20px;
+  }
+
+  .page-title {
+    font-size: 26px;
+    letter-spacing: -0.5px;
+  }
+
+  .card {
+    padding: 16px;
+    border-radius: 20px;
+    margin-bottom: 12px;
+  }
+
+  .dash-card {
+    padding: 14px 16px;
+    border-radius: 18px;
+  }
+
+  .dash-card b {
+    font-size: 26px;
+  }
+
+  .task {
+    padding: 14px;
+    border-radius: 16px;
+  }
+
+  .task-title {
+    font-size: 15.5px;
+  }
+
+  .advisor-card {
+    padding: 16px 14px;
+  }
+
+  .advisor-heading h2 {
+    font-size: 20px;
+  }
+
+  .advisor-examples {
+    gap: 6px;
+  }
+
+  .advisor-chip {
+    min-height: 36px;
+    padding: 7px 10px;
+    font-size: 12px;
+  }
+
+  .advisor-textarea {
+    min-height: 88px;
+    font-size: 16px;
+  }
+
+  .advisor-controls {
+    grid-template-columns: 1fr;
+  }
+
+  .settings-panel {
+    position: fixed;
+    top: auto;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    width: 100%;
+    max-height: 85vh;
+    border-radius: 24px 24px 0 0;
+    padding: 20px 16px calc(20px + env(safe-area-inset-bottom, 0px));
+    z-index: 80;
+    box-shadow: 0 -8px 40px rgba(0,0,0,.15);
+  }
+
+  .settings-panel::before {
+    content: "";
+    display: block;
+    width: 40px;
+    height: 4px;
+    background: var(--border);
+    border-radius: 4px;
+    margin: 0 auto 14px;
+  }
+
+  .modal {
+    border-radius: 24px 24px 0 0;
+    max-height: 90vh;
+  }
+
+  .modal-bg {
+    align-items: flex-end;
+    padding: 0;
+  }
+
+  #planneoProfileButton {
+    width: 38px !important;
+    height: 38px !important;
+  }
+
+  .pomo-ring {
+    width: 130px;
+    height: 130px;
+  }
+
+  .day-progress-ring {
+    width: 110px;
+    height: 110px;
+  }
+
+  .filters {
+    gap: 6px;
+    overflow-x: auto;
+    flex-wrap: nowrap;
+    padding-bottom: 4px;
+    scrollbar-width: none;
+  }
+
+  .filters::-webkit-scrollbar { display: none; }
+
+  .filter-btn {
+    flex: 0 0 auto;
+    min-height: 36px;
+    padding: 7px 14px;
+    border-radius: 12px;
+  }
+
+  .btn {
+    min-height: 46px;
+    border-radius: 12px;
+    font-size: 15px;
+  }
+
+  .auth-card {
+    margin: 12px;
+    padding: 28px 20px 22px;
+    border-radius: 24px;
+  }
+}
+
+@media (max-width: 380px) {
+  .nav-menu button {
+    font-size: 10px;
+    padding: 5px 2px;
+  }
+  .brand { font-size: 16px; }
+  .page-title { font-size: 23px; }
+}
+
 /* ===== ACCESO Y CUENTAS DE PLANNEO ===== */
 
 .auth-gate {
