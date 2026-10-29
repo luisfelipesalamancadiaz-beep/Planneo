@@ -1253,7 +1253,7 @@ textarea { min-height: 100px; resize: vertical; }
         <div class="advisor-heading-copy">
           <div class="advisor-eyebrow">ASISTENTE INTELIGENTE</div>
           <h2>Planneo <span>Advisor</span></h2>
-          <p>Cuéntame qué tienes pendiente y preparo un plan.</p>
+          <p>IA que conoce tu agenda: pregúntale, pídele un plan o que reorganice tu semana.</p>
         </div>
       </div>
       <div class="advisor-examples" aria-label="Ejemplos rápidos">
@@ -1263,8 +1263,8 @@ textarea { min-height: 100px; resize: vertical; }
         <button type="button" class="advisor-chip" data-advisor-example="Tengo una exposición la próxima semana">🎤 Exposición</button>
         <button type="button" class="advisor-chip" data-advisor-example="Quiero organizar mi semana de estudio">📅 Semana</button>
       </div>
-      <label class="advisor-input-label" for="advisorInput">¿Qué necesitas organizar?</label>
-      <textarea id="advisorInput" class="advisor-textarea" placeholder="Escribe en lenguaje normal: elimina todas las tareas, ¿qué notas tengo?, o planea examen de química el viernes. Separa varios planes en líneas distintas."></textarea>
+      <label class="advisor-input-label" for="advisorInput">¿En qué te ayudo?</label>
+      <textarea id="advisorInput" class="advisor-textarea" placeholder="Ej: tengo examen de química el viernes y exposición el martes, ¿cómo me organizo? (Ctrl+Enter para enviar)"></textarea>
       <div class="advisor-controls">
         <div class="advisor-plan-type">
           <label for="advisorIntensity">Intensidad</label>
@@ -1274,7 +1274,7 @@ textarea { min-height: 100px; resize: vertical; }
             <option value="intensive">Intensivo</option>
           </select>
         </div>
-        <button class="btn btn-primary advisor-generate" id="advisorGenerate">✦ Crear plan</button>
+        <button class="btn btn-primary advisor-generate" id="advisorGenerate">✦ Enviar</button>
       </div>
       <div id="advisorResponse" class="advisor-response"></div>
     </div>
@@ -1290,40 +1290,57 @@ textarea { min-height: 100px; resize: vertical; }
     <div class="task-list" id="taskList"></div>
   </section>
  
-  <!-- Mi día mejorado -->
+  <!-- Mi día -->
   <section class="view" id="view-day">
     <div class="day-hero">
-      <h1 class="page-title" style="margin-bottom:4px;">Mi día</h1>
-      <p class="page-sub" id="dayGreeting" style="margin-bottom:12px;"></p>
-      <div id="dayProgressSection" style="display:flex;flex-direction:column;align-items:center;gap:4px;">
-        <div class="day-progress-ring" id="dayProgressRing">
-          <div class="day-progress-text" id="dayProgressText">0%</div>
-        </div>
-        <div style="font-size:13px;color:var(--muted);font-weight:600;">Progreso de hoy</div>
-        <div style="font-size:12.5px;color:var(--muted);" id="studyProgress">Estudio: 0 / 60 min</div>
+      <div class="dh-main">
+        <div class="dh-eyebrow" id="dayDate"></div>
+        <h1 class="page-title" id="dayTitle">Mi día</h1>
+        <p class="page-sub" id="dayGreeting"></p>
+        <div class="dh-chips"><span class="dh-chip" id="dayStreak">🔥 0 días</span><span class="dh-chip" id="dayLeft"></span></div>
+        <div id="dayFocus" class="dh-focus"></div>
+        <button class="btn btn-primary dh-ai" data-ai-plan>✦ Planear mi día con IA</button>
+      </div>
+      <div id="dayProgressSection" class="dh-side">
+        <div class="day-progress-ring" id="dayProgressRing"><div class="day-progress-text" id="dayProgressText">0%</div></div>
+        <div class="dh-label">Tareas de hoy</div>
+        <div class="dh-bar"><i id="dayStudyBar"></i></div>
+        <div class="dh-study" id="studyProgress">Estudio: 0 / 60 min</div>
       </div>
     </div>
- 
-    <!-- Añadir tarea rápida en Mi día -->
-    <div class="card" id="quickTaskCard">
-      <h2>➕ Añadir tarea rápida</h2>
-      <div class="form-grid">
-        <div>
-          <label for="quickTaskTitle">¿Qué tienes que hacer?</label>
-          <input id="quickTaskTitle" placeholder="Ej. Estudiar matemáticas, Entregar trabajo..." maxlength="120">
-        </div>
-        <div class="form-row">
-          <div>
-            <label for="quickTaskTime">Hora (opcional)</label>
-            <input type="time" id="quickTaskTime">
-          </div>
-          <div style="display:flex;align-items:flex-end;">
-            <button class="btn btn-primary" id="quickSaveTask" style="width:100%;">Guardar tarea</button>
-          </div>
-        </div>
+
+    <div class="card dfull" id="dayAiCard" hidden><div id="dayAdvisorResponse" class="advisor-response"></div></div>
+
+    <div class="card dfull" id="quickTaskCard">
+      <div class="qt-row">
+        <input id="quickTaskTitle" placeholder="➕ Añadir algo a hoy…" maxlength="120" aria-label="Tarea rápida">
+        <input type="time" id="quickTaskTime" aria-label="Hora (opcional)">
+        <select id="quickTaskPriority" aria-label="Prioridad"><option value="normal">Normal</option><option value="important">Importante</option><option value="urgent">Urgente</option></select>
+        <button class="btn btn-primary" id="quickSaveTask">Añadir</button>
       </div>
     </div>
- 
+
+    <div class="card dfull dsec" id="dayOverdueSection" hidden>
+      <h2>⚠️ Atrasadas <span class="dcount" id="overdueCount"></span></h2>
+      <div class="task-list" id="dayOverdueList"></div>
+    </div>
+
+    <div id="tasksDaySection" class="dfull">
+      <h2>Tu día</h2>
+      <div id="dayList"></div>
+      <details id="dayDoneBox" class="ddone" hidden><summary id="dayDoneSummary"></summary><div class="task-list" id="dayDoneList"></div></details>
+    </div>
+
+    <div id="habitsDaySection" class="card dfull">
+      <h2>✨ Hábitos de hoy</h2>
+      <div id="habitsDayList"></div>
+    </div>
+
+    <div class="card dfull dsec" id="dayTomorrow" hidden>
+      <h2>👀 Mañana</h2>
+      <div id="dayTomorrowList"></div>
+    </div>
+
     <details class="card" id="pomoWrapper">
   <summary style="
     cursor:pointer;
@@ -1378,17 +1395,8 @@ textarea { min-height: 100px; resize: vertical; }
  
   <div id="alarmList" style="margin-top:12px;"></div>
 </div>
-    <div id="habitsDaySection" class="card" style="display:none;">
-      <h2>Hábitos de hoy</h2>
-      <div id="habitsDayList"></div>
-    </div>
- 
-    <div id="tasksDaySection">
-      <h2 style="margin:16px 0 8px;">Tareas de hoy</h2>
-      <div class="task-list" id="dayList"></div>
-    </div>
   </section>
- 
+
   <!-- Notes -->
   <section class="view" id="view-notes">
     <h1 class="page-title">Notas</h1>
@@ -1571,7 +1579,7 @@ textarea { min-height: 100px; resize: vertical; }
   const $$ = s => Array.from(document.querySelectorAll(s));
  
   function id() { return Date.now().toString(36) + Math.random().toString(36).slice(2, 6); }
-  function today() { const d = new Date(); return d.toISOString().slice(0, 10); }
+  function today() { const d = new Date(); return new Date(d.getTime() - d.getTimezoneOffset() * 60000).toISOString().slice(0, 10); }
   function load(k, def) { try { return JSON.parse(localStorage.getItem(k)) ?? def; } catch { return def; } }
   function save(k, v) {
   try {
@@ -1877,71 +1885,113 @@ textarea { min-height: 100px; resize: vertical; }
     });
   }
  
+  function esc(v) { return String(v ?? "").replace(/[&<>"']/g, c => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c])); }
+  function ymd(d) { return new Date(d.getTime() - d.getTimezoneOffset() * 60000).toISOString().slice(0, 10); }
+
+  function dayTaskHTML(t, mode) {
+    const late = mode === "late", done = !!t.done;
+    const tag = t.priority === "urgent" ? '<span class="tag tag-red">Urgente</span>' : t.priority === "important" ? '<span class="tag tag-amber">Importante</span>' : "";
+    const sub = t.subtasks.length ? ` · ☑ ${t.subtasks.filter(x => x.done).length}/${t.subtasks.length}` : "";
+    const cls = done ? " done" : late ? " overdue" : t.priority === "urgent" ? " urgent" : t.priority === "important" ? " important" : "";
+    const acts = done ? "" : `
+      <div class="dact">
+        <button class="dbtn" data-action="focus" data-id="${t.id}" title="Enfocar con Pomodoro" aria-label="Enfocar con Pomodoro">🍅</button>
+        <button class="dbtn" data-action="${late ? "today" : "postpone"}" data-id="${t.id}">${late ? "Pasar a hoy" : "→ Mañana"}</button>
+        <button class="dbtn" data-action="delete" data-id="${t.id}" aria-label="Borrar">🗑</button>
+      </div>`;
+    return `<div class="task dtask${cls}">
+      <button class="dcheck${done ? " on" : ""}" data-action="toggle" data-id="${t.id}" aria-label="${done ? "Reabrir" : "Marcar como hecha"}">${done ? "✓" : ""}</button>
+      <div class="dbody"><div class="task-title">${esc(t.title)} ${tag}</div>
+      <div class="task-meta">${late ? "📅 " + esc(t.date) + " · " : ""}⏰ ${esc(t.time)}${t.duration ? ` · ⏱ ${t.duration} min` : ""}${sub}</div></div>${acts}</div>`;
+  }
+
   function renderDay() {
-    const list = $("#dayList");
-    const now = today();
-    const todayTasks = tasks.filter(t => t.date === now).sort((a, b) => a.time.localeCompare(b.time));
-    const pendingToday = todayTasks.filter(t => !t.done);
-    const doneTodayCount = todayTasks.filter(t => t.done).length;
-    const totalToday = todayTasks.length || 1;
-    const progressPct = Math.round((doneTodayCount / totalToday) * 100);
- 
-    $("#dayGreeting").textContent = pendingToday.length ? `Tienes ${pendingToday.length} tarea(s) pendiente(s) hoy` : "¡Hoy no tienes tareas pendientes! 🎉";
-    $("#dayProgressText").textContent = progressPct + "%";
-    $("#dayProgressRing").style.setProperty("--day-progress", progressPct + "%");
- 
+    const now = today(), nowHM = new Date().toTimeString().slice(0, 5);
+    const byTime = (a, b) => a.time.localeCompare(b.time);
+    const todayTasks = tasks.filter(t => t.date === now).sort(byTime);
+    const pending = todayTasks.filter(t => !t.done), doneList = todayTasks.filter(t => t.done);
+    const late = tasks.filter(t => !t.done && t.date < now).sort((a, b) => (a.date + a.time).localeCompare(b.date + b.time));
+    const pct = todayTasks.length ? Math.round(doneList.length / todayTasks.length * 100) : 0;
+
+    $("#dayDate").textContent = "MI DÍA · " + new Date().toLocaleDateString("es", { weekday: "long", day: "numeric", month: "long" }).toUpperCase();
+    $("#dayTitle").textContent = getGreeting() + " 👋";
+    $("#dayGreeting").textContent = pending.length
+      ? `Te quedan ${pending.length} tarea(s) por hacer hoy${late.length ? ` y ${late.length} atrasada(s)` : ""}.`
+      : (todayTasks.length ? "¡Terminaste todo lo de hoy! 🎉" : "Hoy no tienes nada planeado. Añade algo o pídele un plan a la IA.");
+    $("#dayProgressText").textContent = pct + "%";
+    $("#dayProgressRing").style.setProperty("--day-progress", pct + "%");
+    $("#dayStreak").textContent = `🔥 Racha ${streak.days || 0} día(s)`;
+    $("#dayLeft").textContent = `✅ ${doneList.length} de ${todayTasks.length}`;
+
     const studyToday = sessions.filter(s => s.date === now).reduce((a, s) => a + (s.minutes || 0), 0);
     const goal = config.studyGoal || 60;
     $("#studyProgress").textContent = `Estudio: ${studyToday} / ${goal} min`;
+    $("#dayStudyBar").style.width = Math.min(100, Math.round(studyToday / goal * 100)) + "%";
     $("#studyToday").textContent = studyToday;
- 
-    list.innerHTML = "";
-    if (!pendingToday.length) {
-      list.innerHTML = '<div class="empty">Nada pendiente para hoy. ¡Buen trabajo!</div>';
+
+    // Siguiente tarea
+    const next = pending.find(t => t.time >= nowHM) || pending[0];
+    $("#dayFocus").innerHTML = next
+      ? `<div class="dh-focus-in"><div class="dh-focus-t"><small>${next.time < nowHM ? "PENDIENTE AHORA" : "SIGUIENTE"}</small><b>${esc(next.title)}</b><span>⏰ ${esc(next.time)}${next.duration ? ` · ${next.duration} min` : ""}</span></div>
+         <div class="dh-focus-b"><button class="btn btn-primary" data-action="toggle" data-id="${next.id}">✓ Hecha</button><button class="btn btn-ghost" data-action="focus" data-id="${next.id}">🍅 Enfocar</button></div></div>`
+      : "";
+
+    // Atrasadas
+    $("#dayOverdueSection").hidden = !late.length;
+    $("#overdueCount").textContent = late.length ? `(${late.length})` : "";
+    $("#dayOverdueList").innerHTML = late.map(t => dayTaskHTML(t, "late")).join("");
+
+    // Línea del día por franjas
+    const slots = [["☀️ Mañana", t => t.time < "12:00"], ["🌤️ Tarde", t => t.time >= "12:00" && t.time < "18:00"], ["🌙 Noche", t => t.time >= "18:00"]];
+    const list = $("#dayList");
+    if (!pending.length) {
+      list.innerHTML = `<div class="empty">${todayTasks.length ? "Nada pendiente. ¡Buen trabajo!" : "Aún no hay tareas para hoy."}</div>`;
     } else {
-      pendingToday.forEach(t => {
-        const el = document.createElement("div");
-        el.className = "task" + (isOverdue(t) ? " overdue" : t.priority === "urgent" ? " urgent" : t.priority === "important" ? " important" : "");
-        const subHtml = t.subtasks.length ? `<div style="font-size:12px;color:var(--muted);margin-top:4px;">Subtareas: ${t.subtasks.filter(s=>s.done).length}/${t.subtasks.length}</div>` : "";
-        el.innerHTML = `
-          <div class="task-title">${t.title}</div>
-          <div class="task-meta">⏰ ${t.time}${t.duration ? ` · ${t.duration} min` : ""} ${t.notes ? "· " + t.notes.slice(0,40) : ""}</div>
-          ${subHtml}
-          <div class="task-actions">
-            <button class="btn btn-primary" style="padding:6px 10px;" data-action="toggle" data-id="${t.id}">Hecha</button>
-            <button class="btn btn-ghost" style="padding:6px 10px;" data-action="edit" data-id="${t.id}">Editar</button>
-          </div>
-        `;
-        list.appendChild(el);
-      });
+      list.innerHTML = slots.map(([label, fn]) => {
+        const items = pending.filter(fn);
+        return items.length ? `<div class="dgroup"><div class="dgroup-h">${label} <span>${items.length}</span></div><div class="task-list">${items.map(t => dayTaskHTML(t)).join("")}</div></div>` : "";
+      }).join("");
     }
- 
-    // Habits today
+    $("#dayDoneBox").hidden = !doneList.length;
+    $("#dayDoneSummary").textContent = `Completadas hoy (${doneList.length})`;
+    $("#dayDoneList").innerHTML = doneList.map(t => dayTaskHTML(t)).join("");
+
+    // Hábitos
     const habitsList = $("#habitsDayList");
-    habitsList.innerHTML = "";
-    const todayHabits = habits.filter(h => true); // all for now
-    if (!todayHabits.length) {
-      habitsList.innerHTML = '<div class="empty">No tienes hábitos aún</div>';
-    } else {
-      todayHabits.forEach(h => {
-        const doneToday = h.history && h.history.includes(now);
-        const el = document.createElement("div");
-        el.className = "habit";
-        el.innerHTML = `
-          <div><strong>${h.title}</strong><div style="font-size:12px;color:var(--muted);">Racha: ${h.streak || 0}</div></div>
-          <button class="btn ${doneToday ? "btn-ghost" : "btn-primary"}" data-habit-toggle="${h.id}">${doneToday ? "Hecho" : "Marcar"}</button>
-        `;
-        habitsList.appendChild(el);
-      });
-    }
- 
-    // Pomo task select
-    const pomoSel = $("#pomoTask");
-    pomoSel.innerHTML = '<option value="">— Ninguna —</option>' + pendingToday.map(t => `<option value="${t.id}">${t.title}</option>`).join("");
- 
+    habitsList.innerHTML = habits.length ? habits.map(h => {
+      const ok = h.history && h.history.includes(now);
+      return `<div class="habit"><div><strong>${esc(h.title)}</strong><div style="font-size:12px;color:var(--muted);">Racha: ${h.streak || 0}</div></div>
+        <button class="btn ${ok ? "btn-ghost" : "btn-primary"}" data-habit-toggle="${h.id}">${ok ? "Hecho ✓" : "Marcar"}</button></div>`;
+    }).join("") : '<div class="empty">No tienes hábitos aún</div>';
+
+    // Mañana
+    const tmr = ymd(new Date(Date.now() + 864e5));
+    const tm = tasks.filter(t => !t.done && t.date === tmr).sort(byTime);
+    $("#dayTomorrow").hidden = !tm.length;
+    $("#dayTomorrowList").innerHTML = tm.slice(0, 5).map(t => `<div class="dtm"><b>${esc(t.time)}</b> ${esc(t.title)}</div>`).join("") + (tm.length > 5 ? `<div class="dtm" style="color:var(--muted)">+${tm.length - 5} más</div>` : "");
+
+    // Pomodoro: tareas de hoy + atrasadas
+    const pomoSel = $("#pomoTask"), keep = pomoSel.value;
+    pomoSel.innerHTML = '<option value="">— Ninguna —</option>' + pending.concat(late).map(t => `<option value="${t.id}">${esc(t.title)}</option>`).join("");
+    pomoSel.value = keep;
+
     applyMyDaySections();
   }
- 
+
+  function dayAction(btn) {
+    const tid = btn.dataset.id, act = btn.dataset.action;
+    const t = tasks.find(x => x.id === tid);
+    if (act === "toggle") toggleTask(tid);
+    else if (act === "delete") deleteTask(tid);
+    else if (act === "postpone" && t) { t.date = ymd(new Date(Date.now() + 864e5)); save(DB.tasks, tasks); refresh(); toast("Movida a mañana", "ok"); }
+    else if (act === "today" && t) { t.date = today(); if (t.time < new Date().toTimeString().slice(0, 5)) t.time = "23:00"; save(DB.tasks, tasks); refresh(); toast("Pasada a hoy", "ok"); }
+    else if (act === "focus" && t) {
+      $("#pomoWrapper").open = true; $("#pomoTask").value = tid;
+      $("#pomoWrapper").scrollIntoView({ behavior: "smooth", block: "center" });
+      toast("Listo: pulsa ▶ Iniciar para enfocarte en esta tarea", "ok");
+    }
+  }
+
   function renderNotes() {
     const list = $("#noteList");
     const q = $("#noteSearch").value.toLowerCase().trim();
@@ -2295,6 +2345,7 @@ function renderAlarms() {
   async function generateAdvisorSuggestion() {
     const text = ($("#advisorInput")?.value || "").trim();
     if (!text) return toast("Escribe qué necesitas", "warn");
+    if (await askAI(text, $("#advisorResponse"))) { $("#advisorInput").value = ""; return; }
     if (await runAdvisorCommand(text)) return;
  
     const lines = text.split(/\n+/).map(l => l.trim()).filter(Boolean);
@@ -2519,6 +2570,137 @@ function renderAlarms() {
     lastAdvisorPlan = null;
   }
  
+
+  // ===== Planneo Advisor con IA real (backend: functions/index.js) =====
+  const AI_URL = "https://planneo-advisor.luisfelipesalamancadiaz.workers.dev/"; // ← pega aquí la URL de tu Worker de Cloudflare
+  const aiThreads = {};
+  let aiBusy = false;
+
+  function aiContext() {
+    const t = today(), horizon = ymd(new Date(Date.now() + 21 * 864e5));
+    const studyToday = sessions.filter(s => s.date === t).reduce((a, s) => a + (s.minutes || 0), 0);
+    return {
+      today: t, now: new Date().toTimeString().slice(0, 5),
+      weekday: new Date().toLocaleDateString("es", { weekday: "long" }),
+      userName: config.userName, studyGoalMin: config.studyGoal || 60, studiedTodayMin: studyToday,
+      categories: categories.map(c => c.id),
+      tasks: tasks.filter(x => (!x.done || x.date === t) && x.date <= horizon).slice(0, 40)
+        .map(({ id, title, date, time, priority, category, duration, done }) => ({ id, title, date, time, priority, category, duration, done })),
+      notes: notes.slice(0, 10).map(n => ({ id: n.id, title: n.title || "", subject: n.subject || "", text: (n.text || "").slice(0, 100) })),
+      habits: habits.map(h => ({ id: h.id, title: h.title, streak: h.streak || 0, doneToday: (h.history || []).includes(t) })),
+      alarms: alarms.map(a => ({ time: a.time, title: a.title }))
+    };
+  }
+
+  function aiFlatten(blocks) {
+    const out = [], ok = /^\d{4}-\d{2}-\d{2}$/, okT = /^\d{2}:\d{2}$/;
+    const byId = x => tasks.find(t => t.id === x);
+    blocks.forEach(b => {
+      const i = b.input || {};
+      if (b.name === "create_tasks") (i.tasks || []).forEach(x => { if (x.title && ok.test(x.date || "") && okT.test(x.time || "")) out.push({ type: "create_task", data: x, label: `➕ ${x.title} · ${x.date} ${x.time}${x.duration ? " · " + x.duration + " min" : ""}` }); });
+      else if (b.name === "update_tasks") (i.updates || []).forEach(x => { const t = byId(x.id); if (t) out.push({ type: "update_task", data: x, label: `✏️ ${t.title} → ${[x.title, x.date, x.time, x.priority].filter(Boolean).join(" · ")}` }); });
+      else if (b.name === "complete_tasks") (i.ids || []).forEach(x => { const t = byId(x); if (t && !t.done) out.push({ type: "complete_task", data: { id: x }, label: `✅ Marcar hecha: ${t.title}` }); });
+      else if (b.name === "delete_tasks") (i.ids || []).forEach(x => { const t = byId(x); if (t) out.push({ type: "delete_task", data: { id: x }, danger: true, off: true, label: `🗑 Borrar: ${t.title}` }); });
+      else if (b.name === "create_note" && i.text) out.push({ type: "create_note", data: i, label: `📝 Nota: ${i.title || i.text.slice(0, 50)}` });
+      else if (b.name === "create_habit" && i.title) out.push({ type: "create_habit", data: i, label: `✨ Hábito: ${i.title}` });
+      else if (b.name === "create_alarm" && okT.test(i.time || "")) out.push({ type: "create_alarm", data: i, label: `⏰ Alarma ${i.time}${i.title ? " · " + i.title : ""}` });
+    });
+    out.forEach(a => a.on = !a.off);
+    return out;
+  }
+
+  function aiRender(target, loading) {
+    const th = aiThreads[target.id] || [];
+    const rich = v => esc(v).replace(/\*\*(.+?)\*\*/g, "<b>$1</b>").replace(/\n/g, "<br>");
+    let html = th.map((m, i) => {
+      if (m.role === "user") return `<div class="ai-msg ai-user">${esc(m.text)}</div>`;
+      let card = "";
+      if (m.actions && m.actions.length) {
+        card = `<div class="ai-acts">${m.actions.map((a, j) => `<label class="ai-act${a.danger ? " danger" : ""}"><input type="checkbox" data-ai-chk="${i}:${j}" ${a.on ? "checked" : ""} ${m.applied ? "disabled" : ""}><span>${esc(a.label)}</span></label>`).join("")}
+          ${m.applied ? '<div class="ai-done">✅ Aplicado</div>' : `<button class="btn btn-primary" data-ai-apply="${i}">Aplicar seleccionados</button>`}</div>`;
+      }
+      return `<div class="ai-msg ai-bot">${rich(m.text)}${card}</div>`;
+    }).join("");
+    if (loading) html += '<div class="ai-msg ai-bot ai-typing"><span></span><span></span><span></span></div>';
+    if (th.length && !loading) html += '<button type="button" class="advisor-chip advisor-chip-quiet" data-ai-reset>Nueva conversación</button>';
+    target.innerHTML = html;
+    target.dataset.aiKey = target.id;
+    target.scrollTop = target.scrollHeight;
+  }
+
+  async function askAI(text, target) {
+    if (!AI_URL || AI_URL.includes("TU-USUARIO")) return false;
+    if (aiBusy) return true;
+    const user = window.firebase && firebase.apps && firebase.apps.length ? firebase.auth().currentUser : null;
+    if (!user) { toast("Inicia sesión para usar la IA del Advisor", "warn"); return false; }
+    const th = (aiThreads[target.id] = aiThreads[target.id] || []);
+    th.push({ role: "user", text });
+    aiBusy = true; aiRender(target, true);
+    const btn = $("#advisorGenerate"); if (btn) { btn.disabled = true; btn.textContent = "Pensando…"; }
+    try {
+      const token = await user.getIdToken();
+      const messages = th.slice(-12).map(m => ({
+        role: m.role,
+        content: m.text + (m.actions && m.actions.length ? "\n[Propuse: " + m.actions.map(a => a.label).join("; ") + "]" : "")
+      }));
+      const res = await fetch(AI_URL, {
+        method: "POST", headers: { "Content-Type": "application/json", Authorization: "Bearer " + token },
+        body: JSON.stringify({ messages, context: aiContext(), intensity: $("#advisorIntensity")?.value || "balanced" })
+      });
+      const data = await res.json().catch(() => ({}));
+      if (!res.ok) { const err = new Error(data.error || "Error " + res.status); err.status = res.status; throw err; }
+      th.push({ role: "assistant", text: data.text || "", actions: aiFlatten(data.actions || []) });
+      aiRender(target);
+      return true;
+    } catch (e) {
+      th.pop(); aiRender(target);
+      const limited = e.status === 429;
+      toast(limited ? e.message : "La IA no está disponible ahora" + (target.id === "advisorResponse" ? ": usé el modo básico." : "."), "warn");
+      return limited;
+    } finally {
+      aiBusy = false;
+      if (btn) { btn.disabled = false; btn.textContent = "✦ Enviar"; }
+    }
+  }
+
+  async function aiApply(target, idx) {
+    const m = (aiThreads[target.id] || [])[idx];
+    if (!m || m.applied) return;
+    const sel = m.actions.filter(a => a.on);
+    if (!sel.length) return toast("Selecciona al menos un cambio", "warn");
+    const dels = sel.filter(a => a.type === "delete_task").length;
+    if (dels && !(await confirm(`Vas a mover ${dels} tarea(s) a la papelera. ¿Continuar?`))) return;
+    const T = /^\d{2}:\d{2}$/;
+    sel.forEach(a => {
+      const d = a.data;
+      if (a.type === "create_task") tasks.push(normalizeTask({ title: d.title, date: d.date, time: d.time, priority: d.priority, category: categories.some(c => c.id === d.category) ? d.category : "estudio", duration: d.duration, notes: d.notes || "Creado por Planneo Advisor" }));
+      else if (a.type === "update_task") { const t = tasks.find(x => x.id === d.id); if (t) { if (d.title) t.title = String(d.title).slice(0, 120); if (/^\d{4}-\d{2}-\d{2}$/.test(d.date || "")) t.date = d.date; if (T.test(d.time || "")) t.time = d.time; if (d.priority) t.priority = d.priority; if (d.duration) t.duration = Number(d.duration) || 0; Object.assign(t, normalizeTask(t)); } }
+      else if (a.type === "complete_task") { const t = tasks.find(x => x.id === d.id); if (t && !t.done) toggleTask(d.id); }
+      else if (a.type === "delete_task") { const t = tasks.find(x => x.id === d.id); if (t) { trash.unshift({ type: "task", data: t, deletedAt: new Date().toISOString() }); tasks = tasks.filter(x => x.id !== d.id); } }
+      else if (a.type === "create_note") notes.unshift({ id: id(), title: String(d.title || "").slice(0, 120), type: ["estudio", "idea", "importante"].includes(d.type) ? d.type : "estudio", subject: d.subject || "", text: String(d.text).slice(0, 5000), date: new Date().toISOString(), favorite: false });
+      else if (a.type === "create_habit") habits.push({ id: id(), title: String(d.title).slice(0, 80), streak: 0, history: [], last: null });
+      else if (a.type === "create_alarm") alarms.push({ id: id(), time: d.time, title: d.title || "Alarma" });
+    });
+    save(DB.tasks, tasks); save(DB.trash, trash); save(DB.notes, notes); save(DB.habits, habits); save(DB.alarms, alarms);
+    m.applied = true;
+    refresh(); renderNotes(); renderHabits();
+    aiRender(target);
+    toast(`Listo: ${sel.length} cambio(s) aplicados`, "ok");
+  }
+
+  document.addEventListener("click", e => {
+    const box = e.target.closest("[data-ai-key]");
+    if (!box) return;
+    if (e.target.closest("[data-ai-apply]")) aiApply(box, Number(e.target.closest("[data-ai-apply]").dataset.aiApply));
+    else if (e.target.closest("[data-ai-reset]")) { aiThreads[box.id] = []; box.innerHTML = ""; }
+  });
+  document.addEventListener("change", e => {
+    const chk = e.target.closest("[data-ai-chk]"), box = e.target.closest("[data-ai-key]");
+    if (!chk || !box) return;
+    const [i, j] = chk.dataset.aiChk.split(":").map(Number);
+    const a = (aiThreads[box.id] || [])[i]?.actions?.[j]; if (a) a.on = chk.checked;
+  });
+
   function renderAdvisor() {
     // Se mantiene por compatibilidad; el Advisor principal es por texto
   }
@@ -2597,7 +2779,7 @@ function renderAlarms() {
       title,
       date: today(),
       time,
-      priority: "normal",
+      priority: $("#quickTaskPriority")?.value || "normal",
       category: categories[0]?.id || "general",
       repeat: "none",
       duration: 0,
@@ -2607,6 +2789,7 @@ function renderAlarms() {
     save(DB.tasks, tasks);
     $("#quickTaskTitle").value = "";
     $("#quickTaskTime").value = "";
+    if ($("#quickTaskPriority")) $("#quickTaskPriority").value = "normal";
     toast("Tarea añadida a hoy");
     refresh();
   }
@@ -2650,8 +2833,8 @@ function renderAlarms() {
     $("#subtaskList").appendChild(div);
   }
  
-  function toggleTask(id) {
-    const t = tasks.find(x => x.id === id);
+  function toggleTask(taskId) {
+    const t = tasks.find(x => x.id === taskId);
     if (!t) return;
     const completing = !t.done;
     t.done = completing;
@@ -3549,6 +3732,7 @@ if (installBtn) {
     const addSub = $("#addSubtask");
     if (addSub) addSub.onclick = () => addSubtaskRow();
     $("#advisorGenerate").onclick = generateAdvisorSuggestion;
+    $("#advisorInput").addEventListener("keydown", e => { if (e.key === "Enter" && (e.ctrlKey || e.metaKey)) { e.preventDefault(); generateAdvisorSuggestion(); } });
     document.querySelectorAll("[data-advisor-example]").forEach(btn => {
       btn.onclick = () => {
         const input = $("#advisorInput");
@@ -3573,12 +3757,15 @@ if (installBtn) {
       else if (btn.dataset.action === "edit") editTask(id);
       else if (btn.dataset.action === "delete") deleteTask(id);
     };
-    $("#dayList").onclick = e => {
+    $("#view-day").addEventListener("click", e => {
       const btn = e.target.closest("[data-action]");
-      if (!btn) return;
-      if (btn.dataset.action === "toggle") toggleTask(btn.dataset.id);
-      else if (btn.dataset.action === "edit") editTask(btn.dataset.id);
-    };
+      if (btn) return dayAction(btn);
+      if (e.target.closest("[data-ai-plan]")) {
+        const box = $("#dayAdvisorResponse"); $("#dayAiCard").hidden = false;
+        askAI("Planea mi día de hoy: ordena mis tareas pendientes por prioridad, propón horarios realistas y, si tengo huecos, sugiere sesiones de estudio.", box);
+      }
+    });
+    $("#quickTaskTitle").addEventListener("keydown", e => { if (e.key === "Enter") quickSaveTask(); });
  
     $("#saveNote").onclick = saveNote;
     $("#cancelNote").onclick = cancelNote;
@@ -5154,5 +5341,76 @@ window.addEventListener("load", async () => {
  
  
  
+<style id="planneo-ai-day">
+/* ===== Advisor IA ===== */
+.advisor-response { display:flex; flex-direction:column; gap:10px; max-height:520px; overflow-y:auto; }
+.advisor-response:empty { display:none; }
+.ai-msg { max-width:92%; padding:10px 14px; border-radius:16px; font-size:14px; line-height:1.55; overflow-wrap:anywhere; }
+.ai-user { align-self:flex-end; background:var(--primary); color:#fff; border-bottom-right-radius:5px; }
+.ai-bot { align-self:flex-start; background:var(--bg-soft); border:1px solid var(--border); border-bottom-left-radius:5px; }
+.ai-acts { margin-top:10px; display:flex; flex-direction:column; gap:6px; }
+.ai-act { display:flex; gap:9px; align-items:flex-start; margin:0; padding:8px 10px; background:var(--surface); border:1px solid var(--border); border-radius:10px; color:var(--text); font-size:13px; font-weight:500; cursor:pointer; }
+.ai-act input { width:17px; height:17px; flex:0 0 17px; margin-top:1px; accent-color:var(--primary); }
+.ai-act.danger { border-color:color-mix(in srgb,var(--danger) 45%,var(--border)); }
+.ai-done { color:var(--success); font-weight:700; font-size:13px; padding:4px 2px; }
+.ai-typing { display:flex; gap:5px; padding:14px 16px; }
+.ai-typing span { width:7px; height:7px; border-radius:50%; background:var(--muted-2); animation:aiDot 1.1s infinite ease-in-out; }
+.ai-typing span:nth-child(2){ animation-delay:.15s } .ai-typing span:nth-child(3){ animation-delay:.3s }
+@keyframes aiDot { 0%,80%,100%{ transform:translateY(0); opacity:.4 } 40%{ transform:translateY(-5px); opacity:1 } }
+#advisorGenerate:disabled { opacity:.7; cursor:wait; }
+[hidden] { display:none !important; }
+
+/* ===== Mi día ===== */
+#view-day .day-hero { display:grid; grid-template-columns:minmax(0,1fr) 190px; gap:20px; align-items:center; text-align:left; }
+#view-day .dh-eyebrow { font-size:11px; font-weight:800; letter-spacing:1.4px; color:var(--primary); margin-bottom:2px; }
+#view-day .dh-main .page-title { margin-bottom:2px; }
+#view-day .dh-main .page-sub { margin-bottom:10px; }
+.dh-chips { display:flex; flex-wrap:wrap; gap:8px; margin-bottom:12px; }
+.dh-chip { padding:5px 11px; border-radius:999px; background:color-mix(in srgb,var(--surface) 80%,transparent); border:1px solid var(--border); font-size:12.5px; font-weight:700; }
+.dh-focus:empty { display:none; }
+.dh-focus-in { display:flex; justify-content:space-between; align-items:center; gap:12px; flex-wrap:wrap; padding:12px 14px; margin-bottom:10px; background:var(--surface); border:1px solid var(--border); border-left:4px solid var(--primary); border-radius:14px; box-shadow:var(--shadow); }
+.dh-focus-t { display:flex; flex-direction:column; min-width:0; }
+.dh-focus-t small { font-size:10px; font-weight:800; letter-spacing:1.2px; color:var(--primary); }
+.dh-focus-t b { font-size:16px; overflow-wrap:anywhere; }
+.dh-focus-t span { font-size:12.5px; color:var(--muted); }
+.dh-focus-b { display:flex; gap:8px; flex-wrap:wrap; }
+.dh-side { display:flex; flex-direction:column; align-items:center; gap:6px; }
+.dh-label { font-size:13px; font-weight:700; color:var(--muted); }
+.dh-bar { width:100%; height:7px; border-radius:99px; background:var(--bg-soft); border:1px solid var(--border); overflow:hidden; }
+.dh-bar i { display:block; height:100%; width:0; background:linear-gradient(90deg,var(--primary),#38bdf8); border-radius:99px; transition:width .4s; }
+.dh-study { font-size:12.5px; color:var(--muted); }
+.qt-row { display:grid; grid-template-columns:minmax(0,1fr) 120px 130px auto; gap:8px; }
+.qt-row input, .qt-row select { min-height:42px; }
+.dsec h2 { display:flex; align-items:center; gap:6px; }
+.dcount { color:var(--danger); font-size:14px; }
+.dgroup { margin-bottom:14px; }
+.dgroup-h { font-size:12px; font-weight:800; color:var(--muted); letter-spacing:.6px; text-transform:uppercase; margin:0 2px 8px; }
+.dgroup-h span { display:inline-block; min-width:18px; margin-left:4px; text-align:center; background:var(--bg-soft); border-radius:99px; padding:0 6px; }
+.dtask { flex-direction:row !important; align-items:center; gap:12px !important; }
+.dtask:hover { transform:none; }
+.dbody { flex:1; min-width:0; }
+.dcheck { flex:0 0 26px; width:26px; height:26px; border-radius:50%; border:2px solid var(--muted-2); background:transparent; color:#fff; font-weight:800; cursor:pointer; display:grid; place-items:center; transition:.15s; }
+.dcheck:hover { border-color:var(--success); background:color-mix(in srgb,var(--success) 15%,transparent); }
+.dcheck.on { background:var(--success); border-color:var(--success); }
+.dact { display:flex; gap:4px; flex-wrap:wrap; justify-content:flex-end; }
+.dbtn { padding:6px 9px; border-radius:9px; border:1px solid var(--border); background:var(--bg-soft); color:var(--text); font:600 12px var(--font); cursor:pointer; min-height:32px; }
+.dbtn:hover { border-color:var(--primary); background:var(--primary-light); }
+.dtask.done .task-title { text-decoration:line-through; }
+.ddone { margin-top:6px; } .ddone summary { cursor:pointer; color:var(--muted); font-weight:700; font-size:13px; padding:6px 2px; }
+.ddone .task-list { margin-top:8px; }
+.dtm { padding:7px 0; border-top:1px solid var(--border); font-size:14px; } .dtm:first-child { border-top:0; } .dtm b { color:var(--primary); margin-right:6px; }
+#view-day.active > .dfull { grid-column:1 / -1; }
+#view-day #habitsDayList { display:grid; grid-template-columns:repeat(auto-fill,minmax(230px,1fr)); gap:8px; }
+#view-day #habitsDayList .habit { margin:0; }
+@media (max-width:720px) {
+  #view-day .day-hero { grid-template-columns:1fr; text-align:center !important; }
+  #view-day .dh-chips { justify-content:center; }
+  #view-day .dh-focus-in { text-align:left; }
+  #view-day .dh-ai { width:100%; }
+  .qt-row { grid-template-columns:1fr 1fr; } .qt-row input:first-child, .qt-row .btn { grid-column:1 / -1; }
+  .dtask { flex-wrap:wrap; } .dact { width:100%; justify-content:flex-start; padding-left:38px; }
+  .ai-msg { max-width:100%; }
+}
+</style>
 </body>
 </html>
