@@ -1290,14 +1290,14 @@ textarea { min-height: 100px; resize: vertical; }
   <!-- Mi día mejorado -->
   <section class="view" id="view-day">
     <div class="day-hero">
-      <h1 class="page-title">Mi día</h1>
-      <p class="page-sub" id="dayGreeting"></p>
-      <div id="dayProgressSection">
+      <h1 class="page-title" style="margin-bottom:4px;">Mi día</h1>
+      <p class="page-sub" id="dayGreeting" style="margin-bottom:12px;"></p>
+      <div id="dayProgressSection" style="display:flex;flex-direction:column;align-items:center;gap:4px;">
         <div class="day-progress-ring" id="dayProgressRing">
           <div class="day-progress-text" id="dayProgressText">0%</div>
         </div>
-        <div style="font-size:14px;color:var(--muted);">Progreso de tareas hoy</div>
-        <div style="margin-top:8px;font-size:13px;color:var(--muted);" id="studyProgress">Estudio: 0 / 60 min</div>
+        <div style="font-size:13px;color:var(--muted);font-weight:600;">Progreso de hoy</div>
+        <div style="font-size:12.5px;color:var(--muted);" id="studyProgress">Estudio: 0 / 60 min</div>
       </div>
     </div>
  
@@ -3910,50 +3910,62 @@ window.addEventListener("load", async () => {
 
   .nav-menu {
     position: fixed;
-    bottom: 0;
-    left: 0;
-    right: 0;
+    bottom: 16px;
+    left: 16px;
+    right: 16px;
     top: auto;
-    width: 100%;
+    width: auto;
     margin: 0;
-    padding: 4px 6px calc(6px + env(safe-area-inset-bottom, 0px));
-    background: color-mix(in srgb, var(--surface) 97%, transparent);
-    backdrop-filter: blur(20px);
-    -webkit-backdrop-filter: blur(20px);
-    border-top: 1px solid var(--border);
-    box-shadow: 0 -6px 30px rgba(0,0,0,.1);
-    z-index: 45;
-    justify-content: space-evenly;
-    gap: 0;
+    padding: 8px 6px;
+    background: color-mix(in srgb, var(--surface) 78%, transparent);
+    backdrop-filter: blur(24px) saturate(180%);
+    -webkit-backdrop-filter: blur(24px) saturate(180%);
+    border: 1px solid color-mix(in srgb, var(--border) 70%, transparent);
+    border-radius: 28px;
+    box-shadow: 0 8px 32px rgba(0,0,0,.12), 0 2px 8px rgba(0,0,0,.06);
+    z-index: 50;
+    justify-content: space-around;
+    gap: 2px;
     overflow-x: auto;
     grid-column: auto;
   }
 
   .nav-menu li {
-    flex: 0 0 auto;
-    min-width: 52px;
+    flex: 1 1 0;
+    min-width: 0;
   }
 
   .nav-menu button {
     width: 100%;
-    min-height: 52px;
-    padding: 4px 2px;
-    font-size: 10px;
+    min-height: 56px;
+    padding: 6px 4px;
+    font-size: 10.5px;
     font-weight: 700;
-    border-radius: 12px;
+    border-radius: 18px;
     display: flex;
     flex-direction: column;
     align-items: center;
     justify-content: center;
-    gap: 1px;
-    line-height: 1.1;
+    gap: 2px;
+    line-height: 1.15;
     white-space: nowrap;
+    background: transparent;
+    transition: background .15s, transform .1s;
   }
 
-  /* Hide less-used items on very small screens to reduce crowding */
-  .nav-menu li:has(button[data-view="trash"]),
-  .nav-menu li:has(#settingsBtn) {
-    display: none;
+  .nav-menu button:active {
+    transform: scale(0.96);
+  }
+
+  .nav-menu button.active {
+    background: var(--primary-light);
+    color: var(--primary);
+  }
+
+  /* Keep settings and trash accessible but smaller */
+  .nav-menu li:has(#settingsBtn) button,
+  .nav-menu li:has(button[data-view="trash"]) button {
+    font-size: 9.5px;
   }
 
   .nav-menu button.active {
@@ -4098,6 +4110,40 @@ window.addEventListener("load", async () => {
     padding: 28px 20px 22px;
     border-radius: 24px;
   }
+
+  /* Mi día más bonito en móvil */
+  #view-day .day-hero {
+    background: linear-gradient(135deg, var(--primary-light) 0%, var(--surface) 100%);
+    border-radius: 24px;
+    padding: 20px 16px;
+    margin-bottom: 16px;
+    border: 1px solid var(--border);
+  }
+
+  #view-day .day-progress-ring {
+    width: 100px;
+    height: 100px;
+    margin: 8px auto;
+  }
+
+  #view-day .card {
+    border-radius: 20px;
+    margin-bottom: 12px;
+  }
+
+  #view-day h2 {
+    font-size: 17px;
+  }
+
+  #view-day .task-list {
+    gap: 8px;
+  }
+
+  #view-day .task {
+    border-radius: 16px;
+    padding: 12px 14px;
+  }
+
 
   /* Profile button stays accessible at top on mobile */
   #planneoProfile {
