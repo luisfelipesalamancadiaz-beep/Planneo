@@ -2655,7 +2655,7 @@ function renderAlarms() {
     } catch (e) {
       th.pop(); aiRender(target);
       const limited = e.status === 429;
-      toast(limited ? e.message : "La IA no está disponible ahora" + (target.id === "advisorResponse" ? ": usé el modo básico." : "."), "warn");
+      toast("IA: " + e.message + (target.id === "advisorResponse" ? " (usé el modo básico)" : ""), "warn");
       return limited;
     } finally {
       aiBusy = false;
