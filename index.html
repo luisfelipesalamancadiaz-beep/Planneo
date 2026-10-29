@@ -84,9 +84,13 @@ body { font-family: var(--font); background: var(--bg); color: var(--text); min-
 @keyframes fadeOut { to { opacity: 0; visibility: hidden; } }
  
 nav {
-  background: var(--surface); border-bottom: 1px solid var(--border);
+  background: color-mix(in srgb, var(--surface) 85%, transparent);
+  backdrop-filter: blur(16px) saturate(180%);
+  -webkit-backdrop-filter: blur(16px) saturate(180%);
+  border-bottom: 1px solid color-mix(in srgb, var(--border) 60%, transparent);
   padding: calc(10px * var(--density)) 20px; display: flex; align-items: center; gap: 16px;
-  position: sticky; top: 0; z-index: 40; box-shadow: 0 1px 2px rgba(0,0,0,.03);
+  position: sticky; top: 0; z-index: 40;
+  box-shadow: 0 1px 3px rgba(0,0,0,.04);
 }
 .brand { font-weight: 800; font-size: 20px; color: var(--primary); background: none; border: none; cursor: pointer; font-family: inherit; }
 .nav-menu { display: flex; gap: 4px; list-style: none; margin-left: auto; flex-wrap: wrap; }
@@ -4166,6 +4170,105 @@ window.addEventListener("load", async () => {
   }
   .brand { font-size: 16px; }
   .page-title { font-size: 23px; }
+}
+
+
+/* ===== MENÚ FLOTANTE DE CRISTAL (PC + MÓVIL) ===== */
+@media (max-width: 720px) {
+  body {
+    padding-bottom: calc(88px + env(safe-area-inset-bottom, 0px));
+  }
+
+  nav {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 10px 14px;
+    position: sticky;
+    top: 0;
+    z-index: 40;
+  }
+
+  .brand {
+    font-size: 18px;
+    flex: 0 0 auto;
+  }
+
+  .search-wrap {
+    flex: 1;
+    max-width: none;
+    min-width: 0;
+  }
+
+  .search-wrap input {
+    min-height: 40px;
+    font-size: 15px;
+    border-radius: 12px;
+  }
+
+  /* Menú flotante de cristal abajo */
+  .nav-menu {
+    position: fixed !important;
+    bottom: 14px !important;
+    left: 14px !important;
+    right: 14px !important;
+    top: auto !important;
+    width: auto !important;
+    margin: 0 !important;
+    padding: 6px 4px !important;
+    background: color-mix(in srgb, var(--surface) 75%, transparent) !important;
+    backdrop-filter: blur(28px) saturate(200%) !important;
+    -webkit-backdrop-filter: blur(28px) saturate(200%) !important;
+    border: 1px solid color-mix(in srgb, var(--border) 50%, transparent) !important;
+    border-radius: 26px !important;
+    box-shadow: 0 10px 40px rgba(0,0,0,.15) !important;
+    z-index: 55 !important;
+    display: flex !important;
+    justify-content: space-around !important;
+    align-items: center !important;
+    gap: 0 !important;
+    overflow-x: auto !important;
+    grid-column: auto !important;
+    order: initial !important;
+  }
+
+  .nav-menu li {
+    flex: 1 1 0 !important;
+    min-width: 0 !important;
+    display: flex !important;
+    justify-content: center !important;
+  }
+
+  .nav-menu button {
+    width: 100% !important;
+    min-height: 50px !important;
+    padding: 4px 2px !important;
+    font-size: 10px !important;
+    font-weight: 700 !important;
+    border-radius: 16px !important;
+    display: flex !important;
+    flex-direction: column !important;
+    align-items: center !important;
+    justify-content: center !important;
+    gap: 1px !important;
+    line-height: 1.1 !important;
+    background: transparent !important;
+    white-space: nowrap !important;
+  }
+
+  .nav-menu button.active {
+    background: var(--primary-light) !important;
+    color: var(--primary) !important;
+  }
+
+  /* Evitar que el buscador quede detrás de nada */
+  .search-results {
+    z-index: 60;
+  }
+
+  .settings-panel {
+    z-index: 70;
+  }
 }
 
 /* ===== ACCESO Y CUENTAS DE PLANNEO ===== */
