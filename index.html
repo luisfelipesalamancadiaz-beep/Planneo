@@ -938,6 +938,8 @@ textarea { min-height: 100px; resize: vertical; }
   .advisor-textarea { min-height:82px; }
 }
  
+
+
 </style>
 </head>
 <body>
@@ -1260,12 +1262,9 @@ textarea { min-height: 100px; resize: vertical; }
         <button type="button" class="advisor-chip" data-advisor-example="Debo entregar un trabajo de historia el miércoles">📝 Entrega</button>
         <button type="button" class="advisor-chip" data-advisor-example="Tengo una exposición la próxima semana">🎤 Exposición</button>
         <button type="button" class="advisor-chip" data-advisor-example="Quiero organizar mi semana de estudio">📅 Semana</button>
-        <button type="button" class="advisor-chip advisor-chip-quiet" id="advisorAnalyzeTasks">↗ Analizar tareas</button>
-        <button type="button" class="advisor-chip advisor-chip-quiet" id="advisorDailyTip">💡 Consejo del día</button>
-        <button type="button" class="advisor-chip advisor-chip-quiet" id="advisorWeeklySummary">📊 Resumen semanal</button>
       </div>
       <label class="advisor-input-label" for="advisorInput">¿Qué necesitas organizar?</label>
-      <textarea id="advisorInput" class="advisor-textarea" placeholder="Ej.: examen de química el miércoles"></textarea>
+      <textarea id="advisorInput" class="advisor-textarea" placeholder="Escribe en lenguaje normal: elimina todas las tareas, ¿qué notas tengo?, o planea examen de química el viernes. Separa varios planes en líneas distintas."></textarea>
       <div class="advisor-controls">
         <div class="advisor-plan-type">
           <label for="advisorIntensity">Intensidad</label>
@@ -1306,7 +1305,7 @@ textarea { min-height: 100px; resize: vertical; }
     </div>
  
     <!-- Añadir tarea rápida en Mi día -->
-    <div class="card">
+    <div class="card" id="quickTaskCard">
       <h2>➕ Añadir tarea rápida</h2>
       <div class="form-grid">
         <div>
@@ -1358,7 +1357,7 @@ textarea { min-height: 100px; resize: vertical; }
       </div>
     </div>
 </details>
-<div class="card">
+<div class="card" id="alarmsDayCard">
   <h2>⏰ Alarmas</h2>
  
   <div class="form-row">
@@ -2244,9 +2243,59 @@ function renderAlarms() {
     return sessions;
   }
  
-  function generateAdvisorSuggestion() {
+  async function runAdvisorCommand(text) {
+    const normalized = text.toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "").trim();
+    const asksToDeleteTasks = /\b(elimina|eliminar|borra|borrar|quita|quitar|limpia|limpiar)\b/.test(normalized) && /\b(todas?|tareas?)\b/.test(normalized) && /\btareas?\b/.test(normalized);
+    if (asksToDeleteTasks) {
+      if (!tasks.length) {
+        $("#advisorResponse").innerHTML = '<div class="empty">No hay tareas para eliminar.</div>';
+        return true;
+      }
+      const amount = tasks.length;
+      if (await confirm(`Vas a eliminar ${amount} tarea(s). ¿Quieres continuar?`)) {
+        tasks = [];
+        save(DB.tasks, tasks);
+        refresh();
+        $("#advisorResponse").innerHTML = `<div class="empty" style="color:var(--success);">Listo, eliminé ${amount} tarea(s).</div>`;
+      } else {
+        $("#advisorResponse").innerHTML = '<div class="empty">No eliminé ninguna tarea.</div>';
+      }
+      return true;
+    }
+
+    const asksForNotes = /\b(que|cuales|cuentame|muestrame|lista|ver)\b/.test(normalized) && /\b(notas?|apuntes?)\b/.test(normalized);
+    if (asksForNotes) {
+      const response = $("#advisorResponse");
+      response.innerHTML = "";
+      if (!notes.length) {
+        response.innerHTML = '<div class="empty">Todavía no tienes notas guardadas.</div>';
+      } else {
+        const card = document.createElement("div");
+        card.className = "card advisor-notes-result";
+        const heading = document.createElement("h3");
+        heading.textContent = `Tienes ${notes.length} nota(s)`;
+        card.appendChild(heading);
+        notes.forEach((note, index) => {
+          const item = document.createElement("div");
+          item.className = "advisor-note-item";
+          const title = document.createElement("strong");
+          title.textContent = `${index + 1}. ${note.title || note.subject || "Nota sin título"}${note.favorite ? " ⭐" : ""}`;
+          const body = document.createElement("p");
+          body.textContent = note.text || "(Sin contenido)";
+          item.append(title, body);
+          card.appendChild(item);
+        });
+        response.appendChild(card);
+      }
+      return true;
+    }
+    return false;
+  }
+
+  async function generateAdvisorSuggestion() {
     const text = ($("#advisorInput")?.value || "").trim();
-    if (!text) return toast("Escribe qué tienes pendiente", "warn");
+    if (!text) return toast("Escribe qué necesitas", "warn");
+    if (await runAdvisorCommand(text)) return;
  
     const lines = text.split(/\n+/).map(l => l.trim()).filter(Boolean);
     const intensity = $("#advisorIntensity")?.value || "balanced";
@@ -2258,7 +2307,7 @@ function renderAlarms() {
       allPlans.push({ parsed, plan });
     });
  
-    lastAdvisorPlan = { intensity, allPlans };
+    lastAdvisorPlan = { intensity, allPlans: allPlans.map(item => ({ ...item, selected: true })) };
  
     let totalSessions = 0;
     let totalMinutes = 0;
@@ -2278,7 +2327,8 @@ function renderAlarms() {
       totalMinutes += plan.reduce((a, s) => a + (s.duration || 0), 0);
  
       html += `
-        <div style="margin-bottom:14px;${idx > 0 ? 'padding-top:12px;border-top:1px solid var(--border);' : ''}">
+        <div class="advisor-plan-item" style="margin-bottom:14px;${idx > 0 ? 'padding-top:12px;border-top:1px solid var(--border);' : ''}">
+          <label class="advisor-plan-select"><input type="checkbox" data-advisor-plan="${idx}" checked> <span>Incluir este plan</span></label>
           <strong>${typeLabel} · ${parsed.subject}</strong><br>
           <span style="color:var(--muted);font-size:13px;">
             ${parsed.targetDate} · ${parsed.daysLeft} día(s)
@@ -2304,15 +2354,23 @@ function renderAlarms() {
  
     html += `
       <div style="font-size:13px;color:var(--muted);margin:8px 0;">
-        Total: ${totalSessions} sesiones · ${totalMinutes} min · Plan ${intensityLabel}
+        ${allPlans.length} plan(es) · ${totalSessions} sesiones · ${totalMinutes} min · Intensidad ${intensityLabel}<br>
+        <span>Marca los planes que quieras añadir (puedes elegir varios).</span>
       </div>
       <button class="btn btn-primary" id="advisorApply" style="width:100%;margin-top:6px;">
-        ✅ Aplicar todo el plan
+        ✅ Aplicar planes seleccionados
       </button>
     </div>`;
  
     $("#advisorResponse").innerHTML = html;
  
+    $$("[data-advisor-plan]").forEach(input => {
+      input.onchange = () => {
+        if (lastAdvisorPlan?.allPlans[input.dataset.advisorPlan]) {
+          lastAdvisorPlan.allPlans[input.dataset.advisorPlan].selected = input.checked;
+        }
+      };
+    });
     const applyBtn = document.getElementById("advisorApply");
     if (applyBtn) applyBtn.onclick = applyAdvisorPlan;
   }
@@ -2430,9 +2488,11 @@ function renderAlarms() {
     if (!lastAdvisorPlan || !lastAdvisorPlan.allPlans?.length) {
       return toast("Genera un plan primero", "warn");
     }
- 
+    const selectedPlans = lastAdvisorPlan.allPlans.filter(item => item.selected);
+    if (!selectedPlans.length) return toast("Selecciona al menos un plan", "warn");
+
     let count = 0;
-    lastAdvisorPlan.allPlans.forEach(item => {
+    selectedPlans.forEach(item => {
       item.plan.forEach(s => {
         tasks.push(normalizeTask({
           title: s.title,
@@ -3489,9 +3549,6 @@ if (installBtn) {
     const addSub = $("#addSubtask");
     if (addSub) addSub.onclick = () => addSubtaskRow();
     $("#advisorGenerate").onclick = generateAdvisorSuggestion;
-    $("#advisorAnalyzeTasks").onclick = analyzeCurrentTasks;
-    $("#advisorDailyTip").onclick = showDailyTip;
-    $("#advisorWeeklySummary").onclick = showWeeklySummary;
     document.querySelectorAll("[data-advisor-example]").forEach(btn => {
       btn.onclick = () => {
         const input = $("#advisorInput");
@@ -4493,6 +4550,66 @@ window.addEventListener("load", async () => {
   .auth-card h2 { font-size: 24px; }
   #planneoProfile { top: 10px; right: 10px; }
 }
+/* Planneo: menú de cristal y vistas adaptables */
+@media (min-width: 721px) {
+  body { padding-top: 92px; }
+  nav {
+    position: fixed; top: 14px; left: 50%; transform: translateX(-50%);
+    width: max-content; max-width: calc(100vw - 32px); padding: 9px 14px;
+    border: 1px solid color-mix(in srgb, var(--border) 55%, transparent);
+    border-radius: 22px; background: color-mix(in srgb, var(--surface) 68%, transparent);
+    backdrop-filter: blur(24px) saturate(190%); -webkit-backdrop-filter: blur(24px) saturate(190%);
+    box-shadow: 0 12px 36px rgba(15,23,42,.14); gap: 10px;
+  }
+  .nav-menu { flex-wrap: nowrap; margin-left: 0; gap: 2px; }
+  .nav-menu button { padding: 8px 10px; white-space: nowrap; }
+  #planneoProfile { flex: 0 0 auto; }
+  #view-day.active { display: grid; grid-template-columns: minmax(0,1.2fr) minmax(280px,.8fr); gap: 16px; align-items: start; }
+  #view-day > .day-hero, #view-day > #quickTaskCard, #view-day > #habitsDaySection, #view-day > #tasksDaySection { grid-column: 1 / -1; }
+  #view-day > .day-hero { padding: 26px; border: 1px solid var(--border); border-radius: 24px; background: radial-gradient(circle at 88% 12%, color-mix(in srgb,var(--primary) 15%,transparent),transparent 34%), linear-gradient(135deg,var(--primary-light),var(--surface) 65%); box-shadow: var(--shadow); }
+  #view-day > .card { border-radius: 20px; }
+  #view-day #pomoWrapper, #view-day #alarmsDayCard { grid-column: span 1; margin-bottom: 0; }
+  #view-day #tasksDaySection { padding: 4px 0; }
+  #view-day #tasksDaySection > h2 { font-size: 20px; margin: 8px 0 12px !important; }
+}
+.advisor-plan-item { padding: 12px; border: 1px solid var(--border); border-radius: 14px; background: var(--surface); }
+.advisor-plan-select { display: flex; align-items: center; gap: 8px; margin: 0 0 8px; color: var(--primary); font-size: 12px; font-weight: 700; cursor: pointer; }
+.advisor-plan-select input { accent-color: var(--primary); width: 16px; height: 16px; }
+.advisor-notes-result { max-height: 380px; overflow: auto; }
+.advisor-note-item { padding: 10px 0; border-top: 1px solid var(--border); overflow-wrap: anywhere; }
+.advisor-note-item p { margin: 4px 0 0; color: var(--muted); white-space: pre-wrap; }
+@media (max-width: 720px) {
+  body { padding-bottom: calc(100px + env(safe-area-inset-bottom, 0px)); }
+  nav { position: sticky; top: 0; display: flex; flex-wrap: wrap; padding: 8px 12px; gap: 7px; background: color-mix(in srgb,var(--surface) 78%,transparent); backdrop-filter: blur(20px) saturate(180%); -webkit-backdrop-filter: blur(20px) saturate(180%); }
+  nav .brand { flex: 0 0 auto; }
+  nav .search-wrap { flex: 1 1 150px; min-width: 120px; max-width: none; }
+  #planneoProfile { position: static; flex: 0 0 auto; margin-left: auto; }
+  .nav-menu { position: fixed !important; left: 10px !important; right: 10px !important; bottom: calc(10px + env(safe-area-inset-bottom,0px)) !important; top: auto !important; width: auto !important; margin: 0 !important; padding: 7px !important; display: flex !important; flex-wrap: nowrap !important; justify-content: flex-start !important; gap: 4px !important; overflow-x: auto !important; overscroll-behavior-x: contain; scrollbar-width: none; background: color-mix(in srgb,var(--surface) 74%,transparent) !important; backdrop-filter: blur(26px) saturate(190%) !important; -webkit-backdrop-filter: blur(26px) saturate(190%) !important; border: 1px solid color-mix(in srgb,var(--border) 55%,transparent) !important; border-radius: 22px !important; box-shadow: 0 10px 34px rgba(15,23,42,.18) !important; z-index: 80 !important; }
+  .nav-menu::-webkit-scrollbar { display: none; }
+  .nav-menu li { flex: 0 0 auto !important; min-width: 58px !important; display: flex !important; }
+  .nav-menu button { width: 100% !important; min-width: 58px; min-height: 50px !important; padding: 5px 7px !important; display: flex !important; flex-direction: column !important; justify-content: center !important; align-items: center !important; gap: 2px !important; border-radius: 14px !important; font-size: 10px !important; line-height: 1.1 !important; white-space: nowrap !important; }
+  .settings-panel { position: fixed; top: 62px; left: 10px; right: 10px; width: auto; max-height: calc(100dvh - 150px); }
+  #view-day.active { display: flex; flex-direction: column; gap: 12px; }
+  #view-day > * { width: 100%; min-width: 0; }
+  #view-day > .day-hero { margin: 0; padding: 20px 16px; border-radius: 22px; border: 1px solid var(--border); background: radial-gradient(circle at 90% 10%, color-mix(in srgb,var(--primary) 17%,transparent),transparent 38%), linear-gradient(145deg,var(--primary-light),var(--surface) 72%); box-shadow: var(--shadow); text-align: center; }
+  #view-day .day-progress-ring { width: 100px; height: 100px; margin: 8px auto; }
+  #view-day > .card, #view-day #pomoWrapper { margin: 0; border-radius: 18px; }
+  #view-day .form-grid, #view-day .form-row { grid-template-columns: minmax(0,1fr); }
+  #view-day #pomoTask { max-width: 100% !important; }
+  #view-day #alarmsDayCard .form-row { display: grid; grid-template-columns: 1fr; gap: 8px; }
+  #view-day #tasksDaySection { margin-top: 4px; }
+  #view-day #tasksDaySection > h2 { margin: 8px 0 10px !important; padding-left: 3px; font-size: 18px; }
+  #view-day .task { min-width: 0; overflow-wrap: anywhere; }
+  #view-day .task-actions { flex-wrap: wrap; }
+  .advisor-controls { grid-template-columns: 1fr; }
+}
+@media (max-width: 380px) {
+  nav .brand { font-size: 15px; }
+  nav .search-wrap { flex-basis: 110px; }
+  .nav-menu { left: 6px !important; right: 6px !important; }
+  .nav-menu li, .nav-menu button { min-width: 54px !important; }
+}
+
 </style>
 <!-- ===== ACCESO A PLANNEO ===== -->
 <div id="authGate" class="auth-gate" hidden>
@@ -4714,16 +4831,10 @@ window.addEventListener("load", async () => {
       <button id="planneoProfilePhotoClear" type="button" style="display:none;margin-top:8px;width:100%;padding:8px;border:none;background:var(--bg-soft);border-radius:10px;color:var(--muted);font-size:12px;font-weight:600;cursor:pointer;">Quitar foto</button>
     </div>`;
 
-  // Insert into the nav menu, before the settings button
-  const navMenu = document.querySelector('.nav-menu');
-  const settingsBtn = document.getElementById('settingsBtn');
-  if (navMenu && settingsBtn) {
-    const li = document.createElement('li');
-    li.appendChild(profile);
-    navMenu.insertBefore(li, settingsBtn.parentElement);
-  } else {
-    document.body.appendChild(profile);
-  }
+  // Keep the account control outside the navigation list so mobile links stay usable.
+  const nav = document.querySelector('nav');
+  if (nav) nav.appendChild(profile);
+  else document.body.appendChild(profile);
   const button = profile.querySelector('#planneoProfileButton');
   const menu = profile.querySelector('#planneoProfileMenu');
   const heading = profile.querySelector('#planneoProfileHeading');
