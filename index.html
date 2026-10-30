@@ -5432,5 +5432,98 @@ window.addEventListener("load", async () => {
   .ai-msg { max-width:100%; }
 }
 </style>
+<script>
+/* ===== Planneo: botón de instalar (independiente, no toca Firebase ni el Worker) ===== */
+(() => {
+  let installEvent = null;
+
+  const isStandalone = () =>
+    window.matchMedia("(display-mode: standalone)").matches ||
+    window.navigator.standalone === true;
+
+  const isIOS = () =>
+    /iphone|ipad|ipod/i.test(navigator.userAgent) ||
+    (navigator.platform === "MacIntel" && navigator.maxTouchPoints > 1);
+
+  const say = (msg, type = "ok", ms = 4500) => {
+    const box = document.getElementById("toasts");
+    if (!box) return alert(msg);
+    const el = document.createElement("div");
+    el.className = "toast " + type;
+    el.textContent = msg;
+    box.appendChild(el);
+    setTimeout(() => el.remove(), ms);
+  };
+
+  function ensureButtons() {
+    // Botón de la landing: quitar el display:none inline
+    const landingBtn = document.getElementById("installAppBtn");
+    if (landingBtn) landingBtn.setAttribute("data-install-btn", "");
+
+    // Botón dentro de Ajustes
+    if (!document.getElementById("installAppBtn2")) {
+      const anchor = document.getElementById("customizeBtn");
+      if (anchor) {
+        const b = document.createElement("button");
+        b.id = "installAppBtn2";
+        b.className = "btn btn-ghost settings-customize";
+        b.setAttribute("data-install-btn", "");
+        b.textContent = "📲 Instalar Planneo";
+        anchor.insertAdjacentElement("afterend", b);
+      }
+    }
+    updateButtons();
+  }
+
+  function updateButtons() {
+    document.querySelectorAll("[data-install-btn]").forEach(b => {
+      b.style.display = isStandalone() ? "none" : "";
+    });
+  }
+
+  async function installApp() {
+    if (isStandalone()) return say("Planneo ya está instalada en este dispositivo.");
+    if (installEvent) {
+      installEvent.prompt();
+      try {
+        const r = await installEvent.userChoice;
+        if (r.outcome === "accepted") say("Instalando Planneo…");
+      } catch (e) {}
+      installEvent = null;
+      return;
+    }
+    if (isIOS()) {
+      say("En iPhone/iPad: toca Compartir ⬆️ y elige «Añadir a pantalla de inicio».", "ok", 9000);
+    } else {
+      say("Abre el menú del navegador (⋮) y elige «Instalar aplicación» o «Añadir a pantalla de inicio».", "ok", 9000);
+    }
+  }
+
+  window.addEventListener("beforeinstallprompt", e => {
+    e.preventDefault();
+    installEvent = e;
+    updateButtons();
+  });
+
+  window.addEventListener("appinstalled", () => {
+    installEvent = null;
+    say("Planneo instalada correctamente 🎉");
+    document.querySelectorAll("[data-install-btn]").forEach(b => (b.style.display = "none"));
+  });
+
+  // Captura el clic antes que el código antiguo, así no hay avisos duplicados
+  document.addEventListener("click", e => {
+    const btn = e.target.closest("[data-install-btn]");
+    if (!btn) return;
+    e.preventDefault();
+    e.stopImmediatePropagation();
+    installApp();
+  }, true);
+
+  if (document.readyState === "loading") document.addEventListener("DOMContentLoaded", ensureButtons);
+  else ensureButtons();
+  window.addEventListener("load", ensureButtons);
+})();
+</script>
 </body>
 </html>
